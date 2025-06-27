@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import importPlugin from "eslint-plugin-import";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 import globals from "globals";
 
 export default [
@@ -21,6 +22,7 @@ export default [
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       "import": importPlugin,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -30,23 +32,12 @@ export default [
         "warn",
         { allowConstantExport: true },
       ],
-      "import/order": [
-        "error",
-        {
-          "groups": [
-            "builtin",
-            "external",
-            "internal",
-            ["sibling", "parent", "index"],
-            "type",
-            "unknown",
-          ],
-          "newlines-between": "always",
-          "alphabetize": { order: "asc", caseInsensitive: true },
-        },
-      ],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
       "padding-line-between-statements": [
         "error",
+        { blankLine: "always", prev: "import", next: "*" },
+        { blankLine: "any", prev: "import", next: "import" },
         { blankLine: "always", prev: ["const", "let"], next: "*" },
         { blankLine: "any", prev: ["const", "let"], next: ["const", "let"] },
         { blankLine: "always", prev: "*", next: "return" },
