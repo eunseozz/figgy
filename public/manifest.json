@@ -10,11 +10,7 @@
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
-      "resources": [
-        "figgy-dashboard.js",
-        "figgy-dashboard.css",
-        "images/logos/*.png"
-      ],
+      "resources": ["figgy-dashboard.js", "images/logos/*.png"],
       "matches": ["<all_urls>"]
     }
   ],
