@@ -1,6 +1,7 @@
 import { AiOutlineSetting } from "react-icons/ai";
 import { FiFileText } from "react-icons/fi";
 import { IoMdArrowBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Panel from "@/components/Panel";
@@ -23,11 +24,21 @@ const data = [
 ];
 
 const Pages = () => {
+  const navigate = useNavigate();
+
   return (
     <Panel>
       <ToolBar>
-        <IoMdArrowBack />
-        <AiOutlineSetting />
+        <IconButton
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          <IoMdArrowBack />
+        </IconButton>
+        <IconButton>
+          <AiOutlineSetting />
+        </IconButton>
       </ToolBar>
       <PanelList
         title="PAGES"
@@ -42,6 +53,11 @@ const ToolBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const IconButton = styled.button`
+  cursor: pointer;
+  background-color: transparent;
 
   svg {
     font-size: 24px;

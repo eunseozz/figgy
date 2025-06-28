@@ -1,4 +1,5 @@
 import { FaRegFolder } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Panel from "@/components/Panel";
@@ -10,6 +11,8 @@ const data = [
 ];
 
 const Projects = () => {
+  const navigate = useNavigate();
+
   return (
     <Panel>
       <ButtonWrapper>
@@ -18,6 +21,9 @@ const Projects = () => {
       <PanelList
         title="PROJECTS"
         items={data}
+        onItemClick={() => {
+          navigate("/pages");
+        }}
       />
     </Panel>
   );

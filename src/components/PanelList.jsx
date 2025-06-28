@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-const PanelList = ({ title, items }) => {
+const PanelList = ({ title, items, onItemClick }) => {
   return (
     <div>
       <Title>{title}</Title>
       <ProjectList>
         {items.map((item, index) => (
           <li key={index}>
-            <PanelListButton>
+            <PanelListButton onClick={onItemClick}>
               {item.icon}
               {item.label}
             </PanelListButton>
