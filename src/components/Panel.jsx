@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const logoImage = chrome.runtime.getURL("images/logos/full.png");
+
 const Panel = ({ children }) => {
   return (
     <Container>
@@ -33,7 +35,7 @@ const Header = styled.header`
 const Logo = styled.h1`
   width: 90px;
   height: 34px;
-  background: url("/images/logos/full.png") no-repeat;
+  background: url(${logoImage}) no-repeat;
   background-size: 100%;
   text-indent: -9999px;
 `;

@@ -21,5 +21,12 @@
   },
   "action": {
     "default_icon": "images/logos/size_16.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["figgy-dashboard.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }
