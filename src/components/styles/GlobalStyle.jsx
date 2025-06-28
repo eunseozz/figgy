@@ -12,6 +12,8 @@ const GlobalStyle = styled.div`
     margin: 0;
     padding: 0;
     border: 0;
+    font-weight: normal;
+    color: #5c5e64;
   }
 
   ul,
@@ -30,7 +32,6 @@ const GlobalStyle = styled.div`
   }
 
   button {
-    all: unset;
     cursor: pointer;
   }
 
@@ -40,16 +41,6 @@ const GlobalStyle = styled.div`
     border: none;
     outline: none;
     background: none;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-weight: normal;
-    font-size: inherit;
   }
 `;
 
