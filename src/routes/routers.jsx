@@ -1,10 +1,12 @@
 import { createMemoryRouter } from "react-router-dom";
 
-import App from "@/App";
+import Pages from "@/pages/Pages";
+import Projects from "@/pages/Projects";
 
 const routers = createMemoryRouter([
-  { path: "/", element: <App /> },
-  { path: "*", element: <App /> },
+  { path: "/", element: <Projects /> },
+  { path: "/pages", element: <Pages /> },
+  { path: "*", element: <Projects /> },
 ]);
 
 export default routers;
