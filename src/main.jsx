@@ -6,8 +6,12 @@ import { RouterProvider } from "react-router-dom";
 
 import routers from "@/routes/routers";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <RouterProvider router={routers} />
-  </StrictMode>,
-);
+const root = document.getElementById("figgy-dashboard");
+
+if (root) {
+  createRoot(root).render(
+    <StrictMode>
+      <RouterProvider router={routers} />
+    </StrictMode>,
+  );
+}

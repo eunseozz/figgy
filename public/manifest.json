@@ -1,0 +1,25 @@
+{
+  "name": "Figgy",
+  "description": "Figma 디자인을 브라우저 우측 대시보드에 오버레이하는 도구",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": ["figgy-dashboard.js", "injection/dashboard.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "16": "images/logos/size_16.png",
+    "48": "images/logos/size_48.png",
+    "128": "images/logos/size_128.png"
+  },
+  "action": {
+    "default_icon": "images/logos/size_16.png"
+  }
+}
