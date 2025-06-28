@@ -18,7 +18,6 @@ export default defineConfig({
       },
       output: {
         entryFileNames: "figgy-dashboard.js",
-        assetFileNames: "figgy-dashboard.css",
       },
     },
   },
