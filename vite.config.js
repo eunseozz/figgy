@@ -12,12 +12,14 @@ export default defineConfig({
   resolve: { alias: { "@": path.resolve(__dirname, "src") } },
   build: {
     outDir: "dist",
+    cssCodeSplit: true,
     rollupOptions: {
       input: {
         "figgy-dashboard": resolve(__dirname, "src/main.jsx"),
       },
       output: {
         entryFileNames: "figgy-dashboard.js",
+        assetFileNames: "figgy-dashboard.css",
       },
     },
   },
