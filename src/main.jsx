@@ -5,18 +5,40 @@ import { RouterProvider } from "react-router-dom";
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import routers from "@/routes/routers";
 
-let root = document.getElementById("figgy-dashboard");
+const mountApp = () => {
+  let root = document.getElementById("figgy-dashboard");
 
-if (!root) {
-  root = document.createElement("div");
-  root.id = "figgy-dashboard";
-  document.body.appendChild(root);
+  if (!root) {
+    root = document.createElement("div");
+    root.id = "figgy-dashboard";
+    document.body.appendChild(root);
+  }
+
+  createRoot(root).render(
+    <StrictMode>
+      <GlobalStyle>
+        <RouterProvider router={routers} />
+      </GlobalStyle>
+    </StrictMode>,
+  );
+};
+
+if (
+  typeof chrome !== "undefined" &&
+  chrome.runtime &&
+  chrome.runtime.onMessage
+) {
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "TOGGLE_DASHBOARD") {
+      const existing = document.getElementById("figgy-dashboard");
+
+      if (existing) {
+        existing.remove();
+      } else {
+        mountApp();
+      }
+    }
+  });
+} else {
+  mountApp();
 }
-
-createRoot(root).render(
-  <StrictMode>
-    <GlobalStyle>
-      <RouterProvider router={routers} />
-    </GlobalStyle>
-  </StrictMode>,
-);

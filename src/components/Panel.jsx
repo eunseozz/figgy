@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-const logoImage = chrome.runtime.getURL("images/logos/full.png");
+import { getAssetUrl } from "@/utils/util";
+
+const logoImage = getAssetUrl("images/logos/full.png");
 
 const Panel = ({ children }) => {
   return (
