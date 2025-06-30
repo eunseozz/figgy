@@ -1,39 +1,67 @@
+import { useState } from "react";
+import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
 
-const PanelList = ({ title, items, onItemClick }) => {
+const PanelList = ({ title, items, isToggle = false, onItemClick }) => {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
     <div>
-      <Title>{title}</Title>
-      <ProjectList>
-        {items?.map((item, index) => (
-          <li key={index}>
-            <PanelListButton onClick={() => onItemClick(item)}>
-              {item.icon}
-              {item.label}
-            </PanelListButton>
-            {item.subItems && (
-              <DeviceList>
-                {item.subItems.map((subItem, idx) => (
-                  <li key={idx}>
-                    <DeviceButton isActive={subItem.isActive}>
-                      <span>{subItem.label}</span>
-                      <DeviceLabel>{subItem.device}</DeviceLabel>
-                    </DeviceButton>
-                  </li>
-                ))}
-              </DeviceList>
-            )}
-          </li>
-        ))}
-      </ProjectList>
+      <TitleWrapper>
+        <Title>{title}</Title>
+        {isToggle && (
+          <ToggleButton onClick={() => setIsOpen((prev) => !prev)}>
+            {isOpen ? <HiChevronUp /> : <HiChevronDown />}
+          </ToggleButton>
+        )}
+      </TitleWrapper>
+
+      <ProjectListWrapper $isOpen={isOpen}>
+        <ProjectList>
+          {items?.map((item, index) => (
+            <li key={index}>
+              <PanelListButton
+                type="button"
+                onClick={() => onItemClick(item)}
+              >
+                {item.icon}
+                {item.label}
+              </PanelListButton>
+            </li>
+          ))}
+        </ProjectList>
+      </ProjectListWrapper>
     </div>
   );
 };
 
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ToggleButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+
+  svg {
+    font-size: 16px;
+  }
+`;
+
 const Title = styled.h2`
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 2px;
   font-weight: 400;
+`;
+
+const ProjectListWrapper = styled.div`
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  max-height: ${({ $isOpen }) => ($isOpen ? "1000px" : "0")};
 `;
 
 const ProjectList = styled.ul`
@@ -56,37 +84,6 @@ const PanelListButton = styled.button`
   svg {
     font-size: 18px;
   }
-`;
-
-const DeviceList = styled.ul`
-  position: relatvie;
-  padding: 0 14px;
-  border-left: 2px solid #d9d9d9;
-  margin-top: 10px;
-`;
-
-const DeviceButton = styled.button`
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 12px;
-  font-size: 14px;
-  border-radius: 6px;
-  background-color: ${({ isActive }) => (isActive ? "#f6f6f6" : "#ffffff")};
-`;
-
-const DeviceLabel = styled.li`
-  height: 24px;
-  line-height: 24px;
-  background-color: #b6b6b6;
-  color: #fff;
-  border-radius: 4px;
-  font-size: 10px;
-  padding: 0 8px;
-  letter-spacing: 1px;
 `;
 
 export default PanelList;
