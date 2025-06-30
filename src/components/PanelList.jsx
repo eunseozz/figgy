@@ -2,7 +2,15 @@ import { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
 
-const PanelList = ({ title, items, isToggle = false, onItemClick }) => {
+const PanelList = ({
+  title,
+  items,
+  onItemClick,
+  onDragStart,
+  onDrop,
+  onDragOver,
+  isToggle = false,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -17,13 +25,18 @@ const PanelList = ({ title, items, isToggle = false, onItemClick }) => {
       </TitleWrapper>
 
       <ProjectListWrapper $isOpen={isOpen}>
-        <ProjectList>
-          {items?.map((item, index) => (
+        <ProjectList
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+        >
+          {items.map((item, index) => (
             <li key={index}>
               <PanelListButton
                 type="button"
-                isActive={item.isActive}
+                draggable
+                $isActive={item.isActive}
                 onClick={() => onItemClick(item)}
+                onDragStart={(e) => onDragStart(e, item)}
               >
                 {item.icon}
                 {item.label}
@@ -79,7 +92,8 @@ const PanelListButton = styled.button`
   height: 40px;
   gap: 14px;
   align-items: center;
-  background-color: ${({ isActive }) => (isActive ? "#f0f0f0" : "transparent")};
+  background-color: ${({ $isActive }) =>
+    $isActive ? "#f0f0f0" : "transparent"};
   font-size: 14px;
   border-radius: 6px;
   padding: 0 12px;

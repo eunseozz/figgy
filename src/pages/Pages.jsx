@@ -12,6 +12,7 @@ const Pages = () => {
   const pages = useFigmaImagePages(fileKey);
   const [isShowOverlay, setIsShowOverlay] = useState(false);
   const [selectedPages, setSelectedPages] = useState({});
+  const [draggedItem, setDraggedItem] = useState(null);
 
   const { projects, updateProjectPagesByFileKey } = useProjectStore();
   const project = projects.find((p) => p.fileKey === fileKey);
@@ -59,6 +60,33 @@ const Pages = () => {
     return selectedPages[matchedMinWidth]?.imageUrl;
   };
 
+  const handleDragStart = (_, item) => {
+    setDraggedItem(item);
+  };
+
+  const handleDrop = (e, targetMinWidth) => {
+    e.preventDefault();
+
+    if (!draggedItem) return;
+
+    const updated = project.projectPages
+      .map((group) => {
+        const withoutItem = group.items.filter((i) => i.id !== draggedItem.id);
+
+        return { ...group, items: withoutItem };
+      })
+      .map((group) => {
+        if (group.minWidth === targetMinWidth) {
+          return { ...group, items: [...group.items, draggedItem] };
+        }
+
+        return group;
+      });
+
+    updateProjectPagesByFileKey(fileKey, updated);
+    setDraggedItem(null);
+  };
+
   if (!project) return null;
 
   return (
@@ -84,6 +112,9 @@ const Pages = () => {
               items={decoratedItems}
               onItemClick={handleItemClick}
               isToggle={true}
+              onDragStart={handleDragStart}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => handleDrop(e, group.minWidth)}
             />
           );
         })}
