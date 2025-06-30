@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const GlobalStyle = styled.div`
   font-family: sans-serif;
-  color: #000;
+  color: #5c5e64;
   box-sizing: border-box;
 
   *,
@@ -13,7 +13,6 @@ const GlobalStyle = styled.div`
     padding: 0;
     border: 0;
     font-weight: normal;
-    color: #5c5e64;
   }
 
   ul,
