@@ -1,36 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import Overlay from "@/components/Overlay";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
-import useFigmaFrames from "@/hooks/useFigmaFrames";
+import useFigmaImagePages from "@/hooks/useFigmaImagePages";
+import useProjectStore from "@/stores/useProjectStore";
 
 const Pages = () => {
-  const pages = useFigmaFrames();
+  const { fileKey } = useParams();
+  const pages = useFigmaImagePages(fileKey);
   const [isShowOverlay, setIsShowOverlay] = useState(false);
   const [selectedPages, setSelectedPages] = useState({});
 
-  const pageGroups = [
-    {
-      title: "PC",
-      minWidth: 1024,
-      items: pages,
-    },
-    {
-      title: "TABLET",
-      minWidth: 768,
-      items: [],
-    },
-    {
-      title: "MOBILE",
-      minWidth: 0,
-      items: [],
-    },
-  ];
+  const { projects, updateProjectPagesByFileKey } = useProjectStore();
+  const project = projects.find((p) => p.fileKey === fileKey);
+
+  const isInitTarget = project && project.projectPages.length === 0;
+
+  useEffect(() => {
+    if (isInitTarget && pages.length > 0) {
+      const initialGroups = [
+        { title: "PC", minWidth: 1024, items: pages },
+        { title: "TABLET", minWidth: 768, items: [] },
+        { title: "MOBILE", minWidth: 0, items: [] },
+      ];
+
+      updateProjectPagesByFileKey(fileKey, initialGroups);
+    }
+  }, [isInitTarget, pages]);
 
   const handleItemClick = (clickedItem) => {
-    const group = pageGroups.find((group) =>
-      group.items.some((groupItem) => groupItem.id === clickedItem.id),
+    const group = project.projectPages.find((group) =>
+      group.items.some((item) => item.id === clickedItem.id),
     );
 
     if (!group) return;
@@ -57,6 +59,8 @@ const Pages = () => {
     return selectedPages[matchedMinWidth]?.imageUrl;
   };
 
+  if (!project) return null;
+
   return (
     <>
       <Panel
@@ -66,7 +70,7 @@ const Pages = () => {
           onClick: () => console.log("폴더 추가"),
         }}
       >
-        {pageGroups.map((group, index) => {
+        {project.projectPages.map((group) => {
           const selectedId = selectedPages[group.minWidth]?.id;
           const decoratedItems = group.items.map((item) => ({
             ...item,
@@ -75,7 +79,7 @@ const Pages = () => {
 
           return (
             <PanelList
-              key={index}
+              key={group.title}
               title={group.title}
               items={decoratedItems}
               onItemClick={handleItemClick}
