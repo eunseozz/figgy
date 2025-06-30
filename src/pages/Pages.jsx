@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import EmptyDropHint from "@/components/EmptyDropHint";
 import Overlay from "@/components/Overlay";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
@@ -115,6 +116,9 @@ const Pages = () => {
               onDragStart={handleDragStart}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, group.minWidth)}
+              emptyHint={
+                <EmptyDropHint text="프레임을 끌어다 놓으면 여기에 추가돼요" />
+              }
             />
           );
         })}

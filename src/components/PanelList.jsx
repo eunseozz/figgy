@@ -9,6 +9,7 @@ const PanelList = ({
   onDragStart,
   onDrop,
   onDragOver,
+  emptyHint,
   isToggle = false,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -29,20 +30,22 @@ const PanelList = ({
           onDrop={onDrop}
           onDragOver={onDragOver}
         >
-          {items.map((item, index) => (
-            <li key={index}>
-              <PanelListButton
-                type="button"
-                draggable
-                $isActive={item.isActive}
-                onClick={() => onItemClick(item)}
-                onDragStart={(e) => onDragStart(e, item)}
-              >
-                {item.icon}
-                {item.label}
-              </PanelListButton>
-            </li>
-          ))}
+          {items.length === 0
+            ? emptyHint
+            : items.map((item, index) => (
+                <li key={index}>
+                  <PanelListButton
+                    type="button"
+                    draggable
+                    $isActive={item.isActive}
+                    onClick={() => onItemClick(item)}
+                    onDragStart={(e) => onDragStart(e, item)}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </PanelListButton>
+                </li>
+              ))}
         </ProjectList>
       </ProjectListWrapper>
     </div>
