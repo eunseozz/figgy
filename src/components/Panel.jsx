@@ -56,7 +56,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 80px;
+  height: 70px;
   background-color: #fafafa;
   display: flex;
   align-items: center;
@@ -65,8 +65,8 @@ const Header = styled.header`
 `;
 
 const Logo = styled.h1`
-  width: 90px;
-  height: 34px;
+  width: 80px;
+  height: 30px;
   background: url(${logoImage}) no-repeat;
   background-size: 100%;
   text-indent: -9999px;
