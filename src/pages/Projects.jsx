@@ -1,6 +1,7 @@
 import { FaRegFolder } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+import EmptyDropHint from "@/components/EmptyDropHint";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
 import useProjectStore from "@/stores/useProjectStore";
@@ -45,6 +46,12 @@ const Projects = () => {
         onItemClick={(item) => {
           navigate(`/pages/${item.fileKey}`);
         }}
+        emptyHint={
+          <EmptyDropHint
+            text="새 프로젝트를 추가해보세요"
+            onClick={handleAddProject}
+          />
+        }
       />
     </Panel>
   );
