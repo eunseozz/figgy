@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 const useUserStore = create(
   persist(
     (set) => ({
-      accessToken: "figd_QNKnCZH8IkzOgT4Dy0OxsHRT_4jswn2m5Y3-ePcf",
+      accessToken: "",
       setAccessToken: (token) => set({ accessToken: token }),
     }),
     {
