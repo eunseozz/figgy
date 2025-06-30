@@ -14,6 +14,7 @@ const Pages = () => {
   const [isShowOverlay, setIsShowOverlay] = useState(false);
   const [selectedPages, setSelectedPages] = useState({});
   const [draggedItem, setDraggedItem] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const { projects, updateProjectPagesByFileKey } = useProjectStore();
   const project = projects.find((p) => p.fileKey === fileKey);
@@ -32,6 +33,16 @@ const Pages = () => {
     }
   }, [isInitTarget, pages]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleItemClick = (clickedItem) => {
     const group = project.projectPages.find((group) =>
       group.items.some((item) => item.id === clickedItem.id),
@@ -48,14 +59,12 @@ const Pages = () => {
   };
 
   const getOverlayImageUrl = () => {
-    const width = window.innerWidth;
-
     const sortedMinWidths = Object.keys(selectedPages)
       .map(Number)
       .sort((a, b) => b - a);
 
     const matchedMinWidth = sortedMinWidths.find(
-      (minWidth) => width >= minWidth,
+      (minWidth) => windowWidth >= minWidth,
     );
 
     return selectedPages[matchedMinWidth]?.imageUrl;
