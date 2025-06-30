@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import useUserStore from "@/stores/useUserStore";
 
 export const getFrameNodeIds = async (fileKey) => {
@@ -54,6 +56,7 @@ export const getPngUrlsFromFrames = async (fileKey, frames) => {
 
   const result = frames
     .map((frame) => ({
+      id: uuidv4(),
       label: frame.name,
       imageUrl: data.images[frame.id] || null,
     }))
