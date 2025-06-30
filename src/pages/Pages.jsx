@@ -1,50 +1,47 @@
+import { useState } from "react";
 import { AiOutlineSetting } from "react-icons/ai";
-import { FiFileText } from "react-icons/fi";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import Overlay from "@/components/Overlay";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
-
-const data = [
-  {
-    icon: <FiFileText />,
-    label: "Page 1",
-    subItems: [
-      { label: "file1.png", device: "PC", isActive: true },
-      { label: "file2.png", device: "TABLET" },
-      { label: "file3.png", device: "MOBILE" },
-    ],
-  },
-  {
-    icon: <FiFileText />,
-    label: "Page 2",
-  },
-];
+import useFigmaFrames from "@/hooks/useFigmaFrames";
 
 const Pages = () => {
   const navigate = useNavigate();
+  const pages = useFigmaFrames();
+
+  const [isShowOverlay, setIsShowOverlay] = useState(false);
+  const [overlayImageUrl, setOverlayImageUrl] = useState("");
 
   return (
-    <Panel>
-      <ToolBar>
-        <IconButton
-          onClick={() => {
-            navigate("/");
+    <>
+      <Panel>
+        <ToolBar>
+          <IconButton
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            <IoMdArrowBack />
+          </IconButton>
+          <IconButton>
+            <AiOutlineSetting />
+          </IconButton>
+        </ToolBar>
+        <PanelList
+          title="PAGES"
+          items={pages}
+          onItemClick={(item) => {
+            setIsShowOverlay(true);
+            setOverlayImageUrl(item.imageUrl);
           }}
-        >
-          <IoMdArrowBack />
-        </IconButton>
-        <IconButton>
-          <AiOutlineSetting />
-        </IconButton>
-      </ToolBar>
-      <PanelList
-        title="PAGES"
-        items={data}
-      />
-    </Panel>
+        />
+      </Panel>
+      {isShowOverlay && <Overlay imageUrl={overlayImageUrl} />}
+    </>
   );
 };
 

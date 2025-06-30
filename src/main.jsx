@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 
+import GlobalPortal from "@/components/GlobalPortal";
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import routers from "@/routes/routers";
 
@@ -17,7 +18,9 @@ const mountApp = () => {
   createRoot(root).render(
     <StrictMode>
       <GlobalStyle>
-        <RouterProvider router={routers} />
+        <GlobalPortal>
+          <RouterProvider router={routers} />
+        </GlobalPortal>
       </GlobalStyle>
     </StrictMode>,
   );
