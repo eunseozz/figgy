@@ -5,7 +5,7 @@ import Projects from "@/pages/Projects";
 
 const routers = createMemoryRouter([
   { path: "/", element: <Projects /> },
-  { path: "/pages", element: <Pages /> },
+  { path: "/pages/:fileKey", element: <Pages /> },
   { path: "*", element: <Projects /> },
 ]);
 

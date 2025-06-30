@@ -5,9 +5,9 @@ const PanelList = ({ title, items, onItemClick }) => {
     <div>
       <Title>{title}</Title>
       <ProjectList>
-        {items.map((item, index) => (
+        {items?.map((item, index) => (
           <li key={index}>
-            <PanelListButton onClick={onItemClick}>
+            <PanelListButton onClick={() => onItemClick(item)}>
               {item.icon}
               {item.label}
             </PanelListButton>
