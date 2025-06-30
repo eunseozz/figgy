@@ -8,12 +8,7 @@ import useFigmaFrames from "@/hooks/useFigmaFrames";
 const Pages = () => {
   const pages = useFigmaFrames();
   const [isShowOverlay, setIsShowOverlay] = useState(false);
-  const [overlayImageUrl, setOverlayImageUrl] = useState("");
-
-  const handleItemClick = (item) => {
-    setIsShowOverlay(true);
-    setOverlayImageUrl(item.imageUrl);
-  };
+  const [selectedPages, setSelectedPages] = useState({});
 
   const pageGroups = [
     {
@@ -24,14 +19,43 @@ const Pages = () => {
     {
       title: "TABLET",
       minWidth: 768,
-      items: pages,
+      items: [],
     },
     {
       title: "MOBILE",
       minWidth: 0,
-      items: pages,
+      items: [],
     },
   ];
+
+  const handleItemClick = (clickedItem) => {
+    const group = pageGroups.find((group) =>
+      group.items.some((groupItem) => groupItem.id === clickedItem.id),
+    );
+
+    if (!group) return;
+
+    setSelectedPages((prev) => ({
+      ...prev,
+      [group.minWidth]: clickedItem,
+    }));
+
+    setIsShowOverlay(true);
+  };
+
+  const getOverlayImageUrl = () => {
+    const width = window.innerWidth;
+
+    const sortedMinWidths = Object.keys(selectedPages)
+      .map(Number)
+      .sort((a, b) => b - a);
+
+    const matchedMinWidth = sortedMinWidths.find(
+      (minWidth) => width >= minWidth,
+    );
+
+    return selectedPages[matchedMinWidth]?.imageUrl;
+  };
 
   return (
     <>
@@ -42,18 +66,26 @@ const Pages = () => {
           onClick: () => console.log("폴더 추가"),
         }}
       >
-        {pageGroups.map((group, index) => (
-          <PanelList
-            key={index}
-            title={group.title}
-            items={group.items}
-            onItemClick={handleItemClick}
-            isToggle={true}
-          />
-        ))}
+        {pageGroups.map((group, index) => {
+          const selectedId = selectedPages[group.minWidth]?.id;
+          const decoratedItems = group.items.map((item) => ({
+            ...item,
+            isActive: item.id === selectedId,
+          }));
+
+          return (
+            <PanelList
+              key={index}
+              title={group.title}
+              items={decoratedItems}
+              onItemClick={handleItemClick}
+              isToggle={true}
+            />
+          );
+        })}
       </Panel>
 
-      {isShowOverlay && <Overlay imageUrl={overlayImageUrl} />}
+      {isShowOverlay && <Overlay imageUrl={getOverlayImageUrl()} />}
     </>
   );
 };

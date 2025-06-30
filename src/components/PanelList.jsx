@@ -22,6 +22,7 @@ const PanelList = ({ title, items, isToggle = false, onItemClick }) => {
             <li key={index}>
               <PanelListButton
                 type="button"
+                isActive={item.isActive}
                 onClick={() => onItemClick(item)}
               >
                 {item.icon}
@@ -78,8 +79,11 @@ const PanelListButton = styled.button`
   height: 40px;
   gap: 14px;
   align-items: center;
-  background-color: transparent;
+  background-color: ${({ isActive }) => (isActive ? "#f0f0f0" : "transparent")};
   font-size: 14px;
+  border-radius: 6px;
+  padding: 0 12px;
+  transition: background-color 0.2s ease;
 
   svg {
     font-size: 18px;
