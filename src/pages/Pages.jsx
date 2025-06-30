@@ -1,96 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AiOutlineSetting } from "react-icons/ai";
-import { FiFileText } from "react-icons/fi";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
-
-const accessToken = "figd_QNKnCZH8IkzOgT4Dy0OxsHRT_4jswn2m5Y3-ePcf";
+import useFigmaFrames from "@/hooks/useFigmaFrames";
 
 const Pages = () => {
   const navigate = useNavigate();
-  const { fileKey } = useParams();
 
-  const [pages, setPages] = useState([]);
+  const pages = useFigmaFrames();
   const [overlay, setOverlay] = useState("");
-
-  useEffect(() => {
-    const fetchPngImages = async () => {
-      const frameIds = await getFrameNodeIds(fileKey);
-      const result = await getPngUrlsFromFrames(frameIds);
-
-      setPages(
-        result.map((item) => ({
-          ...item,
-          icon: <FiFileText />,
-        })),
-      );
-    };
-
-    fetchPngImages();
-  }, []);
-
-  const getFrameNodeIds = async (fileKey) => {
-    const res = await fetch(`https://api.figma.com/v1/files/${fileKey}`, {
-      headers: {
-        "X-FIGMA-TOKEN": accessToken,
-      },
-    });
-
-    const data = await res.json();
-
-    if (!data.document || !data.document.children) {
-      return [];
-    }
-
-    const frames = [];
-
-    data.document.children.forEach((page) => {
-      if (page.children) {
-        page.children.forEach((node) => {
-          if (node.type === "FRAME") {
-            frames.push({
-              id: node.id,
-              name: node.name,
-            });
-          }
-        });
-      }
-    });
-
-    return frames;
-  };
-
-  const getPngUrlsFromFrames = async (frames) => {
-    const ids = frames.map((frame) => frame.id);
-    const idsParam = ids.map(encodeURIComponent).join(",");
-    const url = `https://api.figma.com/v1/images/${fileKey}?ids=${idsParam}&format=png`;
-
-    const res = await fetch(url, {
-      headers: {
-        "X-FIGMA-TOKEN": accessToken,
-      },
-    });
-
-    const data = await res.json();
-
-    if (!data.images) {
-      return [];
-    }
-
-    const result = frames
-      .map((frame) => ({
-        label: frame.name,
-        imageUrl: data.images[frame.id] || null,
-      }))
-      .filter((item) => item.imageUrl !== null);
-
-    return result;
-  };
 
   return (
     <>
