@@ -6,35 +6,33 @@ const useProjectStore = create((set, get) => ({
 
   addProject: (projectName, fileKey) => {
     const { projects } = get();
-    const exists = projects.some((project) => project.fileKey === fileKey);
+    const isDuplicate = projects.some((project) => project.fileKey === fileKey);
 
-    if (exists) return;
+    if (isDuplicate) return;
 
     const newProject = {
       projectId: uuidv4(),
       projectName,
       fileKey,
-      projectPages: [],
+      pages: [],
     };
 
     set({ projects: [...projects, newProject] });
   },
 
-  getProjectByFileKey: (fileKey) => {
+  getProject: (fileKey) => {
     const { projects } = get();
 
-    return projects.find((p) => p.fileKey === fileKey) || null;
+    return projects.find((project) => project.fileKey === fileKey) || null;
   },
 
-  updateProjectPagesByFileKey: (fileKey, newProjectPages) => {
+  updateProjects: (fileKey, newPages) => {
     const { projects } = get();
-    const updated = projects.map((project) =>
-      project.fileKey === fileKey
-        ? { ...project, projectPages: newProjectPages }
-        : project,
+    const updateProjects = projects.map((project) =>
+      project.fileKey === fileKey ? { ...project, pages: newPages } : project,
     );
 
-    set({ projects: updated });
+    set({ projects: updateProjects });
   },
 }));
 
