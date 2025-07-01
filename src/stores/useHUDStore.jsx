@@ -1,4 +1,3 @@
-// stores/useHUDStore.js
 import { create } from "zustand";
 
 import { ALIGNMENT, SCALE_MODE, VIEW_MODE } from "@/constants/hudOptions";
