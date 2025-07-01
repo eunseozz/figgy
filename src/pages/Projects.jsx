@@ -20,7 +20,9 @@ const Projects = () => {
     const figmaUrl = FIGMA_URL;
     const fileKey = getFileKeyFromUrl(figmaUrl);
 
-    const isDuplicate = !!useProjectStore.getState().getProject(fileKey);
+    const isDuplicate = !!projects.some(
+      (project) => project.fileKey === fileKey,
+    );
 
     if (isDuplicate) return;
 

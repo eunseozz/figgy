@@ -8,12 +8,12 @@ import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useFigmaImagePages from "@/hooks/useFigmaImagePages";
 import useInitPageGroups from "@/hooks/useInitPageGroups";
 import useOverlayManager from "@/hooks/useOverlayManager";
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const Pages = () => {
   const { fileKey } = useParams();
 
-  const project = useProjectStore.getState().getProject(fileKey);
+  const project = useProjectStore(selectedProject(fileKey));
   const pages = useFigmaImagePages(fileKey);
 
   useInitPageGroups(pages);

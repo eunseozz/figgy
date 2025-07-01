@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import useWindowWidth from "@/hooks/useWindowWidth";
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const useOverlayPages = () => {
   const { fileKey } = useParams();
@@ -10,7 +10,7 @@ const useOverlayPages = () => {
   const [isShowOverlay, setIsShowOverlay] = useState(false);
   const [selectedPages, setSelectedPages] = useState({});
 
-  const project = useProjectStore.getState().getProject(fileKey);
+  const project = useProjectStore(selectedProject(fileKey));
 
   const windowWidth = useWindowWidth();
 

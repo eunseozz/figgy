@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const useInitPageGroups = (pages) => {
   const { fileKey } = useParams();
 
-  const project = useProjectStore.getState().getProject(fileKey);
+  const project = useProjectStore(selectedProject(fileKey));
   const updateProjects = useProjectStore((state) => state.updateProjects);
 
   const isInitTarget = project && project.pages.length === 0;

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const useDragAndDropPages = () => {
   const { fileKey } = useParams();
   const [draggedItem, setDraggedItem] = useState(null);
 
   const updateProjects = useProjectStore((state) => state.updateProjects);
-  const project = useProjectStore.getState().getProject(fileKey);
+  const project = useProjectStore(selectedProject(fileKey));
 
   const handleDragStart = (_, item) => {
     setDraggedItem(item);
