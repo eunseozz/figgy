@@ -4,18 +4,18 @@ import styled from "styled-components";
 
 import OpacityControl from "@/components/OpacityControl";
 import ToggleOptionGroup from "@/components/ToggleOptionGroup";
-import {
-  ALIGNMENT,
-  SCALE_MODE,
-  toggleGroups,
-  VIEW_MODE,
-} from "@/constants/hudOptions";
+import { toggleGroups } from "@/constants/hudOptions";
+import useHUDStore from "@/stores/useHUDStore";
 
 const OverlayHUD = () => {
-  const [alignment, setAlignment] = useState(ALIGNMENT.ORIGINAL);
-  const [scaleMode, setScaleMode] = useState(SCALE_MODE.ACTUAL);
-  const [viewMode, setViewMode] = useState(VIEW_MODE.DESIGN);
-  const [opacity, setOpacity] = useState(0.3);
+  const alignment = useHUDStore((state) => state.alignment);
+  const scaleMode = useHUDStore((state) => state.scaleMode);
+  const viewMode = useHUDStore((state) => state.viewMode);
+  const opacity = useHUDStore((state) => state.opacity);
+
+  const { setAlignment, setScaleMode, setViewMode, setOpacity } =
+    useHUDStore.getState();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const stateMap = { alignment, scaleMode, viewMode };
