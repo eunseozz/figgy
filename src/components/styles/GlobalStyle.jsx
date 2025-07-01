@@ -39,7 +39,6 @@ const GlobalStyle = styled.div`
     font: inherit;
     border: none;
     outline: none;
-    background: none;
   }
 `;
 
