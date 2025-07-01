@@ -20,12 +20,6 @@ const useProjectStore = create((set, get) => ({
     set({ projects: [...projects, newProject] });
   },
 
-  getProject: (fileKey) => {
-    const { projects } = get();
-
-    return projects.find((project) => project.fileKey === fileKey) || null;
-  },
-
   updateProjects: (fileKey, newPages) => {
     const { projects } = get();
     const updateProjects = projects.map((project) =>
@@ -35,5 +29,8 @@ const useProjectStore = create((set, get) => ({
     set({ projects: updateProjects });
   },
 }));
+
+export const selectedProject = (fileKey) => (state) =>
+  state.projects.find((project) => project.fileKey === fileKey) || null;
 
 export default useProjectStore;

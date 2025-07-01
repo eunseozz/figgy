@@ -1,45 +1,64 @@
-import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = styled.div`
-  font-family: sans-serif;
-  color: #5c5e64;
-  box-sizing: border-box;
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
-  *,
-  *::before,
-  *::after {
+  :where(#figgy-dashboard) {
+    font-family: sans-serif;
+    font-weight: normal;
+    color: #5c5e64;
+    box-sizing: border-box;
+  }
+
+  :where(#figgy-dashboard *),
+  :where(#figgy-dashboard *::before),
+  :where(#figgy-dashboard *::after) {
     box-sizing: inherit;
     margin: 0;
     padding: 0;
     border: 0;
-    font-weight: normal;
   }
 
-  ul,
-  ol {
+  :where(#figgy-dashboard ul),
+  :where(#figgy-dashboard ol) {
     list-style: none;
   }
 
-  a {
+  :where(#figgy-dashboard a) {
     text-decoration: none;
     color: inherit;
   }
 
-  img {
+  :where(#figgy-dashboard img) {
     display: block;
     max-width: 100%;
   }
 
-  button {
+  :where(#figgy-dashboard button) {
     cursor: pointer;
+    background: none;
+    border: none;
   }
 
-  input,
-  textarea {
+  :where(#figgy-dashboard input),
+  :where(#figgy-dashboard textarea) {
     font: inherit;
     border: none;
     outline: none;
     background: none;
+  }
+
+  :where(#figgy-dashboard h1),
+  :where(#figgy-dashboard h2),
+  :where(#figgy-dashboard h3),
+  :where(#figgy-dashboard h4),
+  :where(#figgy-dashboard h5),
+  :where(#figgy-dashboard h6) {
+    font-weight: normal;
+    font-size: inherit;
   }
 `;
 

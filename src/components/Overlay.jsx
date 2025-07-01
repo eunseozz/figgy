@@ -1,41 +1,61 @@
-import { createPortal } from "react-dom";
+import { useRef } from "react";
 import styled from "styled-components";
 
-import useGlobalPortal from "@/hooks/useGlobalPortal";
+import { ALIGNMENT, SCALE_MODE } from "@/constants/hudOptions";
+import useHUDStore from "@/stores/useHUDStore";
 
 const Overlay = ({ imageUrl }) => {
-  const portalContainer = useGlobalPortal();
+  const alignment = useHUDStore((state) => state.alignment);
+  const scaleMode = useHUDStore((state) => state.scaleMode);
+  const opacity = useHUDStore((state) => state.opacity);
 
-  if (!portalContainer || !imageUrl) return null;
+  const imgRef = useRef(null);
 
-  return createPortal(
-    <OverlayWrapper>
+  if (!imageUrl) return null;
+
+  const isFitMode = scaleMode === SCALE_MODE.FIT;
+  const isCenter = alignment === ALIGNMENT.CENTER;
+
+  return (
+    <OverlayWrapper
+      $isCenter={isCenter}
+      $isFitMode={isFitMode}
+    >
       <OverlayImage
+        ref={imgRef}
         src={imageUrl}
         alt="Overlay"
+        $isCenter={isCenter}
+        $isFitMode={isFitMode}
+        $opacity={opacity}
       />
-    </OverlayWrapper>,
-    portalContainer,
+    </OverlayWrapper>
   );
 };
 
 const OverlayWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  z-index: 9999;
+  height: auto;
   pointer-events: none;
-  display: flex;
-  justify-content: center;
+
+  ${({ $isCenter, $isFitMode }) =>
+    $isCenter &&
+    !$isFitMode &&
+    `
+    display: flex;
+    justify-content: center;
+  `}
 `;
 
 const OverlayImage = styled.img`
   display: block;
-  width: auto;
-  max-width: none;
+  pointer-events: none;
+  user-select: none;
+
+  width: ${({ $isFitMode }) => ($isFitMode ? "100%" : "auto")};
   height: auto;
-  opacity: 0.3;
+  max-width: none;
+  opacity: ${({ $opacity }) => $opacity};
 `;
 
 export default Overlay;
