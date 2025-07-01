@@ -4,48 +4,12 @@ import styled from "styled-components";
 
 import OpacityControl from "@/components/OpacityControl";
 import ToggleOptionGroup from "@/components/ToggleOptionGroup";
-
-const ALIGNMENT = {
-  ORIGINAL: "original",
-  CENTER: "center",
-};
-
-const SCALE_MODE = {
-  ACTUAL: "actual",
-  FIT: "fit",
-};
-
-const VIEW_MODE = {
-  DESIGN: "design",
-  DIFF: "diff",
-};
-
-const toggleGroups = [
-  {
-    label: "정렬 방식",
-    stateKey: "alignment",
-    options: [
-      { label: "원본 위치", value: ALIGNMENT.ORIGINAL },
-      { label: "가운데 정렬", value: ALIGNMENT.CENTER },
-    ],
-  },
-  {
-    label: "보기 모드",
-    stateKey: "scaleMode",
-    options: [
-      { label: "실제 크기", value: SCALE_MODE.ACTUAL },
-      { label: "화면 맞춤", value: SCALE_MODE.FIT },
-    ],
-  },
-  {
-    label: "시각화",
-    stateKey: "viewMode",
-    options: [
-      { label: "디자인만 보기", value: VIEW_MODE.DESIGN },
-      { label: "오차 보기", value: VIEW_MODE.DIFF },
-    ],
-  },
-];
+import {
+  ALIGNMENT,
+  SCALE_MODE,
+  toggleGroups,
+  VIEW_MODE,
+} from "@/constants/hudOptions";
 
 const OverlayHUD = () => {
   const [alignment, setAlignment] = useState(ALIGNMENT.ORIGINAL);
