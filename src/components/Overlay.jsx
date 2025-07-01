@@ -1,21 +1,15 @@
-import { createPortal } from "react-dom";
 import styled from "styled-components";
 
-import useGlobalPortal from "@/hooks/useGlobalPortal";
-
 const Overlay = ({ imageUrl }) => {
-  const portalContainer = useGlobalPortal();
+  if (!imageUrl) return null;
 
-  if (!portalContainer || !imageUrl) return null;
-
-  return createPortal(
+  return (
     <OverlayWrapper>
       <OverlayImage
         src={imageUrl}
         alt="Overlay"
       />
-    </OverlayWrapper>,
-    portalContainer,
+    </OverlayWrapper>
   );
 };
 
