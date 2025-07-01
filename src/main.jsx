@@ -17,11 +17,10 @@ const mountApp = () => {
 
   createRoot(root).render(
     <StrictMode>
-      <GlobalStyle>
-        <GlobalPortal>
-          <RouterProvider router={routers} />
-        </GlobalPortal>
-      </GlobalStyle>
+      <GlobalStyle />
+      <GlobalPortal>
+        <RouterProvider router={routers} />
+      </GlobalPortal>
     </StrictMode>,
   );
 };
