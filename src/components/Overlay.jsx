@@ -7,6 +7,7 @@ import useHUDStore from "@/stores/useHUDStore";
 const Overlay = ({ imageUrl }) => {
   const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
+  const opacity = useHUDStore((state) => state.opacity);
 
   const imgRef = useRef(null);
 
@@ -26,6 +27,7 @@ const Overlay = ({ imageUrl }) => {
         alt="Overlay"
         $isCenter={isCenter}
         $isFitMode={isFitMode}
+        $opacity={opacity}
       />
     </OverlayWrapper>
   );
@@ -53,7 +55,7 @@ const OverlayImage = styled.img`
   width: ${({ $isFitMode }) => ($isFitMode ? "100%" : "auto")};
   height: auto;
   max-width: none;
-  opacity: 0.3;
+  opacity: ${({ $opacity }) => $opacity};
 `;
 
 export default Overlay;
