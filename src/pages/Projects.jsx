@@ -8,7 +8,7 @@ import useProjectStore from "@/stores/useProjectStore";
 import { getFileKeyFromUrl } from "@/utils/util";
 
 const FIGMA_URL =
-  "https://www.figma.com/design/t4NRSKbOwOB3SbCbDBjESJ/%EB%82%B4%EC%A7%80%EA%B0%91%EC%86%8D_%ED%99%98%EB%B6%88%EC%A0%91%EC%88%98?node-id=0-1&p=f&t=G2CmbqMeBaTAALFS-0";
+  "https://www.figma.com/design/mChQkVnLzLM1FbphFgDzbA/%EA%B5%90%ED%99%98%EC%86%8C-%EC%82%AC%EC%9D%B4%ED%8A%B8?node-id=0-1&p=f&t=KDZmfu5T0O9IXMZm-0";
 
 const Projects = () => {
   const navigate = useNavigate();
