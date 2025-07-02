@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
@@ -5,6 +6,8 @@ import { RouterProvider } from "react-router-dom";
 import GlobalPortal from "@/components/GlobalPortal";
 import GlobalStyle from "@/components/styles/GlobalStyle";
 import routers from "@/routes/routers";
+
+const queryClient = new QueryClient();
 
 const mountApp = () => {
   let root = document.getElementById("figgy-dashboard");
@@ -17,10 +20,12 @@ const mountApp = () => {
 
   createRoot(root).render(
     <StrictMode>
-      <GlobalStyle />
-      <GlobalPortal>
-        <RouterProvider router={routers} />
-      </GlobalPortal>
+      <QueryClientProvider client={queryClient}>
+        <GlobalStyle />
+        <GlobalPortal>
+          <RouterProvider router={routers} />
+        </GlobalPortal>
+      </QueryClientProvider>
     </StrictMode>,
   );
 };

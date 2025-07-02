@@ -5,13 +5,15 @@ import Overlay from "@/components/Overlay";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
 import SelectFrameModal from "@/components/SelectFrameModal";
+import Spinner from "@/components/Spinner";
+import SuspenseWrapper from "@/components/SuspenseWrapper";
+import useSaveFigmaFrames from "@/hooks/queries/useSaveFigmaFrames";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useOverlayManager from "@/hooks/useOverlayManager";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const Pages = () => {
   const { fileKey } = useParams();
-
   const project = useProjectStore(selectedProject(fileKey));
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
@@ -19,6 +21,19 @@ const Pages = () => {
     useOverlayManager();
 
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { mutate } = useSaveFigmaFrames({
+    onSuccessAfterSave: () => {
+      setIsLoading(false);
+    },
+  });
+
+  const handleConfirmFrames = (frames) => {
+    setIsShowModal(false);
+    setIsLoading(true);
+    mutate(frames);
+  };
 
   if (!project) return null;
 
@@ -46,8 +61,8 @@ const Pages = () => {
               onItemClick={handleItemClick}
               isToggle={true}
               onDragStart={handleDragStart}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => handleDrop(e, group.minWidth)}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => handleDrop(event, group.minWidth)}
               emptyText="프레임을 끌어다 놓으면 여기에 추가돼요"
             />
           );
@@ -55,12 +70,15 @@ const Pages = () => {
       </Panel>
 
       {isShowModal && (
-        <SelectFrameModal
-          closeModal={() => setIsShowModal(false)}
-          onConfirm={() => setIsShowModal(false)}
-        />
+        <SuspenseWrapper>
+          <SelectFrameModal
+            closeModal={() => setIsShowModal(false)}
+            onConfirm={handleConfirmFrames}
+          />
+        </SuspenseWrapper>
       )}
 
+      {isLoading && <Spinner />}
       {isShowOverlay && <Overlay imageUrl={getOverlayImageUrl()} />}
     </>
   );

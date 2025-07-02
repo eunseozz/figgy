@@ -4,15 +4,17 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import GrayDashAddButton from "@/components/GrayDashAddButton";
+import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
 
 const logoImage = getAssetUrl("images/logos/full.png");
 
 const Panel = ({ children, isShowToolBar = false, addButton }) => {
   const navigate = useNavigate();
+  const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
 
   return (
-    <Container>
+    <Container $isOpenPanel={isOpenPanel}>
       <Header>
         <Logo>Figgy</Logo>
       </Header>
@@ -45,14 +47,15 @@ const Panel = ({ children, isShowToolBar = false, addButton }) => {
 const Container = styled.div`
   position: fixed;
   top: 0;
-  right: 0;
+  right: ${({ $isOpenPanel }) => ($isOpenPanel ? "0" : "-400px")};
   width: 400px;
   height: 100vh;
   background-color: #fff;
-  z-index: 999999;
+  z-index: 9999;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
+  transition: right 0.3s ease;
 `;
 
 const Header = styled.header`

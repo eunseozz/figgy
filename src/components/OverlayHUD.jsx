@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { FiSettings } from "react-icons/fi";
+import { IoMdSettings } from "react-icons/io";
 import styled from "styled-components";
 
 import OpacityControl from "@/components/OpacityControl";
 import ToggleOptionGroup from "@/components/ToggleOptionGroup";
 import { toggleGroups } from "@/constants/hudOptions";
 import useHUDStore from "@/stores/useHUDStore";
+import { getAssetUrl } from "@/utils/chrome";
 
 const OverlayHUD = () => {
   const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const viewMode = useHUDStore((state) => state.viewMode);
   const opacity = useHUDStore((state) => state.opacity);
+
+  const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
+  const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
 
   const { setAlignment, setScaleMode, setViewMode, setOpacity } =
     useHUDStore.getState();
@@ -25,31 +29,46 @@ const OverlayHUD = () => {
     viewMode: setViewMode,
   };
 
+  const logoImage = getAssetUrl("images/logos/size_48.png");
+
   return (
     <Container>
-      <IconWrapper onClick={() => setIsOpen((prev) => !prev)}>
-        <FiSettings />
-      </IconWrapper>
+      <HUDBox>
+        <IconColumn>
+          <IconWrapper
+            $isActive={isOpenPanel}
+            onClick={() => setIsOpenPanel(!isOpenPanel)}
+          >
+            <LogoImage src={logoImage} />
+          </IconWrapper>
+          <IconWrapper
+            $isActive={isOpen}
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
+            <IoMdSettings />
+          </IconWrapper>
+        </IconColumn>
 
-      {isOpen && (
-        <HUDContainer>
-          <HUDWrapper>
-            {toggleGroups.map(({ label, stateKey, options }) => (
-              <ToggleOptionGroup
-                key={stateKey}
-                label={label}
-                value={stateMap[stateKey]}
-                onChange={setStateMap[stateKey]}
-                options={options}
+        {isOpen && (
+          <HUDContainer>
+            <HUDWrapper>
+              {toggleGroups.map(({ label, stateKey, options }) => (
+                <ToggleOptionGroup
+                  key={stateKey}
+                  label={label}
+                  value={stateMap[stateKey]}
+                  onChange={setStateMap[stateKey]}
+                  options={options}
+                />
+              ))}
+              <OpacityControl
+                opacity={opacity}
+                setOpacity={setOpacity}
               />
-            ))}
-            <OpacityControl
-              opacity={opacity}
-              setOpacity={setOpacity}
-            />
-          </HUDWrapper>
-        </HUDContainer>
-      )}
+            </HUDWrapper>
+          </HUDContainer>
+        )}
+      </HUDBox>
     </Container>
   );
 };
@@ -61,10 +80,23 @@ const Container = styled.div`
   z-index: 10000;
 `;
 
+const HUDBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+`;
+
+const IconColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
 const IconWrapper = styled.div`
   width: 40px;
   height: 40px;
-  background-color: #ffffff;
+  background-color: ${({ $isActive }) => ($isActive ? "#ede8fe" : "#ffffff")};
   border-radius: 50%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   color: #6dbbbf;
@@ -74,12 +106,15 @@ const IconWrapper = styled.div`
   cursor: pointer;
 
   svg {
-    font-size: 20px;
+    font-size: 24px;
   }
 `;
 
+const LogoImage = styled.img`
+  width: 22px;
+`;
+
 const HUDContainer = styled.div`
-  margin-top: 12px;
   width: 230px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

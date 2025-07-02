@@ -27,15 +27,19 @@ const PanelList = ({
         )}
       </TitleWrapper>
 
-      <ProjectListWrapper $isOpen={isOpen}>
-        <ProjectList
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-        >
-          {items.length === 0 ? (
-            <GrayDashAddButton text={emptyText} />
-          ) : (
-            items.map((item, index) => (
+      <div
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+      >
+        {items.length === 0 ? (
+          <GrayDashAddButton text={emptyText} />
+        ) : (
+          <ProjectList
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            $isOpen={isOpen}
+          >
+            {items.map((item, index) => (
               <li key={index}>
                 <PanelListButton
                   type="button"
@@ -48,10 +52,10 @@ const PanelList = ({
                   {item.label}
                 </PanelListButton>
               </li>
-            ))
-          )}
-        </ProjectList>
-      </ProjectListWrapper>
+            ))}
+          </ProjectList>
+        )}
+      </div>
     </div>
   );
 };
@@ -79,17 +83,21 @@ const Title = styled.h2`
   font-weight: 400;
 `;
 
-const ProjectListWrapper = styled.div`
-  overflow: hidden;
-  transition: max-height 0.5s ease;
-  max-height: ${({ $isOpen }) => ($isOpen ? "1000px" : "0")};
-`;
-
 const ProjectList = styled.ul`
   margin-top: 16px;
+  overflow-y: auto;
+  transition: max-height 0.5s ease;
+  max-height: ${({ $isOpen }) => ($isOpen ? "300px" : "0")};
 
   li + li {
     margin-top: 8px;
+  }
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
