@@ -1,19 +1,21 @@
 import { FiPlusCircle } from "react-icons/fi";
 import styled from "styled-components";
 
-const EmptyDropHint = ({ text, onClick }) => {
+const GrayDashAddButton = ({ text, onClick }) => {
   return (
-    <HintButton
+    <Button
       onClick={onClick}
       $isClickable={!!onClick}
     >
       <FiPlusCircle />
       <span>{text}</span>
-    </HintButton>
+    </Button>
   );
 };
 
-const HintButton = styled.div`
+const Button = styled.button`
+  display: block;
+  width: 100%;
   height: 44px;
   border: 2px dashed #ddd;
   border-radius: 6px;
@@ -34,9 +36,10 @@ const HintButton = styled.div`
   svg {
     font-size: 14px;
   }
+
   span {
     transform: translateY(0.5px);
   }
 `;
 
-export default EmptyDropHint;
+export default GrayDashAddButton;

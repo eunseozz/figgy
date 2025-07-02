@@ -1,58 +1,18 @@
 import { v4 as uuidv4 } from "uuid";
 
-import useUserStore from "@/stores/useUserStore";
+import { fetcher } from "@/services/fetcher";
 
-export const getFrameNodeIds = async (fileKey) => {
-  const accessToken = useUserStore.getState().accessToken;
-
-  const res = await fetch(`https://api.figma.com/v1/files/${fileKey}`, {
-    headers: {
-      "X-FIGMA-TOKEN": accessToken,
-    },
-  });
-
-  const data = await res.json();
-
-  if (!data.document || !data.document.children) {
-    return [];
-  }
-
-  const frames = [];
-
-  data.document.children.forEach((page) => {
-    if (page.children) {
-      page.children.forEach((node) => {
-        if (node.type === "FRAME") {
-          frames.push({
-            id: node.id,
-            name: node.name,
-          });
-        }
-      });
-    }
-  });
-
-  return frames;
+export const getFigmaFile = async (fileKey) => {
+  return await fetcher(`https://api.figma.com/v1/files/${fileKey}`);
 };
 
-export const getPngUrlsFromFrames = async (fileKey, frames) => {
-  const accessToken = useUserStore.getState().accessToken;
+export const getFigmaImageUrls = async (fileKey, frames) => {
+  const idsParam = frames.map((f) => encodeURIComponent(f.id)).join(",");
 
-  const ids = frames.map((frame) => frame.id);
-  const idsParam = ids.map(encodeURIComponent).join(",");
-  const url = `https://api.figma.com/v1/images/${fileKey}?ids=${idsParam}&format=png`;
+  const url = `https://api.figma.com/v1/images/${fileKey}?ids=${idsParam}&format=svg&scale=1`;
+  const data = await fetcher(url);
 
-  const res = await fetch(url, {
-    headers: {
-      "X-FIGMA-TOKEN": accessToken,
-    },
-  });
-
-  const data = await res.json();
-
-  if (!data.images) {
-    return [];
-  }
+  if (!data.images) return [];
 
   const result = frames
     .map((frame) => ({

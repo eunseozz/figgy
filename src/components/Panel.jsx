@@ -1,13 +1,14 @@
-import { AiOutlineSetting } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
+import { TbFolderPlus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { getAssetUrl } from "@/utils/util";
+import GrayDashAddButton from "@/components/GrayDashAddButton";
+import { getAssetUrl } from "@/utils/chrome";
 
 const logoImage = getAssetUrl("images/logos/full.png");
 
-const Panel = ({ children, isShowToolBar = false, primaryButton }) => {
+const Panel = ({ children, isShowToolBar = false, addButton }) => {
   const navigate = useNavigate();
 
   return (
@@ -22,18 +23,17 @@ const Panel = ({ children, isShowToolBar = false, primaryButton }) => {
             <IconButton onClick={() => navigate("/")}>
               <IoMdArrowBack />
             </IconButton>
-            <IconButton>
-              <AiOutlineSetting />
+            <IconButton onClick={() => console.log("폴더 추가")}>
+              <TbFolderPlus />
             </IconButton>
           </ToolBar>
         )}
 
-        {primaryButton && (
-          <ButtonWrapper>
-            <GrayFullButton onClick={primaryButton.onClick}>
-              {primaryButton.label}
-            </GrayFullButton>
-          </ButtonWrapper>
+        {addButton && (
+          <GrayDashAddButton
+            text={addButton.text}
+            onClick={addButton.onClick}
+          />
         )}
 
         <Content>{children}</Content>
@@ -97,22 +97,6 @@ const IconButton = styled.button`
   svg {
     font-size: 24px;
   }
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const GrayFullButton = styled.button`
-  display: block;
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 6px;
-  background-color: #c3c3c3;
-  color: #fff;
-  font-size: 14px;
 `;
 
 const Content = styled.div`

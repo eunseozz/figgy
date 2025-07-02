@@ -4,7 +4,7 @@ import InputGroup from "@/components/InputGroup";
 import ModalLayout from "@/components/ModalLayout";
 import ModalOverlay from "@/components/ModalOverlay";
 import useProjectStore from "@/stores/useProjectStore";
-import { getFileKeyFromUrl } from "@/utils/util";
+import { getFileKey } from "@/utils/figma";
 
 const AddProjectModal = ({ closeModal }) => {
   const [projectName, setProjectName] = useState("");
@@ -31,7 +31,7 @@ const AddProjectModal = ({ closeModal }) => {
   ];
 
   const handleAddProject = () => {
-    const fileKey = getFileKeyFromUrl(figmaUrl);
+    const fileKey = getFileKey(figmaUrl);
     const isDuplicate = !!projects.some(
       (project) => project.fileKey === fileKey,
     );
