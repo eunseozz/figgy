@@ -8,8 +8,6 @@ const ModalButton = ({
 }) => {
   const isDualButton = !!onCancel;
 
-  console.log("isDualButton", isDualButton);
-
   return (
     <ButtonWrapper $isDualButton={isDualButton}>
       {isDualButton && (
