@@ -5,6 +5,7 @@ const ModalButton = ({
   onCancel,
   confirmText = "확인",
   cancelText = "취소",
+  isConfirmDisabled,
 }) => {
   const isDualButton = !!onCancel;
 
@@ -13,7 +14,12 @@ const ModalButton = ({
       {isDualButton && (
         <CancelButton onClick={onCancel}>{cancelText}</CancelButton>
       )}
-      <ConfirmButton onClick={onConfirm}>{confirmText}</ConfirmButton>
+      <ConfirmButton
+        onClick={onConfirm}
+        disabled={isConfirmDisabled}
+      >
+        {confirmText}
+      </ConfirmButton>
     </ButtonWrapper>
   );
 };
@@ -41,6 +47,11 @@ const ConfirmButton = styled(BaseButton)`
   background-color: #6dbbbf;
   color: white;
   border: none;
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `;
 
 const CancelButton = styled(BaseButton)`

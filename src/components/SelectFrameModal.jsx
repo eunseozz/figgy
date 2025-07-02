@@ -18,6 +18,7 @@ const SelectFrameModal = ({ closeModal, onConfirm }) => {
       <ModalLayout
         title="불러올 프레임을 선택해주세요"
         text="아래 그룹과 프레임에서 원하는 항목만 골라서 불러올 수 있어요."
+        isConfirmDisabled={getCheckedIds().length <= 0}
         onConfirm={() => {
           onConfirm(getCheckedIds());
         }}

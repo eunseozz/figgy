@@ -3,7 +3,15 @@ import styled from "styled-components";
 import ModalButton from "@/components/ModalButton";
 import ModalHeader from "@/components/ModalHeader";
 
-const ModalLayout = ({ icon, title, text, children, onConfirm, onCancel }) => {
+const ModalLayout = ({
+  icon,
+  title,
+  text,
+  children,
+  onConfirm,
+  onCancel,
+  isConfirmDisabled,
+}) => {
   return (
     <>
       <ModalHeader
@@ -15,6 +23,7 @@ const ModalLayout = ({ icon, title, text, children, onConfirm, onCancel }) => {
       <ModalButton
         onConfirm={onConfirm}
         onCancel={onCancel}
+        isConfirmDisabled={isConfirmDisabled}
       />
     </>
   );
