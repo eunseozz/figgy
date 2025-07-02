@@ -1,13 +1,14 @@
-import { AiOutlineSetting } from "react-icons/ai";
 import { IoMdArrowBack } from "react-icons/io";
+import { TbFolderPlus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import GrayDashAddButton from "@/components/GrayDashAddButton";
 import { getAssetUrl } from "@/utils/util";
 
 const logoImage = getAssetUrl("images/logos/full.png");
 
-const Panel = ({ children, isShowToolBar = false, primaryButton }) => {
+const Panel = ({ children, isShowToolBar = false, addButton }) => {
   const navigate = useNavigate();
 
   return (
@@ -22,16 +23,16 @@ const Panel = ({ children, isShowToolBar = false, primaryButton }) => {
             <IconButton onClick={() => navigate("/")}>
               <IoMdArrowBack />
             </IconButton>
-            <IconButton>
-              <AiOutlineSetting />
+            <IconButton onClick={() => console.log("폴더 추가")}>
+              <TbFolderPlus />
             </IconButton>
           </ToolBar>
         )}
 
-        {primaryButton && (
+        {addButton && (
           <GrayDashAddButton
-            text={primaryButton.text}
-            onClick={primaryButton.onClick}
+            text={addButton.text}
+            onClick={addButton.onClick}
           />
         )}
 

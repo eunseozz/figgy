@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 
-import EmptyDropHint from "@/components/EmptyDropHint";
 import Overlay from "@/components/Overlay";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
@@ -28,12 +27,12 @@ const Pages = () => {
     <>
       <Panel
         isShowToolBar={true}
-        primaryButton={{
-          label: "폴더 추가하기",
-          onClick: () => console.log("폴더 추가"),
+        addButton={{
+          text: "불러올 프레임을 선택해보세요",
+          onClick: () => {},
         }}
       >
-        {project.pages.map((group) => {
+        {project?.pages.map((group) => {
           const selectedId = selectedPages[group.minWidth]?.id ?? null;
           const markedItems = group.items.map((item) => ({
             ...item,
@@ -50,9 +49,7 @@ const Pages = () => {
               onDragStart={handleDragStart}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, group.minWidth)}
-              emptyHint={
-                <EmptyDropHint text="프레임을 끌어다 놓으면 여기에 추가돼요" />
-              }
+              emptyText="프레임을 끌어다 놓으면 여기에 추가돼요"
             />
           );
         })}

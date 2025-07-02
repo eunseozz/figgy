@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import AddProjectModal from "@/components/AddProjectModal";
 import DeleteProjectModal from "@/components/DeleteProejctModal";
-import EmptyDropHint from "@/components/EmptyDropHint";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
 import useProjectStore from "@/stores/useProjectStore";
@@ -46,24 +45,20 @@ const Projects = () => {
   return (
     <>
       <Panel
-        primaryButton={{
-          label: "Figma 불러오기",
+        addButton={{
+          text: "새 프로젝트를 추가해보세요",
           onClick: () => setOpenModalKey("add"),
         }}
       >
-        <PanelList
-          title="PROJECTS"
-          items={panelItems}
-          onItemClick={(item) => {
-            navigate(`/pages/${item.fileKey}`);
-          }}
-          emptyHint={
-            <EmptyDropHint
-              text="새 프로젝트를 추가해보세요"
-              onClick={() => setOpenModalKey("add")}
-            />
-          }
-        />
+        {panelItems.length > 0 && (
+          <PanelList
+            title="PROJECTS"
+            items={panelItems}
+            onItemClick={(item) => {
+              navigate(`/pages/${item.fileKey}`);
+            }}
+          />
+        )}
       </Panel>
 
       {modals.map((modal) =>

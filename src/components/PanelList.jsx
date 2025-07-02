@@ -2,6 +2,8 @@ import { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
 
+import GrayDashAddButton from "@/components/GrayDashAddButton";
+
 const PanelList = ({
   title,
   items,
@@ -9,7 +11,7 @@ const PanelList = ({
   onDragStart,
   onDrop,
   onDragOver,
-  emptyHint,
+  emptyText,
   isToggle = false,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -30,22 +32,24 @@ const PanelList = ({
           onDrop={onDrop}
           onDragOver={onDragOver}
         >
-          {items.length === 0
-            ? emptyHint
-            : items.map((item, index) => (
-                <li key={index}>
-                  <PanelListButton
-                    type="button"
-                    draggable
-                    $isActive={item.isActive}
-                    onClick={() => onItemClick(item)}
-                    onDragStart={(e) => onDragStart(e, item)}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </PanelListButton>
-                </li>
-              ))}
+          {items.length === 0 ? (
+            <GrayDashAddButton text={emptyText} />
+          ) : (
+            items.map((item, index) => (
+              <li key={index}>
+                <PanelListButton
+                  type="button"
+                  draggable
+                  $isActive={item.isActive}
+                  onClick={() => onItemClick(item)}
+                  onDragStart={(e) => onDragStart(e, item)}
+                >
+                  {item.icon}
+                  {item.label}
+                </PanelListButton>
+              </li>
+            ))
+          )}
         </ProjectList>
       </ProjectListWrapper>
     </div>
