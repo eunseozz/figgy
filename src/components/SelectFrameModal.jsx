@@ -5,15 +5,15 @@ import { getFigmaImageUrls } from "@/api/figma";
 import FrameTree from "@/components/FrameTree";
 import ModalLayout from "@/components/ModalLayout";
 import ModalOverlay from "@/components/ModalOverlay";
+import useFigmaTree from "@/hooks/queries/useFigmaTree";
 import { useCheckboxTree } from "@/hooks/useCheckboxTree";
-import useFigmaTree from "@/hooks/useFigmaTree";
 import useProjectStore from "@/stores/useProjectStore";
 
 const SelectFrameModal = ({ closeModal }) => {
   const { fileKey } = useParams();
   const updateProjects = useProjectStore((state) => state.updateProjects);
 
-  const { tree } = useFigmaTree(fileKey);
+  const { data: tree } = useFigmaTree(fileKey);
   const { checkedMap, handleGroupToggle, handleFrameToggle, getCheckedFrames } =
     useCheckboxTree();
 
