@@ -81,7 +81,9 @@ export const traverseFigmaNode = (node) => {
 export const transformToTree = (data) => {
   const rootNodes = data.document?.children ?? [];
 
-  return rootNodes
+  const result = rootNodes
     .flatMap((page) => page.children?.map(traverseFigmaNode).filter(Boolean))
     .filter(Boolean);
+
+  return result;
 };
