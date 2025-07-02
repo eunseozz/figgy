@@ -58,6 +58,7 @@ export const traverseFigmaNode = (node) => {
 
     if (children.length > 0) {
       return {
+        id: node.id,
         name: node.name,
         type: FIGMA_NODE_TYPE.GROUP,
         children,
