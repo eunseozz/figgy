@@ -5,6 +5,7 @@ import Overlay from "@/components/Overlay";
 import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
 import SelectFrameModal from "@/components/SelectFrameModal";
+import SuspenseWrapper from "@/components/SuspenseWrapper";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useOverlayManager from "@/hooks/useOverlayManager";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
@@ -55,10 +56,12 @@ const Pages = () => {
       </Panel>
 
       {isShowModal && (
-        <SelectFrameModal
-          closeModal={() => setIsShowModal(false)}
-          onConfirm={() => setIsShowModal(false)}
-        />
+        <SuspenseWrapper>
+          <SelectFrameModal
+            closeModal={() => setIsShowModal(false)}
+            onConfirm={() => setIsShowModal(false)}
+          />
+        </SuspenseWrapper>
       )}
 
       {isShowOverlay && <Overlay imageUrl={getOverlayImageUrl()} />}
