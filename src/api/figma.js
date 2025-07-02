@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { FIGMA_NODE_TYPE } from "@/constants/figmaNodeTypes";
 import useUserStore from "@/stores/useUserStore";
 
 export const getPngUrlsFromFrames = async (fileKey, frames) => {
@@ -48,7 +49,9 @@ export const getFigmaFile = async (fileKey) => {
 export const traverseFigmaNode = (node) => {
   if (!node || !node.children) return null;
 
-  const isGroup = node.type === "GROUP" || node.type === "SECTION";
+  const isGroup =
+    node.type === FIGMA_NODE_TYPE.GROUP ||
+    node.type === FIGMA_NODE_TYPE.SECTION;
 
   if (isGroup) {
     const children = node.children.map(traverseFigmaNode).filter(Boolean);
@@ -56,7 +59,7 @@ export const traverseFigmaNode = (node) => {
     if (children.length > 0) {
       return {
         name: node.name,
-        type: "group",
+        type: FIGMA_NODE_TYPE.GROUP,
         children,
       };
     }
@@ -64,10 +67,11 @@ export const traverseFigmaNode = (node) => {
     return null;
   }
 
-  if (node.type === "FRAME") {
+  if (node.type === FIGMA_NODE_TYPE.FRAME) {
     return {
+      id: node.id,
       name: node.name,
-      type: "frame",
+      type: FIGMA_NODE_TYPE.FRAME,
     };
   }
 

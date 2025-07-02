@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import ModalLayout from "@/components/ModalLayout";
 import ModalOverlay from "@/components/ModalOverlay";
+import { FIGMA_NODE_TYPE } from "@/constants/figmaNodeTypes";
 import useFigmaTree from "@/hooks/useFigmaTree";
 
 const SelectFrameModal = ({ closeModal, onConfirm }) => {
@@ -12,7 +13,7 @@ const SelectFrameModal = ({ closeModal, onConfirm }) => {
 
   const renderTree = (nodes, depth = 0) => {
     return nodes.map((node, index) => {
-      if (node.type === "group") {
+      if (node.type === FIGMA_NODE_TYPE.GROUP) {
         return (
           <TreeGroup key={index}>
             <GroupHeader $depth={depth}>
