@@ -14,14 +14,11 @@ const useFigmaTree = (fileKey) => {
       try {
         setIsLoading(true);
         const data = await getFigmaFile(fileKey);
-
-        console.log("data", data);
         const tree = transformToTree(data);
 
         setTree(tree);
-      } catch (err) {
-        setError(err);
-        console.error("useFigmaTree 에러:", err);
+      } catch (error) {
+        setError(error);
       } finally {
         setIsLoading(false);
       }
@@ -29,8 +26,6 @@ const useFigmaTree = (fileKey) => {
 
     fetchTree();
   }, [fileKey]);
-
-  console.log("tree", tree);
 
   return { tree, isLoading, error };
 };
