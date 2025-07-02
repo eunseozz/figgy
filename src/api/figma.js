@@ -7,7 +7,7 @@ export const getPngUrlsFromFrames = async (fileKey, frames) => {
 
   const ids = frames.map((frame) => frame.id);
   const idsParam = ids.map(encodeURIComponent).join(",");
-  const url = `https://api.figma.com/v1/images/${fileKey}?ids=${idsParam}&format=png`;
+  const url = `https://api.figma.com/v1/images/${fileKey}?ids=${idsParam}&format=svg&scale=1`;
 
   const res = await fetch(url, {
     headers: {
