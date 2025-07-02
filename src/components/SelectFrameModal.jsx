@@ -41,7 +41,6 @@ const SelectFrameModal = ({ figmaTree, closeModal, onConfirm }) => {
         title="불러올 프레임을 선택해주세요"
         text="아래 그룹과 프레임에서 원하는 항목만 골라서 불러올 수 있어요."
         onConfirm={onConfirm}
-        onCancel={closeModal}
       >
         <TreeWrapper>{renderTree(figmaTree)}</TreeWrapper>
       </ModalLayout>
