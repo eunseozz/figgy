@@ -68,15 +68,30 @@ export const useCheckboxTree = () => {
     setCheckedMap(updated);
   };
 
-  const getCheckedIds = () =>
-    Object.entries(checkedMap)
-      .filter(([, checked]) => checked)
-      .map(([id]) => id);
+  const getCheckedFrames = (tree) => {
+    const result = [];
+
+    const stack = [...tree];
+
+    while (stack.length > 0) {
+      const node = stack.pop();
+
+      if (checkedMap[node.id] && node.type === FIGMA_NODE_TYPE.FRAME) {
+        result.push({ id: node.id, name: node.name });
+      }
+
+      if (node.children) {
+        stack.push(...node.children);
+      }
+    }
+
+    return result;
+  };
 
   return {
     checkedMap,
     handleGroupToggle,
     handleFrameToggle,
-    getCheckedIds,
+    getCheckedFrames,
   };
 };
