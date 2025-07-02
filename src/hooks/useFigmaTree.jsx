@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { getFigmaFile, transformToTree } from "@/api/figma";
+import { getFigmaFile } from "@/api/figma";
+import { transformToTree } from "@/utils/figma";
 
 const useFigmaTree = (fileKey) => {
   const [tree, setTree] = useState([]);

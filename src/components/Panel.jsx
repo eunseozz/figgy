@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import GrayDashAddButton from "@/components/GrayDashAddButton";
-import { getAssetUrl } from "@/utils/util";
+import { getAssetUrl } from "@/utils/chrome";
 
 const logoImage = getAssetUrl("images/logos/full.png");
 

@@ -1,7 +1,7 @@
 import { FiFileText } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
-import { getPngUrlsFromFrames } from "@/api/figma";
+import { getFigmaImageUrls } from "@/api/figma";
 import FrameTree from "@/components/FrameTree";
 import ModalLayout from "@/components/ModalLayout";
 import ModalOverlay from "@/components/ModalOverlay";
@@ -23,7 +23,7 @@ const SelectFrameModal = ({ closeModal }) => {
     if (!getCheckedFrames.length) return;
 
     if (fileKey && selectedFrames?.length > 0) {
-      const result = await getPngUrlsFromFrames(fileKey, selectedFrames);
+      const result = await getFigmaImageUrls(fileKey, selectedFrames);
 
       const decoratedPages = result.map((item) => ({
         ...item,
