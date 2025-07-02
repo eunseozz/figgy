@@ -6,33 +6,13 @@ import Panel from "@/components/Panel";
 import PanelList from "@/components/PanelList";
 import SelectFrameModal from "@/components/SelectFrameModal";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
-import useFigmaImagePages from "@/hooks/useFigmaImagePages";
-import useInitPageGroups from "@/hooks/useInitPageGroups";
 import useOverlayManager from "@/hooks/useOverlayManager";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
-
-const figmaTree = [
-  {
-    name: "Main Section",
-    type: "group",
-    children: [
-      { name: "Hero", type: "frame" },
-      {
-        name: "Sub Section",
-        type: "group",
-        children: [{ name: "Pricing", type: "frame" }],
-      },
-    ],
-  },
-];
 
 const Pages = () => {
   const { fileKey } = useParams();
 
   const project = useProjectStore(selectedProject(fileKey));
-  const pages = useFigmaImagePages(fileKey);
-
-  useInitPageGroups(pages);
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
   const { isShowOverlay, handleItemClick, selectedPages, getOverlayImageUrl } =
@@ -76,7 +56,6 @@ const Pages = () => {
 
       {isShowModal && (
         <SelectFrameModal
-          figmaTree={figmaTree}
           closeModal={() => setIsShowModal(false)}
           onConfirm={() => setIsShowModal(false)}
         />
