@@ -30,6 +30,12 @@ const SelectFrameModal = ({ closeModal }) => {
         icon: <FiFileText />,
       }));
 
+      decoratedPages.forEach((page) => {
+        const img = new Image();
+
+        img.src = page.imageUrl;
+      });
+
       const initialGroups = [
         { title: "PC", minWidth: 1024, items: decoratedPages },
         { title: "TABLET", minWidth: 768, items: [] },
