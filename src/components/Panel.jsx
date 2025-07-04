@@ -51,7 +51,7 @@ const Container = styled.div`
   width: 400px;
   height: 100vh;
   background-color: #fff;
-  z-index: 9999;
+  z-index: 13000;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;

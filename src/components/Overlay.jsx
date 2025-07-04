@@ -1,15 +1,24 @@
-import { useRef } from "react";
 import styled from "styled-components";
 
 import { ALIGNMENT, SCALE_MODE } from "@/constants/hudOptions";
+import useDomFigmaComparator from "@/hooks/useDomFigmaComparator";
 import useHUDStore from "@/stores/useHUDStore";
 
-const Overlay = ({ imageUrl }) => {
+const Overlay = ({ imageUrl, frameNodeId }) => {
   const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const opacity = useHUDStore((state) => state.opacity);
 
-  const imgRef = useRef(null);
+  const { imgRef } = useDomFigmaComparator({
+    frameNodeId,
+    onCompareResult: ({ comparison }) => {
+      if (!comparison.matched) {
+        console.warn(comparison.mismatches);
+      } else {
+        console.log("✅ DOM과 Figma 노드 일치");
+      }
+    },
+  });
 
   if (!imageUrl) return null;
 
@@ -34,9 +43,12 @@ const Overlay = ({ imageUrl }) => {
 };
 
 const OverlayWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
   pointer-events: none;
+  z-index: 9999;
 
   ${({ $isCenter, $isFitMode }) =>
     $isCenter &&
@@ -44,6 +56,7 @@ const OverlayWrapper = styled.div`
     `
     display: flex;
     justify-content: center;
+    overflow-x: hidden;
   `}
 `;
 

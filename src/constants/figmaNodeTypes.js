@@ -1,4 +1,5 @@
 export const FIGMA_NODE_TYPE = {
+  CANVAS: "CANVAS",
   FRAME: "FRAME",
   GROUP: "GROUP",
   SECTION: "SECTION",
