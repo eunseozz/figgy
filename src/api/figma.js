@@ -18,6 +18,7 @@ export const getFigmaImageUrls = async (fileKey, frames) => {
     .map((frame) => ({
       id: uuidv4(),
       label: frame.name,
+      nodeId: frame.id,
       imageUrl: data.images[frame.id] || null,
     }))
     .filter((item) => item.imageUrl !== null);
