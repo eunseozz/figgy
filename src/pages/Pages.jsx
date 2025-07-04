@@ -17,7 +17,7 @@ const Pages = () => {
   const project = useProjectStore(selectedProject(fileKey));
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
-  const { isShowOverlay, handleItemClick, selectedPages, getOverlayImageUrl } =
+  const { isShowOverlay, handleItemClick, selectedPages, getOverlayNode } =
     useOverlayManager();
 
   const [isShowModal, setIsShowModal] = useState(false);
@@ -36,6 +36,8 @@ const Pages = () => {
   };
 
   if (!project) return null;
+
+  const overlayNode = getOverlayNode();
 
   return (
     <>
@@ -79,7 +81,13 @@ const Pages = () => {
       )}
 
       {isLoading && <Spinner />}
-      {isShowOverlay && <Overlay imageUrl={getOverlayImageUrl()} />}
+
+      {isShowOverlay && (
+        <Overlay
+          imageUrl={overlayNode?.imageUrl}
+          frameNodeId={overlayNode?.nodeId}
+        />
+      )}
     </>
   );
 };

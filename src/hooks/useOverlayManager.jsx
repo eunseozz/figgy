@@ -29,7 +29,9 @@ const useOverlayPages = () => {
     setIsShowOverlay(true);
   };
 
-  const getOverlayImageUrl = () => {
+  const getOverlayNode = () => {
+    if (!selectedPages || Object.keys(selectedPages).length === 0) return null;
+
     const sortedMinWidths = Object.keys(selectedPages)
       .map(Number)
       .sort((a, b) => b - a);
@@ -38,14 +40,14 @@ const useOverlayPages = () => {
       (minWidth) => windowWidth >= minWidth,
     );
 
-    return selectedPages[matchedMinWidth]?.imageUrl;
+    return selectedPages[matchedMinWidth];
   };
 
   return {
     isShowOverlay,
     selectedPages,
     handleItemClick,
-    getOverlayImageUrl,
+    getOverlayNode,
   };
 };
 
