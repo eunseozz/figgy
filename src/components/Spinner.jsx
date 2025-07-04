@@ -24,7 +24,7 @@ const Overlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 30000;
+  z-index: 20000;
   pointer-events: all;
 `;
 
