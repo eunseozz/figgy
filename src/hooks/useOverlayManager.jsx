@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
-const useOverlayPages = () => {
+const useOverlayManager = () => {
   const { fileKey } = useParams();
 
   const [isShowOverlay, setIsShowOverlay] = useState(false);
@@ -51,4 +51,4 @@ const useOverlayPages = () => {
   };
 };
 
-export default useOverlayPages;
+export default useOverlayManager;

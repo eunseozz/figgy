@@ -3,8 +3,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 
-import GlobalPortal from "@/components/GlobalPortal";
-import GlobalStyle from "@/components/styles/GlobalStyle";
+import GlobalPortal from "@/components/Common/GlobalPortal";
+import GlobalStyle from "@/components/Common/GlobalStyle";
 import routers from "@/routes/routers";
 
 const queryClient = new QueryClient();

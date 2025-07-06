@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
+import Panel from "@/components/Common/Panel/Panel";
+import PanelList from "@/components/Common/Panel/PanelList";
+import Spinner from "@/components/Common/Spinner";
+import SuspenseWrapper from "@/components/Common/SuspenseWrapper";
+import SelectFrameModal from "@/components/Modal/SelectFrameModal/SelectFrameModal";
 import Overlay from "@/components/Overlay";
-import Panel from "@/components/Panel";
-import PanelList from "@/components/PanelList";
-import SelectFrameModal from "@/components/SelectFrameModal";
-import Spinner from "@/components/Spinner";
-import SuspenseWrapper from "@/components/SuspenseWrapper";
 import useSaveFigmaFrames from "@/hooks/queries/useSaveFigmaFrames";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useOverlayManager from "@/hooks/useOverlayManager";

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import OverlayHUD from "@/components/OverlayHUD";
+import OverlayHUD from "@/components/HUD/OverlayHUD";
 
 const Layout = () => {
   return (

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
 
-import GrayDashAddButton from "@/components/GrayDashAddButton";
+import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 
 const PanelList = ({
   title,

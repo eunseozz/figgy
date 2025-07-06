@@ -1,6 +1,6 @@
 import { createMemoryRouter } from "react-router-dom";
 
-import Layout from "@/components/Layout";
+import Layout from "@/components/Common/Layout";
 import Pages from "@/pages/Pages";
 import Projects from "@/pages/Projects";
 

@@ -1,7 +1,7 @@
 import { MdErrorOutline } from "react-icons/md";
 
-import ModalLayout from "@/components/ModalLayout";
-import ModalOverlay from "@/components/ModalOverlay";
+import ModalOverlay from "@/components/Common/ModalOverlay";
+import ModalLayout from "@/components/Modal/ModalLayout/ModalLayout";
 
 const DeleteProjectModal = ({ onCancel, onConfirm }) => {
   return (
