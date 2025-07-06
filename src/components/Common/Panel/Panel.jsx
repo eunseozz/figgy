@@ -3,7 +3,7 @@ import { TbFolderPlus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import GrayDashAddButton from "@/components/GrayDashAddButton";
+import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
 

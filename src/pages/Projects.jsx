@@ -2,10 +2,10 @@ import { useState } from "react";
 import { FaRegFolder } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import AddProjectModal from "@/components/AddProjectModal";
-import DeleteProjectModal from "@/components/DeleteProejctModal";
-import Panel from "@/components/Panel";
-import PanelList from "@/components/PanelList";
+import Panel from "@/components/Common/Panel/Panel";
+import PanelList from "@/components/Common/Panel/PanelList";
+import AddProjectModal from "@/components/Modal/AddProejctModal/AddProjectModal";
+import DeleteProjectModal from "@/components/Modal/DeleteProejctModal";
 import useProjectStore from "@/stores/useProjectStore";
 
 const Projects = () => {

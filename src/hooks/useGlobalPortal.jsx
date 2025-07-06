@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { PortalContext } from "@/components/GlobalPortal";
+import { PortalContext } from "@/components/Common/GlobalPortal";
 
 const useGlobalPortal = () => useContext(PortalContext);
 

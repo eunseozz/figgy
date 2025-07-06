@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-import ModalButton from "@/components/ModalButton";
-import ModalHeader from "@/components/ModalHeader";
+import ModalButton from "@/components/Modal/ModalLayout/ModalButton";
+import ModalHeader from "@/components/Modal/ModalLayout/ModalHeader";
 
 const ModalLayout = ({
   icon,

@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 
-import FrameTree from "@/components/FrameTree";
-import ModalLayout from "@/components/ModalLayout";
-import ModalOverlay from "@/components/ModalOverlay";
+import ModalOverlay from "@/components/Common/ModalOverlay";
+import ModalLayout from "@/components/Modal/ModalLayout/ModalLayout";
+import FrameTree from "@/components/Modal/SelectFrameModal/FrameTree";
 import useFigmaTree from "@/hooks/queries/useFigmaTree";
 import { useCheckboxTree } from "@/hooks/useCheckboxTree";
 

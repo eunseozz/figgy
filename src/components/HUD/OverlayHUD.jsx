@@ -2,8 +2,8 @@ import { useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 import styled from "styled-components";
 
-import OpacityControl from "@/components/OpacityControl";
-import ToggleOptionGroup from "@/components/ToggleOptionGroup";
+import OpacityControl from "@/components/HUD/OpacityControl";
+import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
 import { toggleGroups } from "@/constants/hudOptions";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
