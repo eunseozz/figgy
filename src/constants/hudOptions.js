@@ -21,6 +21,7 @@ export const toggleGroups = [
       { label: "표시", value: true },
       { label: "숨김", value: false },
     ],
+    key: "K",
   },
   {
     label: "정렬 방식",

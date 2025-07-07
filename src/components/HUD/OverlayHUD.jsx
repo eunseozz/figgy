@@ -63,13 +63,21 @@ const OverlayHUD = () => {
         {isOpen && (
           <HUDContainer>
             <HUDWrapper>
-              {toggleGroups.map(({ label, stateKey, options }) => (
+              {toggleGroups.map(({ label, stateKey, options, key }) => (
                 <ToggleOptionGroup
                   key={stateKey}
                   label={label}
                   value={stateMap[stateKey]}
                   onChange={setStateMap[stateKey]}
                   options={options}
+                  rightSlot={
+                    key && (
+                      <ShortcutBadge
+                        currentKey={key}
+                        onClick={() => setIsShowShortcutModal(true)}
+                      />
+                    )
+                  }
                 />
               ))}
               <OpacityControl
