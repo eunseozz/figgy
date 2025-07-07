@@ -1,17 +1,12 @@
 import styled from "styled-components";
 
 import { ALIGNMENT, SCALE_MODE } from "@/constants/hudOptions";
-import useDomFigmaComparator from "@/hooks/useDomFigmaComparator";
 import useHUDStore from "@/stores/useHUDStore";
 
-const Overlay = ({ imageUrl, frameNodeId }) => {
+const Overlay = ({ imageUrl, imgRef }) => {
   const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const opacity = useHUDStore((state) => state.opacity);
-
-  const { imgRef } = useDomFigmaComparator({
-    frameNodeId,
-  });
 
   if (!imageUrl) return null;
 
