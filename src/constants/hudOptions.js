@@ -38,4 +38,12 @@ export const toggleGroups = [
       { label: "오차 보기", value: VIEW_MODE.DIFF },
     ],
   },
+  {
+    label: "오버레이",
+    stateKey: "isShowOverlay",
+    options: [
+      { label: "표시", value: true },
+      { label: "숨김", value: false },
+    ],
+  },
 ];

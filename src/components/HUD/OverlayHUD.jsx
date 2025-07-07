@@ -13,20 +13,27 @@ const OverlayHUD = () => {
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const viewMode = useHUDStore((state) => state.viewMode);
   const opacity = useHUDStore((state) => state.opacity);
+  const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
 
   const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
 
-  const { setAlignment, setScaleMode, setViewMode, setOpacity } =
-    useHUDStore.getState();
+  const {
+    setAlignment,
+    setScaleMode,
+    setViewMode,
+    setOpacity,
+    setIsShowOverlay,
+  } = useHUDStore.getState();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const stateMap = { alignment, scaleMode, viewMode };
+  const stateMap = { alignment, scaleMode, viewMode, isShowOverlay };
   const setStateMap = {
     alignment: setAlignment,
     scaleMode: setScaleMode,
     viewMode: setViewMode,
+    isShowOverlay: setIsShowOverlay,
   };
 
   const logoImage = getAssetUrl("images/logos/size_48.png");
