@@ -15,6 +15,14 @@ export const VIEW_MODE = {
 
 export const toggleGroups = [
   {
+    label: "오버레이",
+    stateKey: "isShowOverlay",
+    options: [
+      { label: "표시", value: true },
+      { label: "숨김", value: false },
+    ],
+  },
+  {
     label: "정렬 방식",
     stateKey: "alignment",
     options: [
@@ -36,14 +44,6 @@ export const toggleGroups = [
     options: [
       { label: "디자인만 보기", value: VIEW_MODE.DESIGN },
       { label: "오차 보기", value: VIEW_MODE.DIFF },
-    ],
-  },
-  {
-    label: "오버레이",
-    stateKey: "isShowOverlay",
-    options: [
-      { label: "표시", value: true },
-      { label: "숨김", value: false },
     ],
   },
 ];
