@@ -14,7 +14,9 @@ const DEFAULT_FIGMA_WIDTH = 1440;
 
 const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
   const { fileKey } = useParams();
+
   const imgRef = useRef(null);
+  const lastHighlightedRef = useRef(null);
 
   const [figmaNodes, setFigmaNodes] = useState([]);
   const [frameOffset, setFrameOffset] = useState({ x: 0, y: 0 });
@@ -58,8 +60,16 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
       const clickedElement = event.target;
 
       if (IGNORED_TAGS.includes(clickedElement.tagName)) return;
-
       if (clickedElement.closest("#figgy-dashboard")) return;
+
+      if (lastHighlightedRef.current) {
+        lastHighlightedRef.current.style.outline = "";
+        lastHighlightedRef.current.style.backgroundColor = "";
+      }
+
+      clickedElement.style.outline = "2px solid red";
+      clickedElement.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
+      lastHighlightedRef.current = clickedElement;
 
       const rect = clickedElement.getBoundingClientRect();
 
