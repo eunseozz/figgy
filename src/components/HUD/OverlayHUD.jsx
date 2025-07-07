@@ -3,7 +3,9 @@ import { IoMdSettings } from "react-icons/io";
 import styled from "styled-components";
 
 import OpacityControl from "@/components/HUD/OpacityControl";
+import ShortcutBadge from "@/components/HUD/ShortcutBadge";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
+import ShortcutModal from "@/components/Modal/ShortcutModal";
 import { toggleGroups } from "@/constants/hudOptions";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
@@ -17,6 +19,8 @@ const OverlayHUD = () => {
 
   const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
+
+  const [isShowShortcutModal, setIsShowShortcutModal] = useState(false);
 
   const {
     setAlignment,
@@ -76,6 +80,9 @@ const OverlayHUD = () => {
           </HUDContainer>
         )}
       </HUDBox>
+      {isShowShortcutModal && (
+        <ShortcutModal closeModal={() => setIsShowShortcutModal(false)} />
+      )}
     </Container>
   );
 };
