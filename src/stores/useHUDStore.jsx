@@ -8,12 +8,14 @@ const useHUDStore = create((set) => ({
   viewMode: VIEW_MODE.DESIGN,
   opacity: 0.3,
   isOpenPanel: true,
+  tooltip: null,
 
   setAlignment: (alignment) => set({ alignment }),
   setScaleMode: (scaleMode) => set({ scaleMode }),
   setViewMode: (viewMode) => set({ viewMode }),
   setOpacity: (opacity) => set({ opacity }),
   setIsOpenPanel: (isOpenPanel) => set({ isOpenPanel }),
+  setTooltip: (tooltip) => set({ tooltip }),
 }));
 
 export default useHUDStore;
