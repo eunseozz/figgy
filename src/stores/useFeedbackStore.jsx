@@ -3,12 +3,10 @@ import { create } from "zustand";
 
 const HIGHLIGHT_STYLE = {
   MATCHED: {
-    outline: "2px solid green",
-    backgroundColor: "rgba(0, 255, 0, 0.1)",
+    outline: "3px dashed green",
   },
   MISMATCHED: {
-    outline: "2px solid red",
-    backgroundColor: "rgba(255, 0, 0, 0.1)",
+    outline: "3px dashed red",
   },
 };
 
@@ -28,7 +26,6 @@ const useFeedbackStore = create((set) => {
         : HIGHLIGHT_STYLE.MISMATCHED;
 
       element.style.outline = style.outline;
-      element.style.backgroundColor = style.backgroundColor;
 
       activeElementRef.current = element;
     },
@@ -36,7 +33,6 @@ const useFeedbackStore = create((set) => {
     clearFeedback: () => {
       if (activeElementRef.current) {
         activeElementRef.current.style.outline = "";
-        activeElementRef.current.style.backgroundColor = "";
         activeElementRef.current = null;
       }
       set({ tooltip: null });

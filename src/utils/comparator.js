@@ -102,8 +102,8 @@ export const compareDomWithFigma = (
 
 export const generateDiffText = (mismatches) => {
   const getDirectionText = (key, diff) => {
-    if (key === "x") return diff > 0 ? "오른쪽으로" : "왼쪽으로";
-    if (key === "y") return diff > 0 ? "아래로" : "위로";
+    if (key === "x") return diff > 0 ? "왼쪽으로" : "오른쪽으로";
+    if (key === "y") return diff > 0 ? "위로" : "아래로";
 
     return "";
   };
@@ -112,8 +112,8 @@ export const generateDiffText = (mismatches) => {
     const diff = +(dom - figma).toFixed(1);
     const direction = getDirectionText(key, diff);
 
-    return `${direction} ${Math.abs(diff)}px`;
+    return `${direction} 약 ${Math.abs(diff)}px`;
   });
 
-  return `요소 위치가 실제보다 ${parts.join(", ")} 정도 차이 나요.`;
+  return `⚠️ 위치 조정 필요 (${parts.join(", ")})`;
 };

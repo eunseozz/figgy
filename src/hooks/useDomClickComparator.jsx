@@ -55,8 +55,8 @@ const useDomClickComparator = ({
 
       if (!comparison.matched) {
         setTooltip({
-          top: rect.top + window.scrollY + rect.height + 6,
-          left: rect.left - 2,
+          top: rect.top + window.scrollY + rect.height + 7,
+          left: rect.left - 3,
           text: generateDiffText(comparison.mismatches),
         });
       }
