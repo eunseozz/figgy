@@ -99,3 +99,21 @@ export const compareDomWithFigma = (
 
   return result;
 };
+
+export const generateDiffText = (mismatches) => {
+  const getDirectionText = (key, diff) => {
+    if (key === "x") return diff > 0 ? "왼쪽으로" : "오른쪽으로";
+    if (key === "y") return diff > 0 ? "위로" : "아래로";
+
+    return "";
+  };
+
+  const parts = mismatches.map(({ key, dom, figma }) => {
+    const diff = +(dom - figma).toFixed(1);
+    const direction = getDirectionText(key, diff);
+
+    return `${direction} 약 ${Math.abs(diff)}px`;
+  });
+
+  return `⚠️ 위치 조정 필요 (${parts.join(", ")})`;
+};

@@ -7,7 +7,7 @@ import useProjectStore from "@/stores/useProjectStore";
 
 const useSaveFigmaFrames = ({ onSuccessAfterSave } = {}) => {
   const { fileKey } = useParams();
-  const updateProjects = useProjectStore((s) => s.updateProjects);
+  const updateProjects = useProjectStore((state) => state.updateProjects);
 
   return useMutation({
     mutationFn: (frames) => getFigmaImageUrls(fileKey, frames),

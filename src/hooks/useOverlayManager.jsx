@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import useWindowWidth from "@/hooks/useWindowWidth";
+import useFeedbackStore from "@/stores/useFeedbackStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const useOverlayManager = () => {
@@ -11,6 +12,7 @@ const useOverlayManager = () => {
   const [selectedPages, setSelectedPages] = useState({});
 
   const project = useProjectStore(selectedProject(fileKey));
+  const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
 
   const windowWidth = useWindowWidth();
 
@@ -20,6 +22,8 @@ const useOverlayManager = () => {
     );
 
     if (!group) return;
+
+    clearFeedback();
 
     setSelectedPages((prev) => ({
       ...prev,

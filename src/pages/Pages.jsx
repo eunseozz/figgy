@@ -8,7 +8,9 @@ import SuspenseWrapper from "@/components/Common/SuspenseWrapper";
 import SelectFrameModal from "@/components/Modal/SelectFrameModal/SelectFrameModal";
 import Overlay from "@/components/Overlay";
 import useSaveFigmaFrames from "@/hooks/queries/useSaveFigmaFrames";
+import useDomClickComparator from "@/hooks/useDomClickComparator";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
+import useFigmaFrameData from "@/hooks/useFigmaFrameData";
 import useOverlayManager from "@/hooks/useOverlayManager";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
@@ -19,6 +21,18 @@ const Pages = () => {
   const { handleDragStart, handleDrop } = useDragAndDropPages();
   const { isShowOverlay, handleItemClick, selectedPages, getOverlayNode } =
     useOverlayManager();
+
+  const overlayNode = getOverlayNode();
+
+  const { figmaNodes, imgRef, figmaOriginalWidthRef, frameOffsetRef } =
+    useFigmaFrameData(overlayNode?.nodeId);
+
+  useDomClickComparator({
+    imgRef,
+    figmaNodes,
+    figmaOriginalWidthRef,
+    frameOffsetRef,
+  });
 
   const [isShowModal, setIsShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,8 +50,6 @@ const Pages = () => {
   };
 
   if (!project) return null;
-
-  const overlayNode = getOverlayNode();
 
   return (
     <>
@@ -85,7 +97,7 @@ const Pages = () => {
       {isShowOverlay && (
         <Overlay
           imageUrl={overlayNode?.imageUrl}
-          frameNodeId={overlayNode?.nodeId}
+          imgRef={imgRef}
         />
       )}
     </>
