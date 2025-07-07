@@ -12,7 +12,9 @@ export const findNodeById = (node, targetId) => {
 };
 
 export const flattenNodes = (node, acc = [], depth = 0) => {
-  if (node.absoluteBoundingBox) acc.push({ ...node, __depth: depth });
+  if (node.absoluteBoundingBox) {
+    acc.push({ ...node, __depth: depth });
+  }
 
   if (node.children) {
     node.children.forEach((child) => flattenNodes(child, acc, depth + 1));
@@ -26,68 +28,72 @@ export const getClosestFigmaNode = (
   figmaNodes,
   imageRef,
   figmaOriginalWidth,
+  frameOffset,
 ) => {
+  if (!imageRef.current) return null;
+
+  const GAP = 20;
   const imageRect = imageRef.current.getBoundingClientRect();
   const scale = imageRef.current.width / figmaOriginalWidth;
   const offsetX = imageRect.left;
+  const offsetY = imageRect.top;
 
-  let closestNode = null;
-  let minDist = Infinity;
+  const domX = domData.x;
+  const domY = domData.y;
 
-  const sorted = [...figmaNodes].sort((a, b) => b.__depth - a.__depth);
-
-  for (const node of sorted) {
-    if (!node.absoluteBoundingBox) continue;
-
+  const candidates = figmaNodes.filter((node) => {
     const box = node.absoluteBoundingBox;
 
-    const adjustedX = box.x * scale + offsetX;
-    const adjustedY = box.y * scale;
-    const dist = Math.hypot(domData.x - adjustedX, domData.y - adjustedY);
+    if (!box) return false;
+    const x1 = (box.x - frameOffset.x) * scale + offsetX - GAP;
+    const y1 = (box.y - frameOffset.y) * scale + offsetY - GAP;
+    const x2 = x1 + box.width * scale + GAP * 2;
+    const y2 = y1 + box.height * scale + GAP * 2;
 
-    if (dist < minDist) {
-      minDist = dist;
-      closestNode = node;
-    }
-  }
+    return domX >= x1 && domX <= x2 && domY >= y1 && domY <= y2;
+  });
 
-  return closestNode;
+  const sorted = candidates.sort((a, b) => b.__depth - a.__depth);
+  const closest = sorted[0] ?? null;
+
+  return closest;
 };
 
-export const compareDomWithFigma = (dom, figmaNode) => {
+export const compareDomWithFigma = (
+  dom,
+  figmaNode,
+  imageRef,
+  figmaOriginalWidth,
+  frameOffset,
+) => {
   const result = { matched: true, mismatches: [] };
-  const isTextMismatch =
-    figmaNode.characters && figmaNode.characters.trim() !== dom.text.trim();
 
-  if (isTextMismatch) {
-    result.matched = false;
-    result.mismatches.push({
-      key: "text",
-      dom: dom.text,
-      figma: figmaNode.characters,
-    });
+  if (!figmaNode || !figmaNode.absoluteBoundingBox || !imageRef.current) {
+    return result;
   }
 
-  const pixelLimit = 5;
   const figmaBox = figmaNode.absoluteBoundingBox;
+  const pixelLimit = 5;
 
-  if (figmaBox) {
-    const positionKeys = ["x", "y", "width", "height"];
+  const imageRect = imageRef.current.getBoundingClientRect();
+  const scale = imageRef.current.width / figmaOriginalWidth;
+  const offsetX = imageRect.left;
+  const offsetY = imageRect.top;
 
-    positionKeys.forEach((key) => {
-      const domValue = dom[key];
-      const figmaValue = figmaBox[key];
+  const figmaX = (figmaBox.x - frameOffset.x) * scale + offsetX;
+  const figmaY = (figmaBox.y - frameOffset.y) * scale + offsetY;
 
-      const isOverGap =
-        figmaValue != null && Math.abs(domValue - figmaValue) > pixelLimit;
+  const comparePairs = [
+    { key: "x", dom: dom.x, figma: figmaX },
+    { key: "y", dom: dom.y, figma: figmaY },
+  ];
 
-      if (isOverGap) {
-        result.mismatches.push({ key, dom: domValue, figma: figmaValue });
-      }
-    });
+  for (const { key, dom, figma } of comparePairs) {
+    const isOverGap = Math.abs(dom - figma) > pixelLimit;
 
-    if (result.mismatches.length > 0) {
+    if (isOverGap) {
       result.matched = false;
+      result.mismatches.push({ key, dom, figma });
     }
   }
 

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { getFigmaFile } from "@/api/figma";
-import { FIGMA_NODE_TYPE } from "@/constants/figmaNodeTypes";
 import {
   compareDomWithFigma,
   findNodeById,
@@ -11,23 +10,27 @@ import {
 } from "@/utils/comparator";
 
 const IGNORED_TAGS = ["HTML", "BODY"];
+const DEFAULT_FIGMA_WIDTH = 1440;
 
 const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
   const { fileKey } = useParams();
+
   const imgRef = useRef(null);
+  const lastHighlightedRef = useRef(null);
 
   const [figmaNodes, setFigmaNodes] = useState([]);
-  const [figmaOriginalWidth, setFigmaOriginalWidth] = useState(1440);
+  const [frameOffset, setFrameOffset] = useState({ x: 0, y: 0 });
+  const [figmaOriginalWidth, setFigmaOriginalWidth] =
+    useState(DEFAULT_FIGMA_WIDTH);
 
   useEffect(() => {
     const fetchFigmaNodes = async () => {
-      if (!imgRef.current) return;
-      if (!fileKey || !frameNodeId) return;
+      if (!imgRef.current || !fileKey || !frameNodeId) return;
 
       try {
         const result = await getFigmaFile(fileKey);
-        const pageNode = result.document.children.find(
-          (node) => node.type === FIGMA_NODE_TYPE.CANVAS,
+        const pageNode = result.document.children.find((page) =>
+          findNodeById(page, frameNodeId),
         );
 
         if (!pageNode) return;
@@ -38,11 +41,12 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
 
         const flattened = flattenNodes(targetFrame);
         const originalWidth = targetFrame.absoluteBoundingBox?.width;
-
-        if (!originalWidth) return;
+        const offsetX = targetFrame.absoluteBoundingBox?.x || 0;
+        const offsetY = targetFrame.absoluteBoundingBox?.y || 0;
 
         setFigmaNodes(flattened);
-        setFigmaOriginalWidth(originalWidth);
+        setFigmaOriginalWidth(originalWidth ?? DEFAULT_FIGMA_WIDTH);
+        setFrameOffset({ x: offsetX, y: offsetY });
       } catch (error) {
         console.error("Figma fetch 실패:", error);
       }
@@ -56,23 +60,22 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
       const clickedElement = event.target;
 
       if (IGNORED_TAGS.includes(clickedElement.tagName)) return;
+      if (clickedElement.closest("#figgy-dashboard")) return;
+
+      if (lastHighlightedRef.current) {
+        lastHighlightedRef.current.style.outline = "";
+        lastHighlightedRef.current.style.backgroundColor = "";
+      }
+
+      clickedElement.style.outline = "2px solid red";
+      clickedElement.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
+      lastHighlightedRef.current = clickedElement;
 
       const rect = clickedElement.getBoundingClientRect();
-      const computedStyle = window.getComputedStyle(clickedElement);
 
       const domData = {
         x: rect.x,
         y: rect.y,
-        width: rect.width,
-        height: rect.height,
-        fontSize: computedStyle.fontSize,
-        fontFamily: computedStyle.fontFamily,
-        fontWeight: computedStyle.fontWeight,
-        letterSpacing: computedStyle.letterSpacing,
-        lineHeight: computedStyle.lineHeight,
-        color: computedStyle.color,
-        backgroundColor: computedStyle.backgroundColor,
-        text: clickedElement.innerText,
       };
 
       const closestNode = getClosestFigmaNode(
@@ -80,8 +83,16 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
         figmaNodes,
         imgRef,
         figmaOriginalWidth,
+        frameOffset,
       );
-      const comparison = compareDomWithFigma(domData, closestNode);
+
+      const comparison = compareDomWithFigma(
+        domData,
+        closestNode,
+        imgRef,
+        figmaOriginalWidth,
+        frameOffset,
+      );
 
       if (onCompareResult) {
         onCompareResult({ dom: domData, figma: closestNode, comparison });
@@ -91,7 +102,7 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
     document.addEventListener("click", handleClick, true);
 
     return () => document.removeEventListener("click", handleClick, true);
-  }, [figmaNodes, figmaOriginalWidth]);
+  }, [figmaNodes, figmaOriginalWidth, frameOffset]);
 
   return { imgRef };
 };
