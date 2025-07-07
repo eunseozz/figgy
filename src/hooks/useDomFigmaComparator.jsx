@@ -2,17 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { getFigmaFile } from "@/api/figma";
+import useHUDStore from "@/stores/useHUDStore";
 import {
   compareDomWithFigma,
   findNodeById,
   flattenNodes,
+  generateDiffText,
   getClosestFigmaNode,
 } from "@/utils/comparator";
 
 const IGNORED_TAGS = ["HTML", "BODY"];
 const DEFAULT_FIGMA_WIDTH = 1440;
 
-const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
+const useDomFigmaComparator = ({ frameNodeId }) => {
   const { fileKey } = useParams();
 
   const imgRef = useRef(null);
@@ -22,6 +24,8 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
   const [frameOffset, setFrameOffset] = useState({ x: 0, y: 0 });
   const [figmaOriginalWidth, setFigmaOriginalWidth] =
     useState(DEFAULT_FIGMA_WIDTH);
+
+  const setTooltip = useHUDStore((state) => state.setTooltip);
 
   useEffect(() => {
     const fetchFigmaNodes = async () => {
@@ -59,6 +63,8 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
     const handleClick = (event) => {
       const clickedElement = event.target;
 
+      setTooltip(null);
+
       if (IGNORED_TAGS.includes(clickedElement.tagName)) return;
       if (clickedElement.closest("#figgy-dashboard")) return;
 
@@ -66,10 +72,6 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
         lastHighlightedRef.current.style.outline = "";
         lastHighlightedRef.current.style.backgroundColor = "";
       }
-
-      clickedElement.style.outline = "2px solid red";
-      clickedElement.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
-      lastHighlightedRef.current = clickedElement;
 
       const rect = clickedElement.getBoundingClientRect();
 
@@ -94,9 +96,21 @@ const useDomFigmaComparator = ({ frameNodeId, onCompareResult }) => {
         frameOffset,
       );
 
-      if (onCompareResult) {
-        onCompareResult({ dom: domData, figma: closestNode, comparison });
+      if (!comparison.matched) {
+        clickedElement.style.outline = "2px solid red";
+        clickedElement.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
+
+        setTooltip({
+          top: rect.top + window.scrollY + rect.height + 6,
+          left: rect.left - 2,
+          text: generateDiffText(comparison.mismatches),
+        });
+      } else {
+        clickedElement.style.outline = "2px solid green";
+        clickedElement.style.backgroundColor = "rgba(0, 255, 0, 0.1)";
       }
+
+      lastHighlightedRef.current = clickedElement;
     };
 
     document.addEventListener("click", handleClick, true);
