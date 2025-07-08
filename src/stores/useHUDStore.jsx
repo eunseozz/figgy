@@ -7,6 +7,7 @@ const useHUDStore = create((set) => ({
   scaleMode: SCALE_MODE.ACTUAL,
   viewMode: VIEW_MODE.DESIGN,
   isShowOverlay: true,
+  showOverlayShortcutKey: "K",
   opacity: 0.3,
   isOpenPanel: true,
 
@@ -14,6 +15,8 @@ const useHUDStore = create((set) => ({
   setScaleMode: (scaleMode) => set({ scaleMode }),
   setViewMode: (viewMode) => set({ viewMode }),
   setIsShowOverlay: (isShowOverlay) => set({ isShowOverlay }),
+  setShowOverlayShortcutKey: (showOverlayShortcutKey) =>
+    set({ showOverlayShortcutKey }),
   setOpacity: (opacity) => set({ opacity }),
   setIsOpenPanel: (isOpenPanel) => set({ isOpenPanel }),
 }));

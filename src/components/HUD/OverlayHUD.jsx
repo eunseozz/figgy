@@ -3,7 +3,6 @@ import { IoMdSettings } from "react-icons/io";
 import styled from "styled-components";
 
 import OpacityControl from "@/components/HUD/OpacityControl";
-import ShortcutBadge from "@/components/HUD/ShortcutBadge";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
 import ShortcutModal from "@/components/Modal/ShortcutModal";
 import { toggleGroups } from "@/constants/hudOptions";
@@ -16,6 +15,9 @@ const OverlayHUD = () => {
   const viewMode = useHUDStore((state) => state.viewMode);
   const opacity = useHUDStore((state) => state.opacity);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
+  const showOverlayShortcutKey = useHUDStore(
+    (state) => state.showOverlayShortcutKey,
+  );
 
   const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
@@ -63,21 +65,17 @@ const OverlayHUD = () => {
         {isOpen && (
           <HUDContainer>
             <HUDWrapper>
-              {toggleGroups.map(({ label, stateKey, options, key }) => (
+              {toggleGroups.map(({ label, stateKey, options, rightSlot }) => (
                 <ToggleOptionGroup
                   key={stateKey}
                   label={label}
                   value={stateMap[stateKey]}
                   onChange={setStateMap[stateKey]}
                   options={options}
-                  rightSlot={
-                    key && (
-                      <ShortcutBadge
-                        currentKey={key}
-                        onClick={() => setIsShowShortcutModal(true)}
-                      />
-                    )
-                  }
+                  rightSlot={rightSlot?.({
+                    value: showOverlayShortcutKey,
+                    onClick: () => setIsShowShortcutModal(true),
+                  })}
                 />
               ))}
               <OpacityControl
