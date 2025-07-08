@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiFileText } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 import Panel from "@/components/Common/Panel/Panel";
@@ -19,7 +20,7 @@ const Pages = () => {
   const project = useProjectStore(selectedProject(fileKey));
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
-  const { isShowOverlay, handleItemClick, selectedPages, getOverlayNode } =
+  const { isShowOverlay, handleItemClick, getOverlayNode } =
     useOverlayManager();
 
   const overlayNode = getOverlayNode();
@@ -51,6 +52,8 @@ const Pages = () => {
 
   if (!project) return null;
 
+  const selectedPages = project.activePageMap ?? {};
+
   return (
     <>
       <Panel
@@ -64,6 +67,7 @@ const Pages = () => {
           const selectedId = selectedPages[group.minWidth]?.id ?? null;
           const markedItems = group.items.map((item) => ({
             ...item,
+            icon: <FiFileText />,
             isActive: item.id === selectedId,
           }));
 

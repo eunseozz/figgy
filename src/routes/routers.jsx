@@ -1,10 +1,10 @@
-import { createMemoryRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 
 import Layout from "@/components/Common/Layout";
 import Pages from "@/pages/Pages";
 import Projects from "@/pages/Projects";
 
-const routers = createMemoryRouter([
+const routers = createHashRouter([
   {
     path: "/",
     element: <Layout />,

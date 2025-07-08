@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import useWindowWidth from "@/hooks/useWindowWidth";
@@ -8,37 +7,29 @@ import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const useOverlayManager = () => {
   const { fileKey } = useParams();
-
-  const [selectedPages, setSelectedPages] = useState({});
-
   const project = useProjectStore(selectedProject(fileKey));
-  const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
 
+  const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const setIsShowOverlay = useHUDStore((state) => state.setIsShowOverlay);
 
+  const setActivePage = useProjectStore((state) => state.setActivePage);
   const windowWidth = useWindowWidth();
 
   const handleItemClick = (clickedItem) => {
-    const group = project.pages.find((group) =>
+    const group = project?.pages.find((group) =>
       group.items.some((item) => item.id === clickedItem.id),
     );
 
     if (!group) return;
 
     clearFeedback();
-
-    setSelectedPages((prev) => ({
-      ...prev,
-      [group.minWidth]: clickedItem,
-    }));
-
+    setActivePage(fileKey, group.minWidth, clickedItem);
     setIsShowOverlay(true);
   };
 
   const getOverlayNode = () => {
-    if (!selectedPages || Object.keys(selectedPages).length === 0) return null;
-
+    const selectedPages = project?.activePageMap ?? {};
     const sortedMinWidths = Object.keys(selectedPages)
       .map(Number)
       .sort((a, b) => b - a);
@@ -47,12 +38,11 @@ const useOverlayManager = () => {
       (minWidth) => windowWidth >= minWidth,
     );
 
-    return selectedPages[matchedMinWidth];
+    return selectedPages[matchedMinWidth] ?? null;
   };
 
   return {
     isShowOverlay,
-    selectedPages,
     handleItemClick,
     getOverlayNode,
   };
