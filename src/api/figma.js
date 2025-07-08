@@ -25,3 +25,17 @@ export const getFigmaImageUrls = async (fileKey, frames) => {
 
   return result;
 };
+
+export const checkAccessToken = async (token) => {
+  try {
+    const res = await fetch("https://api.figma.com/v1/me", {
+      headers: {
+        "X-FIGMA-TOKEN": token,
+      },
+    });
+
+    return res.ok;
+  } catch {
+    return false;
+  }
+};
