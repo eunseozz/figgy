@@ -42,20 +42,16 @@ const isChromeExtension =
 if (isChromeExtension) {
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.type === "ENABLE_DASHBOARD") {
-      chrome.storage.local.set({ isDashboardEnabled: true }, () => {
-        mountApp();
-      });
+      mountApp();
     }
 
     if (msg.type === "DISABLE_DASHBOARD") {
-      chrome.storage.local.set({ isDashboardEnabled: false }, () => {
-        unmountApp();
-      });
+      unmountApp();
     }
   });
 
-  chrome.storage.local.get("isDashboardEnabled", ({ isDashboardEnabled }) => {
-    if (isDashboardEnabled) {
+  chrome.runtime.sendMessage({ type: "GET_DASHBOARD_STATE" }, (response) => {
+    if (response?.isDashboardEnabled) {
       mountApp();
     }
   });
