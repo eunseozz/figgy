@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import ModalOverlay from "@/components/Common/ModalOverlay";
-import InputGroup from "@/components/Modal/AddProejctModal/InputGroup";
+import InputGroup from "@/components/Modal/InputGroup";
 import ModalLayout from "@/components/Modal/ModalLayout/ModalLayout";
 import useProjectStore from "@/stores/useProjectStore";
 import { getFileKey } from "@/utils/figma";

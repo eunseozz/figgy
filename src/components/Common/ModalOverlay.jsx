@@ -48,10 +48,6 @@ const ModalContainer = styled.div`
   border-radius: 14px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   min-width: 430px;
-
-  & > div + div {
-    border-top: 1px solid #eee;
-  }
 `;
 
 const CloseButton = styled.button`

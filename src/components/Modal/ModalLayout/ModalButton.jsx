@@ -29,7 +29,6 @@ const ButtonWrapper = styled.div`
   justify-content: ${({ $isDualButton }) =>
     $isDualButton ? "space-between" : "center"};
   gap: 12px;
-  margin-top: 20px;
   padding-top: 20px;
 `;
 

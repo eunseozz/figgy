@@ -38,6 +38,7 @@ const ModalContent = styled.div`
   flex-direction: column;
   gap: 20px;
   padding-top: 20px;
+  border-top: 1px solid #eee;
 `;
 
 export default ModalLayout;

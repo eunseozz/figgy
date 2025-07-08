@@ -5,7 +5,7 @@ const InputGroup = ({
   value,
   onChange,
   readOnly = false,
-  errorText,
+  errorText = undefined,
   placeholder,
 }) => {
   return (
@@ -17,7 +17,7 @@ const InputGroup = ({
         readOnly={readOnly}
         placeholder={placeholder}
       />
-      {errorText && <ErrorText>{errorText}</ErrorText>}
+      {errorText !== undefined && <ErrorText>{errorText}</ErrorText>}
     </GroupWrapper>
   );
 };
@@ -49,7 +49,8 @@ const Input = styled.input`
 
 const ErrorText = styled.p`
   font-size: 11px;
-  line-height: 22px;
+  height: 16px;
+  line-height: 16px;
   color: #ff0000;
 `;
 
