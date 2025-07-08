@@ -1,3 +1,9 @@
 chrome.action.onClicked.addListener((tab) => {
-  chrome.tabs.sendMessage(tab.id, { type: "TOGGLE_DASHBOARD" });
+  chrome.storage.local.get("isDashboardEnabled", ({ isDashboardEnabled }) => {
+    const newState = !isDashboardEnabled;
+
+    chrome.tabs.sendMessage(tab.id, {
+      type: newState ? "ENABLE_DASHBOARD" : "DISABLE_DASHBOARD",
+    });
+  });
 });

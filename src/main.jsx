@@ -30,20 +30,33 @@ const mountApp = () => {
   );
 };
 
-if (
-  typeof chrome !== "undefined" &&
-  chrome.runtime &&
-  chrome.runtime.onMessage
-) {
-  chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.type === "TOGGLE_DASHBOARD") {
-      const existing = document.getElementById("figgy-dashboard");
+const unmountApp = () => {
+  const root = document.getElementById("figgy-dashboard");
 
-      if (existing) {
-        existing.remove();
-      } else {
+  if (root) root.remove();
+};
+
+const isChromeExtension =
+  typeof chrome !== "undefined" && chrome.runtime?.onMessage;
+
+if (isChromeExtension) {
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "ENABLE_DASHBOARD") {
+      chrome.storage.local.set({ isDashboardEnabled: true }, () => {
         mountApp();
-      }
+      });
+    }
+
+    if (msg.type === "DISABLE_DASHBOARD") {
+      chrome.storage.local.set({ isDashboardEnabled: false }, () => {
+        unmountApp();
+      });
+    }
+  });
+
+  chrome.storage.local.get("isDashboardEnabled", ({ isDashboardEnabled }) => {
+    if (isDashboardEnabled) {
+      mountApp();
     }
   });
 } else {
