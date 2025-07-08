@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiFileText } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 import Panel from "@/components/Common/Panel/Panel";
@@ -66,6 +67,7 @@ const Pages = () => {
           const selectedId = selectedPages[group.minWidth]?.id ?? null;
           const markedItems = group.items.map((item) => ({
             ...item,
+            icon: <FiFileText />,
             isActive: item.id === selectedId,
           }));
 

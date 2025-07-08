@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { FiFileText } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 import { getFigmaImageUrls } from "@/api/figma";
@@ -11,20 +10,15 @@ const useSaveFigmaFrames = ({ onSuccessAfterSave } = {}) => {
 
   return useMutation({
     mutationFn: (frames) => getFigmaImageUrls(fileKey, frames),
-    onSuccess: (result) => {
-      const decoratedPages = result.map((item) => ({
-        ...item,
-        icon: <FiFileText />,
-      }));
-
-      decoratedPages.forEach((page) => {
+    onSuccess: (pages) => {
+      pages.forEach((page) => {
         const img = new Image();
 
         img.src = page.imageUrl;
       });
 
       const initialGroups = [
-        { title: "PC", minWidth: 1024, items: decoratedPages },
+        { title: "PC", minWidth: 1024, items: pages },
         { title: "TABLET", minWidth: 768, items: [] },
         { title: "MOBILE", minWidth: 0, items: [] },
       ];
@@ -33,8 +27,8 @@ const useSaveFigmaFrames = ({ onSuccessAfterSave } = {}) => {
 
       if (onSuccessAfterSave) onSuccessAfterSave();
     },
-    onError: (err) => {
-      console.error("프레임 저장 실패", err);
+    onError: (error) => {
+      console.error("프레임 저장 실패", error);
     },
   });
 };
