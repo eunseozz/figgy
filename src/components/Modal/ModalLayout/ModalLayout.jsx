@@ -12,6 +12,8 @@ const ModalLayout = ({
   onCancel,
   isConfirmDisabled,
 }) => {
+  const isShowButton = !!onConfirm || !!onCancel;
+
   return (
     <>
       <ModalHeader
@@ -20,11 +22,13 @@ const ModalLayout = ({
         text={text}
       />
       {children && <ModalContent>{children}</ModalContent>}
-      <ModalButton
-        onConfirm={onConfirm}
-        onCancel={onCancel}
-        isConfirmDisabled={isConfirmDisabled}
-      />
+      {isShowButton && (
+        <ModalButton
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+          isConfirmDisabled={isConfirmDisabled}
+        />
+      )}
     </>
   );
 };

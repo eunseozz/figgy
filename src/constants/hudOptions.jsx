@@ -1,3 +1,5 @@
+import ShortcutBadge from "@/components/HUD/ShortcutBadge";
+
 export const ALIGNMENT = {
   ORIGINAL: "original",
   CENTER: "center",
@@ -14,6 +16,20 @@ export const VIEW_MODE = {
 };
 
 export const toggleGroups = [
+  {
+    label: "오버레이",
+    stateKey: "isShowOverlay",
+    options: [
+      { label: "표시", value: true },
+      { label: "숨김", value: false },
+    ],
+    rightSlot: ({ value, onClick }) => (
+      <ShortcutBadge
+        currentKey={value}
+        onClick={onClick}
+      />
+    ),
+  },
   {
     label: "정렬 방식",
     stateKey: "alignment",

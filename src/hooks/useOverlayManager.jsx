@@ -3,16 +3,19 @@ import { useParams } from "react-router-dom";
 
 import useWindowWidth from "@/hooks/useWindowWidth";
 import useFeedbackStore from "@/stores/useFeedbackStore";
+import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const useOverlayManager = () => {
   const { fileKey } = useParams();
 
-  const [isShowOverlay, setIsShowOverlay] = useState(false);
   const [selectedPages, setSelectedPages] = useState({});
 
   const project = useProjectStore(selectedProject(fileKey));
   const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
+
+  const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
+  const setIsShowOverlay = useHUDStore((state) => state.setIsShowOverlay);
 
   const windowWidth = useWindowWidth();
 

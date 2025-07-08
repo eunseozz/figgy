@@ -1,10 +1,13 @@
 import styled from "styled-components";
 
-import SlidingToggle from "./SlidingToggle";
+import SlidingToggle from "@/components/HUD/SlidingToggle";
 
-const ToggleOptionGroup = ({ label, value, onChange, options }) => (
+const ToggleOptionGroup = ({ label, value, onChange, options, rightSlot }) => (
   <div>
-    <GroupLabel>{label}</GroupLabel>
+    <LabelRow>
+      <GroupLabel>{label}</GroupLabel>
+      {rightSlot && <RightSlotWrapper>{rightSlot}</RightSlotWrapper>}
+    </LabelRow>
     <SlidingToggle
       options={options}
       value={value}
@@ -13,11 +16,22 @@ const ToggleOptionGroup = ({ label, value, onChange, options }) => (
   </div>
 );
 
+const LabelRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
 const GroupLabel = styled.div`
   font-size: 12px;
   font-weight: 600;
-  margin-bottom: 10px;
   color: #111827;
+`;
+
+const RightSlotWrapper = styled.div`
+  font-size: 12px;
+  color: #6b7280;
 `;
 
 export default ToggleOptionGroup;
