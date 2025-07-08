@@ -1,34 +1,49 @@
 import { v4 as uuidv4 } from "uuid";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const useProjectStore = create((set, get) => ({
-  projects: [],
+import { chromeStorage } from "@/utils/chromeStorage";
 
-  addProject: (projectName, fileKey) => {
-    const { projects } = get();
-    const isDuplicate = projects.some((project) => project.fileKey === fileKey);
+const useProjectStore = create(
+  persist(
+    (set, get) => ({
+      projects: [],
 
-    if (isDuplicate) return;
+      addProject: (projectName, fileKey) => {
+        const { projects } = get();
+        const isDuplicate = projects.some(
+          (project) => project.fileKey === fileKey,
+        );
 
-    const newProject = {
-      projectId: uuidv4(),
-      projectName,
-      fileKey,
-      pages: [],
-    };
+        if (isDuplicate) return;
 
-    set({ projects: [...projects, newProject] });
-  },
+        const newProject = {
+          projectId: uuidv4(),
+          projectName,
+          fileKey,
+          pages: [],
+        };
 
-  updateProjects: (fileKey, newPages) => {
-    const { projects } = get();
-    const updateProjects = projects.map((project) =>
-      project.fileKey === fileKey ? { ...project, pages: newPages } : project,
-    );
+        set({ projects: [...projects, newProject] });
+      },
 
-    set({ projects: updateProjects });
-  },
-}));
+      updateProjects: (fileKey, newPages) => {
+        const { projects } = get();
+        const updateProjects = projects.map((project) =>
+          project.fileKey === fileKey
+            ? { ...project, pages: newPages }
+            : project,
+        );
+
+        set({ projects: updateProjects });
+      },
+    }),
+    {
+      name: "project-storage",
+      storage: chromeStorage,
+    },
+  ),
+);
 
 export const selectedProject = (fileKey) => (state) =>
   state.projects.find((project) => project.fileKey === fileKey) || null;
