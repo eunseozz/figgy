@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import ModalOverlay from "@/components/Common/ModalOverlay";
 import ModalLayout from "@/components/Modal/ModalLayout/ModalLayout";
+import useHUDStore from "@/stores/useHUDStore";
 
 const ShortcutModal = ({ closeModal }) => {
   const KEYBOARD_ROWS = [
@@ -9,6 +10,13 @@ const ShortcutModal = ({ closeModal }) => {
     ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
     ["Z", "X", "C", "V", "B", "N", "M"],
   ];
+
+  const showOverlayShortcutKey = useHUDStore(
+    (state) => state.showOverlayShortcutKey,
+  );
+  const setShowOverlayShortcutKey = useHUDStore(
+    (state) => state.setShowOverlayShortcutKey,
+  );
 
   return (
     <ModalOverlay closeModal={closeModal}>
@@ -22,7 +30,11 @@ const ShortcutModal = ({ closeModal }) => {
               {row.map((key) => (
                 <KeyButton
                   key={key}
-                  onClick={() => console.log("key 입력")}
+                  onClick={() => {
+                    setShowOverlayShortcutKey(key);
+                    closeModal();
+                  }}
+                  $isActive={key === showOverlayShortcutKey}
                 >
                   {key}
                 </KeyButton>
@@ -50,7 +62,8 @@ const KeyboardRow = styled.div`
 const KeyButton = styled.button`
   padding: 8px 12px;
   min-width: 40px;
-  background: #f3f4f6;
+  background: ${({ $isActive }) => ($isActive ? "#6dbbbf" : "#f3f4f6")};
+  color: ${({ $isActive }) => ($isActive ? "white" : "#71717a")};
   border: none;
   border-radius: 6px;
   font-weight: 600;
