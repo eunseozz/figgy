@@ -37,6 +37,24 @@ const useProjectStore = create(
 
         set({ projects: updateProjects });
       },
+
+      setActivePage: (fileKey, minWidth, item) => {
+        const { projects } = get();
+
+        const updated = projects.map((project) =>
+          project.fileKey === fileKey
+            ? {
+                ...project,
+                activePageMap: {
+                  ...(project.activePageMap || {}),
+                  [minWidth]: item,
+                },
+              }
+            : project,
+        );
+
+        set({ projects: updated });
+      },
     }),
     {
       name: "project-storage",

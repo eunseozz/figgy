@@ -19,7 +19,7 @@ const Pages = () => {
   const project = useProjectStore(selectedProject(fileKey));
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
-  const { isShowOverlay, handleItemClick, selectedPages, getOverlayNode } =
+  const { isShowOverlay, handleItemClick, getOverlayNode } =
     useOverlayManager();
 
   const overlayNode = getOverlayNode();
@@ -50,6 +50,8 @@ const Pages = () => {
   };
 
   if (!project) return null;
+
+  const selectedPages = project.activePageMap ?? {};
 
   return (
     <>
