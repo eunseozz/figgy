@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import SlidingToggle from "@/components/HUD/ToggleOptionGroup";
+import SlidingToggle from "@/components/HUD/SlidingToggle";
 
 const ToggleOptionGroup = ({ label, value, onChange, options, rightSlot }) => (
   <div>
