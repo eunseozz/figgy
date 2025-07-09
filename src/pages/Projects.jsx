@@ -7,14 +7,21 @@ import PanelList from "@/components/Common/Panel/PanelList";
 import AccessTokenModal from "@/components/Modal/AccessTokenModal";
 import AddProjectModal from "@/components/Modal/AddProjectModal";
 import DeleteProjectModal from "@/components/Modal/DeleteProejctModal";
+import UpdateTitleModal from "@/components/Modal/UpdateTitleModal";
 import useProjectStore from "@/stores/useProjectStore";
 import useUserStore from "@/stores/useUserStore";
 
 const Projects = () => {
   const navigate = useNavigate();
   const projects = useProjectStore((state) => state.projects);
+  const deleteProject = useProjectStore((state) => state.deleteProject);
+  const updateProjectTitle = useProjectStore(
+    (state) => state.updateProjectTitle,
+  );
 
   const [openModalKey, setOpenModalKey] = useState(null);
+  const [targetProject, setTargetProject] = useState(null);
+
   const accessToken = useUserStore((state) => state.accessToken);
 
   const handleCloseModal = () => setOpenModalKey(null);
@@ -45,8 +52,23 @@ const Projects = () => {
       props: {
         onCancel: handleCloseModal,
         onConfirm: () => {
+          deleteProject(targetProject.fileKey);
           handleCloseModal();
         },
+      },
+    },
+    {
+      key: "update",
+      Component: UpdateTitleModal,
+      isOpen: openModalKey === "update",
+      props: {
+        closeModal: handleCloseModal,
+        onConfirm: (newTitle) => {
+          updateProjectTitle(targetProject.fileKey, newTitle);
+          handleCloseModal();
+        },
+        title: targetProject?.label,
+        label: "프로젝트 이름",
       },
     },
   ];
@@ -67,6 +89,14 @@ const Projects = () => {
             items={panelItems}
             onItemClick={(item) => {
               navigate(`/pages/${item.fileKey}`);
+            }}
+            onDeleteClick={(item) => {
+              setTargetProject(item);
+              setOpenModalKey("delete");
+            }}
+            onUpdateClick={(item) => {
+              setTargetProject(item);
+              setOpenModalKey("update");
             }}
           />
         )}
