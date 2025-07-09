@@ -54,23 +54,27 @@ const PanelList = ({
                   <LabelText>{item.label}</LabelText>
                 </PanelListButton>
                 <ButtonWrapper>
-                  <IconButton
-                    type="button"
-                    onClick={() => {
-                      onUpdateClick(item);
-                    }}
-                  >
-                    <FiEdit />
-                  </IconButton>
+                  {!!onUpdateClick && (
+                    <IconButton
+                      type="button"
+                      onClick={() => {
+                        onUpdateClick(item);
+                      }}
+                    >
+                      <FiEdit />
+                    </IconButton>
+                  )}
 
-                  <IconButton
-                    type="button"
-                    onClick={() => {
-                      onDeleteClick(item);
-                    }}
-                  >
-                    <FiTrash2 />
-                  </IconButton>
+                  {!!onDeleteClick && (
+                    <IconButton
+                      type="button"
+                      onClick={() => {
+                        onDeleteClick(item);
+                      }}
+                    >
+                      <FiTrash2 />
+                    </IconButton>
+                  )}
                 </ButtonWrapper>
               </ProjectItem>
             ))}
