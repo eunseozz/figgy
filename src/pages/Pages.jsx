@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { FiFileText } from "react-icons/fi";
+import { RiEdit2Fill } from "react-icons/ri";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 
 import Panel from "@/components/Common/Panel/Panel";
 import PanelList from "@/components/Common/Panel/PanelList";
 import Spinner from "@/components/Common/Spinner";
 import SuspenseWrapper from "@/components/Common/SuspenseWrapper";
 import SelectFrameModal from "@/components/Modal/SelectFrameModal/SelectFrameModal";
+import UpdateFolderModal from "@/components/Modal/UpdateFolderModal";
 import Overlay from "@/components/Overlay";
 import useSaveFigmaFrames from "@/hooks/queries/useSaveFigmaFrames";
 import useDomClickComparator from "@/hooks/useDomClickComparator";
@@ -19,6 +22,7 @@ const Pages = () => {
   const { fileKey } = useParams();
   const project = useProjectStore(selectedProject(fileKey));
   const deletePage = useProjectStore((state) => state.deletePage);
+  const updatePageFolder = useProjectStore((state) => state.updatePageFolder);
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
   const { isShowOverlay, handleItemClick, getOverlayNode } =
@@ -36,8 +40,11 @@ const Pages = () => {
     frameOffsetRef,
   });
 
-  const [isShowModal, setIsShowModal] = useState(false);
+  const [openModalKey, setOpenModalKey] = useState(null);
+  const handleCloseModal = () => setOpenModalKey(null);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [targetFolder, setTargetFolder] = useState(null);
 
   const { mutate } = useSaveFigmaFrames({
     onSuccessAfterSave: () => {
@@ -45,15 +52,44 @@ const Pages = () => {
     },
   });
 
-  const handleConfirmFrames = (frames) => {
-    setIsShowModal(false);
-    setIsLoading(true);
-    mutate(frames);
-  };
-
   if (!project) return null;
 
   const selectedPages = project.activePageMap ?? {};
+
+  const modals = [
+    {
+      key: "selectFrame",
+      Component: SelectFrameModal,
+      isOpen: openModalKey === "selectFrame",
+      props: {
+        closeModal: handleCloseModal,
+        onConfirm: (frames) => {
+          handleCloseModal();
+          setIsLoading(true);
+          mutate(frames);
+        },
+      },
+    },
+    {
+      key: "updateFolder",
+      Component: UpdateFolderModal,
+      isOpen: openModalKey === "updateFolder",
+      props: {
+        closeModal: handleCloseModal,
+        onConfirm: (newTitle, newWidth) => {
+          updatePageFolder(
+            project.projectId,
+            targetFolder?.minWidth,
+            newTitle,
+            newWidth,
+          );
+          handleCloseModal();
+        },
+        name: targetFolder?.title,
+        width: targetFolder?.minWidth,
+      },
+    },
+  ];
 
   return (
     <>
@@ -61,7 +97,7 @@ const Pages = () => {
         isShowToolBar={true}
         addButton={{
           text: "불러올 프레임을 선택해보세요",
-          onClick: () => setIsShowModal(true),
+          onClick: () => setOpenModalKey("selectFrame"),
         }}
       >
         {project?.pages.map((group) => {
@@ -76,6 +112,20 @@ const Pages = () => {
             <PanelList
               key={group.title}
               title={group.title}
+              titleExtras={
+                <>
+                  <Label
+                    onClick={() => {
+                      setOpenModalKey("updateFolder");
+                      setTargetFolder(group);
+                    }}
+                  >
+                    <RiEdit2Fill />
+                    {group.minWidth}
+                  </Label>
+                </>
+              }
+              labelText={group.minWidth}
               items={markedItems}
               onItemClick={handleItemClick}
               isToggle={true}
@@ -91,14 +141,16 @@ const Pages = () => {
         })}
       </Panel>
 
-      {isShowModal && (
+      {modals.map((modal) => (
         <SuspenseWrapper>
-          <SelectFrameModal
-            closeModal={() => setIsShowModal(false)}
-            onConfirm={handleConfirmFrames}
-          />
+          {modal.isOpen ? (
+            <modal.Component
+              key={modal.key}
+              {...modal.props}
+            />
+          ) : null}
         </SuspenseWrapper>
-      )}
+      ))}
 
       {isLoading && <Spinner />}
 
@@ -111,5 +163,18 @@ const Pages = () => {
     </>
   );
 };
+
+const Label = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+  background-color: #6ebbbf;
+  color: #fff;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 18px;
+  height: 18px;
+`;
 
 export default Pages;
