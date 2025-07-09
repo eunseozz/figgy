@@ -38,6 +38,15 @@ const useProjectStore = create(
         set({ projects: updateProjects });
       },
 
+      deleteProject: (fileKey) => {
+        const { projects } = get();
+        const filteredProject = projects.filter(
+          (project) => project.fileKey !== fileKey,
+        );
+
+        set({ projects: filteredProject });
+      },
+
       setActivePage: (fileKey, minWidth, item) => {
         const { projects } = get();
 

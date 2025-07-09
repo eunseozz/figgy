@@ -13,6 +13,7 @@ const PanelList = ({
   onDragOver,
   emptyText,
   isToggle = false,
+  onDeleteClick,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -42,7 +43,6 @@ const PanelList = ({
             {items.map((item, index) => (
               <li key={index}>
                 <PanelListButton
-                  type="button"
                   draggable
                   $isActive={item.isActive}
                   onClick={() => onItemClick(item)}
@@ -51,6 +51,13 @@ const PanelList = ({
                   {item.icon}
                   {item.label}
                 </PanelListButton>
+                <button type="button">수정</button>
+                <button
+                  type="button"
+                  onClick={() => onDeleteClick(item)}
+                >
+                  삭제
+                </button>
               </li>
             ))}
           </ProjectList>

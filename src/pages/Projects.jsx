@@ -13,8 +13,11 @@ import useUserStore from "@/stores/useUserStore";
 const Projects = () => {
   const navigate = useNavigate();
   const projects = useProjectStore((state) => state.projects);
+  const deleteProject = useProjectStore((state) => state.deleteProject);
 
   const [openModalKey, setOpenModalKey] = useState(null);
+  const [targetProject, setTargetProject] = useState(null);
+
   const accessToken = useUserStore((state) => state.accessToken);
 
   const handleCloseModal = () => setOpenModalKey(null);
@@ -43,8 +46,9 @@ const Projects = () => {
       Component: DeleteProjectModal,
       isOpen: openModalKey === "delete",
       props: {
-        onCancel: handleCloseModal,
+        onCancel: () => handleCloseModal,
         onConfirm: () => {
+          deleteProject(targetProject.fileKey);
           handleCloseModal();
         },
       },
@@ -67,6 +71,10 @@ const Projects = () => {
             items={panelItems}
             onItemClick={(item) => {
               navigate(`/pages/${item.fileKey}`);
+            }}
+            onDeleteClick={(item) => {
+              setTargetProject(item);
+              setOpenModalKey("delete");
             }}
           />
         )}
