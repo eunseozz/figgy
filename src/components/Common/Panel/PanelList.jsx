@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
@@ -7,6 +8,7 @@ import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 
 const PanelList = ({
   title,
+  titleExtras,
   items,
   onItemClick,
   onDragStart,
@@ -21,14 +23,17 @@ const PanelList = ({
 
   return (
     <div>
-      <TitleWrapper>
-        <Title>{title}</Title>
+      <ListHeader>
+        <TitleWrapper>
+          <Title>{title}</Title>
+          {titleExtras}
+        </TitleWrapper>
         {isToggle && (
           <ToggleButton onClick={() => setIsOpen((prev) => !prev)}>
             {isOpen ? <HiChevronUp /> : <HiChevronDown />}
           </ToggleButton>
         )}
-      </TitleWrapper>
+      </ListHeader>
 
       <div
         onDrop={onDrop}
@@ -43,34 +48,43 @@ const PanelList = ({
             $isOpen={isOpen}
           >
             {items.map((item, index) => (
-              <ProjectItem key={index}>
+              <ProjectItem
+                key={index}
+                $isActive={item.isActive}
+              >
                 <PanelListButton
                   draggable
-                  $isActive={item.isActive}
                   onClick={() => onItemClick(item)}
                   onDragStart={(e) => onDragStart(e, item)}
+                  $isActive={item.isActive}
                 >
-                  {item.icon}
-                  <LabelText>{item.label}</LabelText>
+                  {item.isActive ? <FaCheckCircle /> : item.icon}
+                  <LabelText $isActive={item.isActive}>{item.label}</LabelText>
                 </PanelListButton>
                 <ButtonWrapper>
-                  <IconButton
-                    type="button"
-                    onClick={() => {
-                      onUpdateClick(item);
-                    }}
-                  >
-                    <FiEdit />
-                  </IconButton>
+                  {!!onUpdateClick && (
+                    <IconButton
+                      $isActive={item.isActive}
+                      type="button"
+                      onClick={() => {
+                        onUpdateClick(item);
+                      }}
+                    >
+                      <FiEdit />
+                    </IconButton>
+                  )}
 
-                  <IconButton
-                    type="button"
-                    onClick={() => {
-                      onDeleteClick(item);
-                    }}
-                  >
-                    <FiTrash2 />
-                  </IconButton>
+                  {!!onDeleteClick && (
+                    <IconButton
+                      $isActive={item.isActive}
+                      type="button"
+                      onClick={() => {
+                        onDeleteClick(item);
+                      }}
+                    >
+                      <FiTrash2 />
+                    </IconButton>
+                  )}
                 </ButtonWrapper>
               </ProjectItem>
             ))}
@@ -81,9 +95,15 @@ const PanelList = ({
   );
 };
 
-const TitleWrapper = styled.div`
+const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  gap: 6px;
   align-items: center;
 `;
 
@@ -101,7 +121,10 @@ const ToggleButton = styled.button`
 const Title = styled.h2`
   font-size: 14px;
   letter-spacing: 2px;
-  font-weight: 400;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 `;
 
 const ProjectList = styled.ul`
@@ -123,10 +146,12 @@ const ProjectList = styled.ul`
 `;
 
 const ProjectItem = styled.li`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  border-radius: 6px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -147,6 +172,7 @@ const IconButton = styled.button`
   svg {
     font-size: 16px;
     color: #aaa;
+    color: ${({ $isActive }) => ($isActive ? "#6ebbbf" : "inherit")};
   }
 `;
 
@@ -156,17 +182,17 @@ const PanelListButton = styled.button`
   height: 40px;
   gap: 14px;
   align-items: center;
-  background-color: ${({ $isActive }) =>
-    $isActive ? "#f0f0f0" : "transparent"};
+  background-color: transparent;
   font-size: 14px;
-  border-radius: 6px;
   transition: background-color 0.2s ease;
   flex-grow: 1;
   min-width: 0;
+  color: inherit;
 
   svg {
     font-size: 18px;
     flex-shrink: 0;
+    color: ${({ $isActive }) => ($isActive ? "#6ebbbf" : "inherit")};
   }
 `;
 
@@ -177,6 +203,7 @@ const LabelText = styled.span`
   text-align: left;
   flex-grow: 1;
   min-width: 0;
+  color: ${({ $isActive }) => ($isActive ? "#6ebbbf" : "inherit")};
 `;
 
 export default PanelList;

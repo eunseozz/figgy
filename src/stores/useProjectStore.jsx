@@ -58,6 +58,72 @@ const useProjectStore = create(
         set({ projects: updated });
       },
 
+      deletePage: (fileKey, pageId) => {
+        const { projects } = get();
+
+        const updatedProjects = projects.map((project) => {
+          if (project.fileKey !== fileKey) return project;
+
+          const updatedPages = project.pages.map((page) => {
+            const filteredItems = page.items.filter(
+              (item) => item.id !== pageId,
+            );
+
+            return { ...page, items: filteredItems };
+          });
+
+          return { ...project, pages: updatedPages };
+        });
+
+        set({ projects: updatedProjects });
+      },
+
+      updatePageFolder: (projectId, targetMinWidth, newTitle, newMinWidth) => {
+        const { projects } = get();
+
+        const updatedProjects = projects.map((project) => {
+          if (project.projectId !== projectId) return project;
+
+          const updatedPages = project.pages.map((page) => {
+            if (page.minWidth !== targetMinWidth) return page;
+
+            return {
+              ...page,
+              title: newTitle,
+              minWidth: newMinWidth,
+            };
+          });
+
+          return {
+            ...project,
+            pages: updatedPages,
+          };
+        });
+
+        set({ projects: updatedProjects });
+      },
+
+      createPageFolder: (projectId, title, width) => {
+        const { projects } = get();
+
+        const updatedProjects = projects.map((project) => {
+          if (project.projectId !== projectId) return project;
+
+          const newPage = {
+            title,
+            minWidth: width,
+            items: [],
+          };
+
+          return {
+            ...project,
+            pages: [...project.pages, newPage],
+          };
+        });
+
+        set({ projects: updatedProjects });
+      },
+
       setActivePage: (fileKey, minWidth, item) => {
         const { projects } = get();
 

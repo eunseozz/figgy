@@ -1,46 +1,67 @@
+import { useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { TbFolderPlus } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
+import FolderSettingsModal from "@/components/Modal/FolderSettingsModal";
 import useHUDStore from "@/stores/useHUDStore";
+import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 import { getAssetUrl } from "@/utils/chrome";
 
 const logoImage = getAssetUrl("images/logos/full.png");
 
 const Panel = ({ children, isShowToolBar = false, addButton }) => {
+  const { fileKey } = useParams();
+  const project = useProjectStore(selectedProject(fileKey));
+
   const navigate = useNavigate();
   const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
 
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const createPageFolder = useProjectStore((state) => state.createPageFolder);
+
   return (
-    <Container $isOpenPanel={isOpenPanel}>
-      <Header>
-        <Logo>Figgy</Logo>
-      </Header>
+    <>
+      <Container $isOpenPanel={isOpenPanel}>
+        <Header>
+          <Logo>Figgy</Logo>
+        </Header>
 
-      <Section $isShowToolBar={isShowToolBar}>
-        {isShowToolBar && (
-          <ToolBar>
-            <IconButton onClick={() => navigate("/")}>
-              <IoMdArrowBack />
-            </IconButton>
-            <IconButton onClick={() => console.log("폴더 추가")}>
-              <TbFolderPlus />
-            </IconButton>
-          </ToolBar>
-        )}
+        <Section $isShowToolBar={isShowToolBar}>
+          {isShowToolBar && (
+            <ToolBar>
+              <IconButton onClick={() => navigate("/")}>
+                <IoMdArrowBack />
+              </IconButton>
+              <IconButton onClick={() => setIsOpenModal(true)}>
+                <TbFolderPlus />
+              </IconButton>
+            </ToolBar>
+          )}
 
-        {addButton && (
-          <GrayDashAddButton
-            text={addButton.text}
-            onClick={addButton.onClick}
-          />
-        )}
+          {addButton && (
+            <GrayDashAddButton
+              text={addButton.text}
+              onClick={addButton.onClick}
+            />
+          )}
 
-        <Content>{children}</Content>
-      </Section>
-    </Container>
+          <Content>{children}</Content>
+        </Section>
+      </Container>
+      {isOpenModal && (
+        <FolderSettingsModal
+          closeModal={() => setIsOpenModal(false)}
+          onConfirm={(newTitle, newWidth) => {
+            createPageFolder(project.projectId, newTitle, newWidth);
+            setIsOpenModal(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 
