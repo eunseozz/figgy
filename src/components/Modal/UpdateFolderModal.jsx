@@ -56,7 +56,7 @@ const UpdateFolderModal = ({
             (page) => page.minWidth === numericWidth,
           );
 
-          if (isDuplicateWidth) {
+          if (isDuplicateWidth && width !== numericWidth) {
             setErrorText("이미 같은 너비의 폴더가 있어요.");
 
             return;
