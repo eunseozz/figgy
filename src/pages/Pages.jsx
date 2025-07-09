@@ -8,9 +8,10 @@ import Panel from "@/components/Common/Panel/Panel";
 import PanelList from "@/components/Common/Panel/PanelList";
 import Spinner from "@/components/Common/Spinner";
 import SuspenseWrapper from "@/components/Common/SuspenseWrapper";
+import FolderSettingsModal from "@/components/Modal/FolderSettingsModal";
 import SelectFrameModal from "@/components/Modal/SelectFrameModal/SelectFrameModal";
-import UpdateFolderModal from "@/components/Modal/UpdateFolderModal";
 import Overlay from "@/components/Overlay";
+import { SETTING_MODE } from "@/constants/folderSettingModes";
 import useSaveFigmaFrames from "@/hooks/queries/useSaveFigmaFrames";
 import useDomClickComparator from "@/hooks/useDomClickComparator";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
@@ -72,7 +73,7 @@ const Pages = () => {
     },
     {
       key: "updateFolder",
-      Component: UpdateFolderModal,
+      Component: FolderSettingsModal,
       isOpen: openModalKey === "updateFolder",
       props: {
         closeModal: handleCloseModal,
@@ -87,6 +88,7 @@ const Pages = () => {
         },
         name: targetFolder?.title,
         width: targetFolder?.minWidth,
+        mode: SETTING_MODE.EDIT,
       },
     },
   ];
