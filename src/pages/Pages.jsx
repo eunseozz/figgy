@@ -18,6 +18,7 @@ import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 const Pages = () => {
   const { fileKey } = useParams();
   const project = useProjectStore(selectedProject(fileKey));
+  const deletePage = useProjectStore((state) => state.deletePage);
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
   const { isShowOverlay, handleItemClick, getOverlayNode } =
@@ -82,6 +83,9 @@ const Pages = () => {
               onDragOver={(event) => event.preventDefault()}
               onDrop={(event) => handleDrop(event, group.minWidth)}
               emptyText="프레임을 끌어다 놓으면 여기에 추가돼요"
+              onDeleteClick={(item) => {
+                deletePage(fileKey, item.id);
+              }}
             />
           );
         })}

@@ -58,6 +58,26 @@ const useProjectStore = create(
         set({ projects: updated });
       },
 
+      deletePage: (fileKey, pageId) => {
+        const { projects } = get();
+
+        const updatedProjects = projects.map((project) => {
+          if (project.fileKey !== fileKey) return project;
+
+          const updatedPages = project.pages.map((page) => {
+            const filteredItems = page.items.filter(
+              (item) => item.id !== pageId,
+            );
+
+            return { ...page, items: filteredItems };
+          });
+
+          return { ...project, pages: updatedPages };
+        });
+
+        set({ projects: updatedProjects });
+      },
+
       setActivePage: (fileKey, minWidth, item) => {
         const { projects } = get();
 
