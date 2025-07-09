@@ -73,7 +73,7 @@ export const compareDomWithFigma = (
   }
 
   const figmaBox = figmaNode.absoluteBoundingBox;
-  const pixelLimit = 5;
+  const pixelLimit = 3;
 
   const imageRect = imageRef.current.getBoundingClientRect();
   const scale = imageRef.current.width / figmaOriginalWidth;

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import useWindowWidth from "@/hooks/useWindowWidth";
@@ -15,6 +16,10 @@ const useOverlayManager = () => {
 
   const setActivePage = useProjectStore((state) => state.setActivePage);
   const windowWidth = useWindowWidth();
+
+  useEffect(() => {
+    if (!isShowOverlay) clearFeedback();
+  }, [isShowOverlay]);
 
   const handleItemClick = (clickedItem) => {
     const group = project?.pages.find((group) =>
