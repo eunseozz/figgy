@@ -7,7 +7,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   :where(#figgy-dashboard) {
-    font-family: sans-serif;
+    font-family: system-ui, sans-serif;
     font-weight: normal;
     color: #5c5e64;
     box-sizing: border-box;
