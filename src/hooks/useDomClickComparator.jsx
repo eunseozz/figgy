@@ -1,6 +1,9 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import useFeedbackStore from "@/stores/useFeedbackStore";
+import useHUDStore from "@/stores/useHUDStore";
+import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 import {
   compareDomWithFigma,
   generateDiffText,
@@ -15,16 +18,26 @@ const useDomClickComparator = ({
   figmaOriginalWidthRef,
   frameOffsetRef,
 }) => {
+  const { fileKey } = useParams();
+  const project = useProjectStore(selectedProject(fileKey));
+
   const setTooltip = useFeedbackStore((state) => state.setTooltip);
   const setActiveElement = useFeedbackStore((state) => state.setActiveElement);
   const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
+  const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
 
   useEffect(() => {
     const handleClick = (event) => {
       const clickedElement = event.target;
 
-      if (IGNORED_TAGS.includes(clickedElement.tagName)) return;
-      if (clickedElement.closest("#figgy-dashboard")) return;
+      const hasActivePages =
+        project?.activePageMap && Object.keys(project.activePageMap).length > 0;
+
+      const isIgnoredTag = IGNORED_TAGS.includes(clickedElement.tagName);
+      const isInsideDashboard = clickedElement.closest("#figgy-dashboard");
+
+      if (!isShowOverlay || !hasActivePages) return;
+      if (isIgnoredTag || isInsideDashboard) return;
 
       clearFeedback();
 
@@ -65,7 +78,7 @@ const useDomClickComparator = ({
     document.addEventListener("click", handleClick, true);
 
     return () => document.removeEventListener("click", handleClick, true);
-  }, [figmaNodes]);
+  }, [figmaNodes, project?.activePageMap, isShowOverlay]);
 };
 
 export default useDomClickComparator;
