@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
@@ -47,19 +48,23 @@ const PanelList = ({
             $isOpen={isOpen}
           >
             {items.map((item, index) => (
-              <ProjectItem key={index}>
+              <ProjectItem
+                key={index}
+                $isActive={item.isActive}
+              >
                 <PanelListButton
                   draggable
-                  $isActive={item.isActive}
                   onClick={() => onItemClick(item)}
                   onDragStart={(e) => onDragStart(e, item)}
+                  $isActive={item.isActive}
                 >
-                  {item.icon}
-                  <LabelText>{item.label}</LabelText>
+                  {item.isActive ? <FaCheckCircle /> : item.icon}
+                  <LabelText $isActive={item.isActive}>{item.label}</LabelText>
                 </PanelListButton>
                 <ButtonWrapper>
                   {!!onUpdateClick && (
                     <IconButton
+                      $isActive={item.isActive}
                       type="button"
                       onClick={() => {
                         onUpdateClick(item);
@@ -71,6 +76,7 @@ const PanelList = ({
 
                   {!!onDeleteClick && (
                     <IconButton
+                      $isActive={item.isActive}
                       type="button"
                       onClick={() => {
                         onDeleteClick(item);
@@ -140,10 +146,12 @@ const ProjectList = styled.ul`
 `;
 
 const ProjectItem = styled.li`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  border-radius: 6px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -164,6 +172,7 @@ const IconButton = styled.button`
   svg {
     font-size: 16px;
     color: #aaa;
+    color: ${({ $isActive }) => ($isActive ? "#6ebbbf" : "inherit")};
   }
 `;
 
@@ -173,17 +182,17 @@ const PanelListButton = styled.button`
   height: 40px;
   gap: 14px;
   align-items: center;
-  background-color: ${({ $isActive }) =>
-    $isActive ? "#f0f0f0" : "transparent"};
+  background-color: transparent;
   font-size: 14px;
-  border-radius: 6px;
   transition: background-color 0.2s ease;
   flex-grow: 1;
   min-width: 0;
+  color: inherit;
 
   svg {
     font-size: 18px;
     flex-shrink: 0;
+    color: ${({ $isActive }) => ($isActive ? "#6ebbbf" : "inherit")};
   }
 `;
 
@@ -194,6 +203,7 @@ const LabelText = styled.span`
   text-align: left;
   flex-grow: 1;
   min-width: 0;
+  color: ${({ $isActive }) => ($isActive ? "#6ebbbf" : "inherit")};
 `;
 
 export default PanelList;

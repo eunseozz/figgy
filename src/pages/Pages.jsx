@@ -169,10 +169,10 @@ const Pages = () => {
 const Label = styled.button`
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   padding: 0 4px;
-  background-color: #6ebbbf;
-  color: #fff;
+  background-color: #f0f0f0;
+  color: #aaa;
   border-radius: 3px;
   font-size: 11px;
   line-height: 18px;
