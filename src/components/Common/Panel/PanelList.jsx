@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import styled from "styled-components";
 
@@ -42,7 +43,7 @@ const PanelList = ({
             $isOpen={isOpen}
           >
             {items.map((item, index) => (
-              <li key={index}>
+              <ProjectItem key={index}>
                 <PanelListButton
                   draggable
                   $isActive={item.isActive}
@@ -50,21 +51,28 @@ const PanelList = ({
                   onDragStart={(e) => onDragStart(e, item)}
                 >
                   {item.icon}
-                  {item.label}
+                  <LabelText>{item.label}</LabelText>
                 </PanelListButton>
-                <button
-                  type="button"
-                  onClick={() => onUpdateClick(item)}
-                >
-                  수정
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onDeleteClick(item)}
-                >
-                  삭제
-                </button>
-              </li>
+                <ButtonWrapper>
+                  <IconButton
+                    type="button"
+                    onClick={() => {
+                      onUpdateClick(item);
+                    }}
+                  >
+                    <FiEdit />
+                  </IconButton>
+
+                  <IconButton
+                    type="button"
+                    onClick={() => {
+                      onDeleteClick(item);
+                    }}
+                  >
+                    <FiTrash2 />
+                  </IconButton>
+                </ButtonWrapper>
+              </ProjectItem>
             ))}
           </ProjectList>
         )}
@@ -97,7 +105,7 @@ const Title = styled.h2`
 `;
 
 const ProjectList = styled.ul`
-  margin-top: 16px;
+  margin-top: 12px;
   overflow-y: auto;
   transition: max-height 0.5s ease;
   max-height: ${({ $isOpen }) => ($isOpen ? "300px" : "0")};
@@ -114,6 +122,34 @@ const ProjectList = styled.ul`
   }
 `;
 
+const ProjectItem = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  z-index: 1;
+`;
+
+const IconButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+
+  svg {
+    font-size: 16px;
+    color: #aaa;
+  }
+`;
+
 const PanelListButton = styled.button`
   display: flex;
   width: 100%;
@@ -124,12 +160,23 @@ const PanelListButton = styled.button`
     $isActive ? "#f0f0f0" : "transparent"};
   font-size: 14px;
   border-radius: 6px;
-  padding: 0 12px;
   transition: background-color 0.2s ease;
+  flex-grow: 1;
+  min-width: 0;
 
   svg {
     font-size: 18px;
+    flex-shrink: 0;
   }
+`;
+
+const LabelText = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  flex-grow: 1;
+  min-width: 0;
 `;
 
 export default PanelList;
