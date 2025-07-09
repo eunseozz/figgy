@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 import FolderSettingsModal from "@/components/Modal/FolderSettingsModal";
+import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 import { getAssetUrl } from "@/utils/chrome";
@@ -22,6 +23,8 @@ const Panel = ({ children, isShowToolBar = false, addButton }) => {
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const createPageFolder = useProjectStore((state) => state.createPageFolder);
+  const resetActivePage = useProjectStore((state) => state.resetActivePage);
+  const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
 
   return (
     <>
@@ -33,7 +36,13 @@ const Panel = ({ children, isShowToolBar = false, addButton }) => {
         <Section $isShowToolBar={isShowToolBar}>
           {isShowToolBar && (
             <ToolBar>
-              <IconButton onClick={() => navigate("/")}>
+              <IconButton
+                onClick={() => {
+                  clearFeedback();
+                  resetActivePage(fileKey);
+                  navigate("/");
+                }}
+              >
                 <IoMdArrowBack />
               </IconButton>
               <IconButton onClick={() => setIsOpenModal(true)}>
