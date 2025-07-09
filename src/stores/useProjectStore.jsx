@@ -103,6 +103,27 @@ const useProjectStore = create(
         set({ projects: updatedProjects });
       },
 
+      createPageFolder: (projectId, title, width) => {
+        const { projects } = get();
+
+        const updatedProjects = projects.map((project) => {
+          if (project.projectId !== projectId) return project;
+
+          const newPage = {
+            title,
+            minWidth: width,
+            items: [],
+          };
+
+          return {
+            ...project,
+            pages: [...project.pages, newPage],
+          };
+        });
+
+        set({ projects: updatedProjects });
+      },
+
       setActivePage: (fileKey, minWidth, item) => {
         const { projects } = get();
 
