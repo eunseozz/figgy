@@ -7,6 +7,7 @@ import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 
 const PanelList = ({
   title,
+  titleExtras,
   items,
   onItemClick,
   onDragStart,
@@ -21,14 +22,17 @@ const PanelList = ({
 
   return (
     <div>
-      <TitleWrapper>
-        <Title>{title}</Title>
+      <ListHeader>
+        <TitleWrapper>
+          <Title>{title}</Title>
+          {titleExtras}
+        </TitleWrapper>
         {isToggle && (
           <ToggleButton onClick={() => setIsOpen((prev) => !prev)}>
             {isOpen ? <HiChevronUp /> : <HiChevronDown />}
           </ToggleButton>
         )}
-      </TitleWrapper>
+      </ListHeader>
 
       <div
         onDrop={onDrop}
@@ -85,9 +89,15 @@ const PanelList = ({
   );
 };
 
-const TitleWrapper = styled.div`
+const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  gap: 6px;
   align-items: center;
 `;
 
@@ -105,7 +115,10 @@ const ToggleButton = styled.button`
 const Title = styled.h2`
   font-size: 14px;
   letter-spacing: 2px;
-  font-weight: 400;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 `;
 
 const ProjectList = styled.ul`
