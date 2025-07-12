@@ -6,7 +6,7 @@ import Panel from "@/components/Common/Panel/Panel";
 import PanelList from "@/components/Common/Panel/PanelList";
 import AccessTokenModal from "@/components/Modal/AccessTokenModal";
 import AddProjectModal from "@/components/Modal/AddProjectModal";
-import DeleteProjectModal from "@/components/Modal/DeleteProejctModal";
+import ConfirmDeleteModal from "@/components/Modal/ConfirmDeleteModal";
 import UpdateTitleModal from "@/components/Modal/UpdateTitleModal";
 import useProjectStore from "@/stores/useProjectStore";
 import useUserStore from "@/stores/useUserStore";
@@ -47,9 +47,11 @@ const Projects = () => {
     },
     {
       key: "delete",
-      Component: DeleteProjectModal,
+      Component: ConfirmDeleteModal,
       isOpen: openModalKey === "delete",
       props: {
+        title: "프로젝트 삭제를 진행할게요",
+        text: "삭제하면 이 프로젝트의 모든 정보가 사라지고 복구할 수 없어요.",
         onCancel: handleCloseModal,
         onConfirm: () => {
           deleteProject(targetProject.fileKey);

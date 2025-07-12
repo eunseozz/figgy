@@ -3,13 +3,13 @@ import { MdErrorOutline } from "react-icons/md";
 import ModalOverlay from "@/components/Common/ModalOverlay";
 import ModalLayout from "@/components/Modal/ModalLayout/ModalLayout";
 
-const DeleteProjectModal = ({ onCancel, onConfirm }) => {
+const ConfirmDeleteModal = ({ title, text, onCancel, onConfirm }) => {
   return (
     <ModalOverlay closeModal={onCancel}>
       <ModalLayout
         icon={<MdErrorOutline style={{ color: "#ef4444" }} />}
-        title="프로젝트 삭제를 진행할게요"
-        text="삭제하면 이 프로젝트의 모든 정보가 사라지고 복구할 수 없어요."
+        title={title}
+        text={text}
         onConfirm={onConfirm}
         onCancel={onCancel}
       />
@@ -17,4 +17,4 @@ const DeleteProjectModal = ({ onCancel, onConfirm }) => {
   );
 };
 
-export default DeleteProjectModal;
+export default ConfirmDeleteModal;
