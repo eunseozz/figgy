@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+import { VIEW_MODE } from "@/constants/hudOptions";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
@@ -25,6 +26,7 @@ const useDomClickComparator = ({
   const setActiveElement = useFeedbackStore((state) => state.setActiveElement);
   const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
+  const viewMode = useHUDStore((state) => state.viewMode);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -32,11 +34,12 @@ const useDomClickComparator = ({
 
       const hasActivePages =
         project?.activePageMap && Object.keys(project.activePageMap).length > 0;
+      const isDiffMode = viewMode === VIEW_MODE.DIFF;
 
       const isIgnoredTag = IGNORED_TAGS.includes(clickedElement.tagName);
       const isInsideDashboard = clickedElement.closest("#figgy-dashboard");
 
-      if (!isShowOverlay || !hasActivePages) return;
+      if (!isShowOverlay || !hasActivePages || !isDiffMode) return;
       if (isIgnoredTag || isInsideDashboard) return;
 
       clearFeedback();
@@ -78,7 +81,7 @@ const useDomClickComparator = ({
     document.addEventListener("click", handleClick, true);
 
     return () => document.removeEventListener("click", handleClick, true);
-  }, [figmaNodes, project?.activePageMap, isShowOverlay]);
+  }, [figmaNodes, project?.activePageMap, isShowOverlay, viewMode]);
 };
 
 export default useDomClickComparator;
