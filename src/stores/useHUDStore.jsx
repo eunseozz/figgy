@@ -9,7 +9,7 @@ const useHUDStore = create(
     (set) => ({
       alignment: ALIGNMENT.CENTER,
       scaleMode: SCALE_MODE.ACTUAL,
-      viewMode: VIEW_MODE.DESIGN,
+      viewMode: VIEW_MODE.DIFF,
       isShowOverlay: true,
       showOverlayShortcutKey: "K",
       opacity: 0.3,
