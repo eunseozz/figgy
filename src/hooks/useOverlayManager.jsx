@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import useWindowWidth from "@/hooks/useWindowWidth";
@@ -11,15 +10,10 @@ const useOverlayManager = () => {
   const project = useProjectStore(selectedProject(fileKey));
 
   const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
-  const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const setIsShowOverlay = useHUDStore((state) => state.setIsShowOverlay);
 
   const setActivePage = useProjectStore((state) => state.setActivePage);
   const windowWidth = useWindowWidth();
-
-  useEffect(() => {
-    if (!isShowOverlay) clearFeedback();
-  }, [isShowOverlay]);
 
   const handleItemClick = (clickedItem) => {
     const group = project?.pages.find((group) =>
@@ -47,7 +41,6 @@ const useOverlayManager = () => {
   };
 
   return {
-    isShowOverlay,
     handleItemClick,
     getOverlayNode,
   };

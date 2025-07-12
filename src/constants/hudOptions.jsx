@@ -34,8 +34,8 @@ export const toggleGroups = [
     label: "정렬 방식",
     stateKey: "alignment",
     options: [
-      { label: "원본 위치", value: ALIGNMENT.ORIGINAL },
       { label: "가운데 정렬", value: ALIGNMENT.CENTER },
+      { label: "원본 위치", value: ALIGNMENT.ORIGINAL },
     ],
   },
   {
@@ -50,8 +50,8 @@ export const toggleGroups = [
     label: "시각화",
     stateKey: "viewMode",
     options: [
-      { label: "디자인만 보기", value: VIEW_MODE.DESIGN },
       { label: "오차 보기", value: VIEW_MODE.DIFF },
+      { label: "디자인만 보기", value: VIEW_MODE.DESIGN },
     ],
   },
 ];

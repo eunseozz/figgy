@@ -19,6 +19,7 @@ import useDomClickComparator from "@/hooks/useDomClickComparator";
 import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useFigmaFrameData from "@/hooks/useFigmaFrameData";
 import useOverlayManager from "@/hooks/useOverlayManager";
+import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 
 const Pages = () => {
@@ -27,10 +28,10 @@ const Pages = () => {
   const deletePage = useProjectStore((state) => state.deletePage);
   const updatePageFolder = useProjectStore((state) => state.updatePageFolder);
   const deletePageFolder = useProjectStore((state) => state.deletePageFolder);
+  const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
-  const { isShowOverlay, handleItemClick, getOverlayNode } =
-    useOverlayManager();
+  const { handleItemClick, getOverlayNode } = useOverlayManager();
 
   const overlayNode = getOverlayNode();
 

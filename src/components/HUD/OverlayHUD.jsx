@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 import styled from "styled-components";
 
 import OpacityControl from "@/components/HUD/OpacityControl";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
 import ShortcutModal from "@/components/Modal/ShortcutModal";
-import { toggleGroups } from "@/constants/hudOptions";
+import { toggleGroups, VIEW_MODE } from "@/constants/hudOptions";
+import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
 
@@ -18,6 +19,8 @@ const OverlayHUD = () => {
   const showOverlayShortcutKey = useHUDStore(
     (state) => state.showOverlayShortcutKey,
   );
+
+  const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
 
   const isOpenPanel = useHUDStore((state) => state.isOpenPanel);
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
@@ -41,6 +44,14 @@ const OverlayHUD = () => {
     viewMode: setViewMode,
     isShowOverlay: setIsShowOverlay,
   };
+
+  useEffect(() => {
+    const shouldClearFeedback = viewMode !== VIEW_MODE.DIFF || !isShowOverlay;
+
+    if (shouldClearFeedback) {
+      clearFeedback();
+    }
+  }, [viewMode, isShowOverlay]);
 
   const logoImage = getAssetUrl("images/logos/size_48.png");
 
