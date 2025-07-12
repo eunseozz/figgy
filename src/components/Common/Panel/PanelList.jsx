@@ -105,6 +105,12 @@ const TitleWrapper = styled.div`
   display: flex;
   gap: 6px;
   align-items: center;
+  position: relative;
+
+  &:hover .delete-icon {
+    opacity: 1;
+    pointer-events: auto;
+  }
 `;
 
 const ToggleButton = styled.button`
