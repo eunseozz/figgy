@@ -124,6 +124,25 @@ const useProjectStore = create(
         set({ projects: updatedProjects });
       },
 
+      deletePageFolder: (projectId, targetWidth) => {
+        const { projects } = get();
+
+        const updatedProjects = projects.map((project) => {
+          if (project.projectId !== projectId) return project;
+
+          const filteredPages = project.pages.filter(
+            (page) => page.minWidth !== targetWidth,
+          );
+
+          return {
+            ...project,
+            pages: filteredPages,
+          };
+        });
+
+        set({ projects: updatedProjects });
+      },
+
       setActivePage: (fileKey, minWidth, item) => {
         const { projects } = get();
 

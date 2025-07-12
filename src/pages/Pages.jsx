@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiFileText } from "react-icons/fi";
+import { IoMdClose } from "react-icons/io";
 import { RiEdit2Fill } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +9,7 @@ import Panel from "@/components/Common/Panel/Panel";
 import PanelList from "@/components/Common/Panel/PanelList";
 import Spinner from "@/components/Common/Spinner";
 import SuspenseWrapper from "@/components/Common/SuspenseWrapper";
+import ConfirmDeleteModal from "@/components/Modal/ConfirmDeleteModal";
 import FolderSettingsModal from "@/components/Modal/FolderSettingsModal";
 import SelectFrameModal from "@/components/Modal/SelectFrameModal/SelectFrameModal";
 import Overlay from "@/components/Overlay";
@@ -24,6 +26,7 @@ const Pages = () => {
   const project = useProjectStore(selectedProject(fileKey));
   const deletePage = useProjectStore((state) => state.deletePage);
   const updatePageFolder = useProjectStore((state) => state.updatePageFolder);
+  const deletePageFolder = useProjectStore((state) => state.deletePageFolder);
 
   const { handleDragStart, handleDrop } = useDragAndDropPages();
   const { isShowOverlay, handleItemClick, getOverlayNode } =
@@ -91,6 +94,20 @@ const Pages = () => {
         mode: SETTING_MODE.EDIT,
       },
     },
+    {
+      key: "delete",
+      Component: ConfirmDeleteModal,
+      isOpen: openModalKey === "delete",
+      props: {
+        title: "페이지 폴더를 삭제할까요?",
+        text: "삭제하면 이 폴더 안의 모든 프레임이 함께 사라지고 복구할 수 없어요.",
+        onCancel: handleCloseModal,
+        onConfirm: () => {
+          deletePageFolder(project.projectId, targetFolder?.minWidth);
+          handleCloseModal();
+        },
+      },
+    },
   ];
 
   return (
@@ -115,7 +132,7 @@ const Pages = () => {
               key={group.title}
               title={group.title}
               titleExtras={
-                <>
+                <TitleExtraWrap>
                   <Label
                     onClick={() => {
                       setOpenModalKey("updateFolder");
@@ -125,7 +142,16 @@ const Pages = () => {
                     <RiEdit2Fill />
                     {group.minWidth}
                   </Label>
-                </>
+                  <DeleteButton
+                    className="delete-icon"
+                    onClick={() => {
+                      setTargetFolder(group);
+                      setOpenModalKey("delete");
+                    }}
+                  >
+                    <IoMdClose />
+                  </DeleteButton>
+                </TitleExtraWrap>
               }
               labelText={group.minWidth}
               items={markedItems}
@@ -166,6 +192,17 @@ const Pages = () => {
   );
 };
 
+const TitleExtraWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover button {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
+
 const Label = styled.button`
   display: flex;
   align-items: center;
@@ -177,6 +214,24 @@ const Label = styled.button`
   font-size: 11px;
   line-height: 18px;
   height: 18px;
+`;
+
+const DeleteButton = styled.button`
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  svg {
+    font-size: 14px;
+    color: #aaa;
+  }
+
+  &:hover svg {
+    color: #e76e6e;
+  }
 `;
 
 export default Pages;
