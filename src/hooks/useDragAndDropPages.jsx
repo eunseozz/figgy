@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
+import { selectedProject } from "@/utils/project";
 
 const useDragAndDropPages = () => {
   const { fileKey } = useParams();

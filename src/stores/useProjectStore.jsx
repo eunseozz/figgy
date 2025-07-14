@@ -219,7 +219,4 @@ const useProjectStore = create(
   ),
 );
 
-export const selectedProject = (fileKey) => (state) =>
-  state.projects.find((project) => project.fileKey === fileKey) || null;
-
 export default useProjectStore;

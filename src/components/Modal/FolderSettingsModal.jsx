@@ -5,7 +5,8 @@ import ModalOverlay from "@/components/Common/ModalOverlay";
 import InputGroup from "@/components/Modal/InputGroup";
 import ModalLayout from "@/components/Modal/ModalLayout/ModalLayout";
 import { SETTING_MODE } from "@/constants/folderSettingModes";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
+import { selectedProject } from "@/utils/project";
 
 const getModalText = (currentType) => {
   const isAddMode = currentType === SETTING_MODE.ADD;

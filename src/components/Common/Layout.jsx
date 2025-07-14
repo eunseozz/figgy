@@ -7,8 +7,8 @@ import OverlayHUD from "@/components/HUD/OverlayHUD";
 import useOverlayShortcut from "@/hooks/useOverlayShortcut";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import useFeedbackStore from "@/stores/useFeedbackStore";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
-import { getActivePageGroupLabel } from "@/utils/project";
+import useProjectStore from "@/stores/useProjectStore";
+import { getActivePageGroupLabel, selectedProject } from "@/utils/project";
 
 const Layout = () => {
   const { fileKey } = useParams();

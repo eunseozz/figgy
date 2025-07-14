@@ -3,13 +3,14 @@ import { useParams } from "react-router-dom";
 
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
 import {
   compareDomWithFigma,
   generateDiffText,
 } from "@/utils/comparator/compare";
 import { getDomData, isDiffTarget } from "@/utils/comparator/domUtil";
 import { getClosestFigmaNode } from "@/utils/comparator/nodeMatching";
+import { selectedProject } from "@/utils/project";
 
 const useDomClickComparator = ({
   figmaNodes,

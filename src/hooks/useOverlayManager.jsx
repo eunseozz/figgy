@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
-import { getOverlayNodeByWidth } from "@/utils/project";
+import useProjectStore from "@/stores/useProjectStore";
+import { getOverlayNodeByWidth, selectedProject } from "@/utils/project";
 
 const useOverlayManager = () => {
   const { fileKey } = useParams();

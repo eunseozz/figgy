@@ -30,3 +30,7 @@ export const getOverlayNodeByWidth = (activePageMap, windowWidth) => {
     ? activePageMap[bestFit]
     : (activePageMap[availableWidths[availableWidths.length - 1]] ?? null);
 };
+
+export const selectedProject = (fileKey) => (state) => {
+  return state.projects.find((project) => project.fileKey === fileKey) || null;
+};

@@ -20,7 +20,8 @@ import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useFigmaFrameData from "@/hooks/useFigmaFrameData";
 import useOverlayManager from "@/hooks/useOverlayManager";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
+import { selectedProject } from "@/utils/project";
 
 const Pages = () => {
   const { fileKey } = useParams();

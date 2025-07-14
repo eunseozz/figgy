@@ -9,8 +9,9 @@ import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 import FolderSettingsModal from "@/components/Modal/FolderSettingsModal";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
 import { getAssetUrl } from "@/utils/chrome";
+import { selectedProject } from "@/utils/project";
 
 const logoImage = getAssetUrl("images/logos/full.png");
 
