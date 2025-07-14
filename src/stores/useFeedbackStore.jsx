@@ -1,41 +1,39 @@
 import { createRef } from "react";
 import { create } from "zustand";
 
-const HIGHLIGHT_STYLE = {
-  MATCHED: {
-    outline: "3px dashed green",
-  },
-  MISMATCHED: {
-    outline: "3px dashed red",
-  },
-};
-
 const useFeedbackStore = create((set) => {
   const activeElementRef = createRef();
 
   return {
     tooltip: null,
+    highlightBox: null,
+    activeElementRef,
+
     setTooltip: (tooltip) => set({ tooltip }),
 
-    activeElementRef,
+    setHighlightBox: (highlight) => set({ highlightBox: highlight }),
+
+    clearFeedback: () => {
+      activeElementRef.current = null;
+      set({ tooltip: null, highlightBox: null });
+    },
+
     setActiveElement: (element, isMatched = true) => {
       if (!element) return;
 
-      const style = isMatched
-        ? HIGHLIGHT_STYLE.MATCHED
-        : HIGHLIGHT_STYLE.MISMATCHED;
+      const rect = element.getBoundingClientRect();
 
-      element.style.outline = style.outline;
+      set({
+        highlightBox: {
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width,
+          height: rect.height,
+          isMatched,
+        },
+      });
 
       activeElementRef.current = element;
-    },
-
-    clearFeedback: () => {
-      if (activeElementRef.current) {
-        activeElementRef.current.style.outline = "";
-        activeElementRef.current = null;
-      }
-      set({ tooltip: null });
     },
   };
 });

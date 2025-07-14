@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import useWindowWidth from "@/hooks/useWindowWidth";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
+import { getOverlayNodeByWidth, selectedProject } from "@/utils/project";
 
 const useOverlayManager = () => {
   const { fileKey } = useParams();
@@ -28,16 +29,7 @@ const useOverlayManager = () => {
   };
 
   const getOverlayNode = () => {
-    const selectedPages = project?.activePageMap ?? {};
-    const sortedMinWidths = Object.keys(selectedPages)
-      .map(Number)
-      .sort((a, b) => b - a);
-
-    const matchedMinWidth = sortedMinWidths.find(
-      (minWidth) => windowWidth >= minWidth,
-    );
-
-    return selectedPages[matchedMinWidth] ?? null;
+    return getOverlayNodeByWidth(project?.activePageMap, windowWidth);
   };
 
   return {

@@ -72,7 +72,19 @@ const useProjectStore = create(
             return { ...page, items: filteredItems };
           });
 
-          return { ...project, pages: updatedPages };
+          const updatedActivePageMap = { ...(project.activePageMap ?? {}) };
+
+          for (const [minWidth, page] of Object.entries(updatedActivePageMap)) {
+            if (page.id === pageId) {
+              delete updatedActivePageMap[minWidth];
+            }
+          }
+
+          return {
+            ...project,
+            pages: updatedPages,
+            activePageMap: updatedActivePageMap,
+          };
         });
 
         set({ projects: updatedProjects });
@@ -134,9 +146,14 @@ const useProjectStore = create(
             (page) => page.minWidth !== targetWidth,
           );
 
+          const updatedActivePageMap = { ...(project.activePageMap ?? {}) };
+
+          delete updatedActivePageMap[targetWidth];
+
           return {
             ...project,
             pages: filteredPages,
+            activePageMap: updatedActivePageMap,
           };
         });
 
@@ -154,6 +171,25 @@ const useProjectStore = create(
                   ...(project.activePageMap || {}),
                   [minWidth]: item,
                 },
+              }
+            : project,
+        );
+
+        set({ projects: updated });
+      },
+
+      removeActivePage: (fileKey, minWidth) => {
+        const { projects } = get();
+
+        const updated = projects.map((project) =>
+          project.fileKey === fileKey
+            ? {
+                ...project,
+                activePageMap: Object.fromEntries(
+                  Object.entries(project.activePageMap || {}).filter(
+                    ([key]) => Number(key) !== Number(minWidth),
+                  ),
+                ),
               }
             : project,
         );
@@ -182,8 +218,5 @@ const useProjectStore = create(
     },
   ),
 );
-
-export const selectedProject = (fileKey) => (state) =>
-  state.projects.find((project) => project.fileKey === fileKey) || null;
 
 export default useProjectStore;

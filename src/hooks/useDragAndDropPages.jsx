@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import useProjectStore from "@/stores/useProjectStore";
+import { selectedProject } from "@/utils/project";
 
 const useDragAndDropPages = () => {
   const { fileKey } = useParams();
   const [draggedItem, setDraggedItem] = useState(null);
 
   const updateProjects = useProjectStore((state) => state.updateProjects);
+  const removeActivePage = useProjectStore((state) => state.removeActivePage);
+
   const project = useProjectStore(selectedProject(fileKey));
 
   const handleDragStart = (_, item) => {
@@ -34,6 +37,14 @@ const useDragAndDropPages = () => {
 
       return group;
     });
+
+    for (const [minWidth, page] of Object.entries(
+      project.activePageMap ?? {},
+    )) {
+      if (page.id === draggedItem.id) {
+        removeActivePage(fileKey, minWidth);
+      }
+    }
 
     updateProjects(fileKey, updatedGroups);
     setDraggedItem(null);
