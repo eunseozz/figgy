@@ -15,11 +15,7 @@ const Layout = () => {
   return (
     <>
       <OverlayHUD />
-      <Tooltip
-        top={tooltip?.top}
-        left={tooltip?.left}
-        text={tooltip?.text}
-      />
+      <Tooltip {...tooltip} />
       <HighlightBox {...highlight} />
       <Outlet />
     </>

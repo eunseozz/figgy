@@ -25,7 +25,7 @@ const TooltipWrapper = styled.div`
   border-radius: 6px;
   pointer-events: none;
   white-space: nowrap;
-  z-index: 9999;
+  z-index: 10000;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 `;
 
