@@ -23,25 +23,36 @@ const useDomClickComparator = ({
   const setTooltip = useFeedbackStore((state) => state.setTooltip);
   const setActiveElement = useFeedbackStore((state) => state.setActiveElement);
   const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
+  const setHighlightBox = useFeedbackStore((state) => state.setHighlightBox);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const viewMode = useHUDStore((state) => state.viewMode);
 
   const clickedElementRef = useRef(null);
   const comparisonRef = useRef(null);
 
-  const updateTooltipPosition = () => {
+  const updateFeedbackPosition = () => {
     const el = clickedElementRef.current;
     const comparison = comparisonRef.current;
 
-    if (!el || !comparison || comparison.matched) return;
+    if (!el || !comparison) return;
 
     const rect = el.getBoundingClientRect();
 
-    setTooltip({
-      top: rect.top + window.scrollY + rect.height + 7,
-      left: rect.left - 3,
-      text: generateDiffText(comparison.mismatches),
+    setHighlightBox({
+      top: rect.top + window.scrollY,
+      left: rect.left + window.scrollX,
+      width: rect.width,
+      height: rect.height,
+      isMatched: comparison.matched,
     });
+
+    if (!comparison.matched) {
+      setTooltip({
+        top: rect.top + window.scrollY + rect.height + 7,
+        left: rect.left - 3,
+        text: generateDiffText(comparison.mismatches),
+      });
+    }
   };
 
   useEffect(() => {
@@ -77,6 +88,14 @@ const useDomClickComparator = ({
 
       setActiveElement(clickedElement, comparison.matched);
 
+      setHighlightBox({
+        top: rect.top + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        height: rect.height,
+        isMatched: comparison.matched,
+      });
+
       if (!comparison.matched) {
         setTooltip({
           top: rect.top + window.scrollY + rect.height + 7,
@@ -87,7 +106,7 @@ const useDomClickComparator = ({
     };
 
     const handleResizeOrScroll = () => {
-      updateTooltipPosition();
+      updateFeedbackPosition();
     };
 
     document.addEventListener("click", handleClick, true);
