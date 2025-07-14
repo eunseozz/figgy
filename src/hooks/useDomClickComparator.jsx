@@ -1,19 +1,15 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { VIEW_MODE } from "@/constants/hudOptions";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
 import {
   compareDomWithFigma,
   generateDiffText,
-  getClosestFigmaNode,
-  isMultiBlockParent,
-  isTextSizedBox,
-} from "@/utils/comparator";
-
-const IGNORED_TAGS = ["HTML", "BODY"];
+} from "@/utils/comparator/compare";
+import { getDomData, isDiffTarget } from "@/utils/comparator/domUtil";
+import { getClosestFigmaNode } from "@/utils/comparator/nodeMatching";
 
 const useDomClickComparator = ({
   figmaNodes,
@@ -34,31 +30,13 @@ const useDomClickComparator = ({
     const handleClick = (event) => {
       const clickedElement = event.target;
 
-      const hasActivePages =
-        project?.activePageMap && Object.keys(project.activePageMap).length > 0;
-      const isDiffMode = viewMode === VIEW_MODE.DIFF;
-
-      const isIgnoredTag = IGNORED_TAGS.includes(clickedElement.tagName);
-      const isInsideDashboard = clickedElement.closest("#figgy-dashboard");
-      const computedStyle = getComputedStyle(clickedElement);
-      const isInline = computedStyle.display === "inline";
-
-      if (!isShowOverlay || !hasActivePages || !isDiffMode) return;
-      if (isIgnoredTag || isInsideDashboard || isInline) return;
+      if (!isDiffTarget(clickedElement, project, viewMode, isShowOverlay))
+        return;
 
       clearFeedback();
 
       const rect = clickedElement.getBoundingClientRect();
-      const domData = {
-        x: rect.x,
-        y: rect.y,
-        width: rect.width,
-        height: rect.height,
-        text: clickedElement.innerText || clickedElement.textContent || "",
-        isMessy: isMultiBlockParent(clickedElement),
-        isTextLikeOnly: isTextSizedBox(clickedElement),
-        tagName: clickedElement.tagName,
-      };
+      const domData = getDomData(clickedElement);
 
       const closestNode = getClosestFigmaNode(
         domData,

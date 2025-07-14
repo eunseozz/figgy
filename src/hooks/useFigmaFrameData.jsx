@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { getFigmaFile } from "@/api/figma";
-import { findNodeById, flattenNodes } from "@/utils/comparator";
+import { findNodeById, flattenNodes } from "@/utils/comparator/nodeMatching";
 
 const DEFAULT_FIGMA_WIDTH = 1440;
 
