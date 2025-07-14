@@ -4,6 +4,7 @@ import useWindowWidth from "@/hooks/useWindowWidth";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore, { selectedProject } from "@/stores/useProjectStore";
+import { getOverlayNodeByWidth } from "@/utils/project";
 
 const useOverlayManager = () => {
   const { fileKey } = useParams();
@@ -28,16 +29,7 @@ const useOverlayManager = () => {
   };
 
   const getOverlayNode = () => {
-    const selectedPages = project?.activePageMap ?? {};
-    const availableWidths = Object.keys(selectedPages)
-      .map(Number)
-      .sort((a, b) => b - a);
-
-    const bestFit = availableWidths.find((w) => windowWidth >= w);
-
-    if (bestFit) return selectedPages[bestFit];
-
-    return selectedPages[availableWidths[availableWidths.length - 1]] ?? null;
+    return getOverlayNodeByWidth(project?.activePageMap, windowWidth);
   };
 
   return {
