@@ -8,6 +8,8 @@ const useDragAndDropPages = () => {
   const [draggedItem, setDraggedItem] = useState(null);
 
   const updateProjects = useProjectStore((state) => state.updateProjects);
+  const removeActivePage = useProjectStore((state) => state.removeActivePage);
+
   const project = useProjectStore(selectedProject(fileKey));
 
   const handleDragStart = (_, item) => {
@@ -34,6 +36,14 @@ const useDragAndDropPages = () => {
 
       return group;
     });
+
+    for (const [minWidth, page] of Object.entries(
+      project.activePageMap ?? {},
+    )) {
+      if (page.id === draggedItem.id) {
+        removeActivePage(fileKey, minWidth);
+      }
+    }
 
     updateProjects(fileKey, updatedGroups);
     setDraggedItem(null);
