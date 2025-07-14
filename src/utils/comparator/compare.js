@@ -1,64 +1,3 @@
-export const findNodeById = (node, targetId) => {
-  if (node.id === targetId) return node;
-  if (!node.children) return null;
-
-  for (const child of node.children) {
-    const found = findNodeById(child, targetId);
-
-    if (found) return found;
-  }
-
-  return null;
-};
-
-export const flattenNodes = (node, acc = [], depth = 0) => {
-  if (node.absoluteBoundingBox) {
-    acc.push({ ...node, __depth: depth });
-  }
-
-  if (node.children) {
-    node.children.forEach((child) => flattenNodes(child, acc, depth + 1));
-  }
-
-  return acc;
-};
-
-export const getClosestFigmaNode = (
-  domData,
-  figmaNodes,
-  imageRef,
-  figmaOriginalWidth,
-  frameOffset,
-) => {
-  if (!imageRef.current) return null;
-
-  const GAP = 20;
-  const imageRect = imageRef.current.getBoundingClientRect();
-  const scale = imageRef.current.width / figmaOriginalWidth;
-  const offsetX = imageRect.left;
-  const offsetY = imageRect.top;
-
-  const domX = domData.x;
-  const domY = domData.y;
-
-  const candidates = figmaNodes.filter((node) => {
-    const box = node.absoluteBoundingBox;
-
-    if (!box) return false;
-    const x1 = (box.x - frameOffset.x) * scale + offsetX - GAP;
-    const y1 = (box.y - frameOffset.y) * scale + offsetY - GAP;
-    const x2 = x1 + box.width * scale + GAP * 2;
-    const y2 = y1 + box.height * scale + GAP * 2;
-
-    return domX >= x1 && domX <= x2 && domY >= y1 && domY <= y2;
-  });
-
-  const sorted = candidates.sort((a, b) => b.__depth - a.__depth);
-  const closest = sorted[0] ?? null;
-
-  return closest;
-};
-
 export const compareDomWithFigma = (
   dom,
   figmaNode,
@@ -116,4 +55,38 @@ export const generateDiffText = (mismatches) => {
   });
 
   return `⚠️ 위치 조정 필요 (${parts.join(", ")})`;
+};
+
+export const computeTextSimilarity = (a = "", b = "") => {
+  const tokenize = (str) => {
+    const clean = str.replace(/\s+/g, "").toLowerCase();
+
+    return [...Array(clean.length - 2)].map((_, i) => clean.slice(i, i + 3));
+  };
+
+  const aGrams = tokenize(a);
+  const bGrams = tokenize(b);
+
+  const freqMap = new Map();
+
+  aGrams.forEach((gram) => {
+    freqMap.set(gram, (freqMap.get(gram) || 0) + 1);
+  });
+
+  let dotProduct = 0;
+  let bMagnitude = 0;
+  let aMagnitude = 0;
+
+  bGrams.forEach((gram) => {
+    const aFreq = freqMap.get(gram) || 0;
+
+    dotProduct += aFreq * 1;
+    bMagnitude += 1;
+  });
+
+  aMagnitude = aGrams.length;
+
+  const denominator = Math.sqrt(aMagnitude) * Math.sqrt(bMagnitude);
+
+  return denominator === 0 ? 0 : dotProduct / denominator;
 };
