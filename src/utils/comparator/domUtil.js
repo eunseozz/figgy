@@ -11,7 +11,7 @@ export const getDomData = (el) => {
     width: rect.width,
     height: rect.height,
     text: el.innerText || el.textContent || "",
-    isMessy: isMultiBlockParent(el),
+    isMessy: isMessyTextBlock(el),
     isTextLikeOnly: isTextSizedBox(el),
     tagName: el.tagName,
   };
@@ -35,24 +35,22 @@ export const isDiffTarget = (el, project, viewMode, isShowOverlay) => {
   );
 };
 
-export const isMultiBlockParent = (el) => {
+export const isMessyTextBlock = (el) => {
   if (!el || !el.children || el.children.length === 0) return false;
 
-  let blockCount = 0;
-  let textOnly = true;
+  let hasBlock = false;
+  let hasExtraText = false;
 
   for (const child of el.children) {
     const display = window.getComputedStyle(child).display;
 
-    if (display !== "inline") {
-      blockCount++;
-    }
+    if (display !== "inline") hasBlock = true;
 
-    if (child.children.length > 0 || (child.textContent?.trim() ?? "") === "") {
-      textOnly = false;
-    }
+    const text = child.textContent?.trim() ?? "";
 
-    if (blockCount > 1 && !textOnly) return true;
+    if (text.length > 0) hasExtraText = true;
+
+    if (hasBlock && hasExtraText) return true;
   }
 
   return false;

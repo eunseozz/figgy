@@ -144,10 +144,8 @@ const isNodeOverlapping = (domX, domY, x1, y1, x2, y2, GAP) => {
 };
 
 export const calculateOffsetSum = (domBox, figmaBox) => {
-  const dx1 = Math.abs(domBox.x1 - figmaBox.x1);
-  const dx2 = Math.abs(domBox.x2 - figmaBox.x2);
-  const dy1 = Math.abs(domBox.y1 - figmaBox.y1);
-  const dy2 = Math.abs(domBox.y2 - figmaBox.y2);
+  const dx = Math.abs(domBox.x1 - figmaBox.x1);
+  const dy = Math.abs(domBox.y1 - figmaBox.y1);
 
-  return dx1 + dx2 + dy1 + dy2;
+  return dx + dy;
 };
