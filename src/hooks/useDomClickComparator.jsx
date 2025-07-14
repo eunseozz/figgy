@@ -9,6 +9,8 @@ import {
   compareDomWithFigma,
   generateDiffText,
   getClosestFigmaNode,
+  isMultiBlockParent,
+  isTextSizedBox,
 } from "@/utils/comparator";
 
 const IGNORED_TAGS = ["HTML", "BODY"];
@@ -38,17 +40,24 @@ const useDomClickComparator = ({
 
       const isIgnoredTag = IGNORED_TAGS.includes(clickedElement.tagName);
       const isInsideDashboard = clickedElement.closest("#figgy-dashboard");
+      const computedStyle = getComputedStyle(clickedElement);
+      const isInline = computedStyle.display === "inline";
 
       if (!isShowOverlay || !hasActivePages || !isDiffMode) return;
-      if (isIgnoredTag || isInsideDashboard) return;
+      if (isIgnoredTag || isInsideDashboard || isInline) return;
 
       clearFeedback();
 
       const rect = clickedElement.getBoundingClientRect();
-
       const domData = {
         x: rect.x,
         y: rect.y,
+        width: rect.width,
+        height: rect.height,
+        text: clickedElement.innerText || clickedElement.textContent || "",
+        isMessy: isMultiBlockParent(clickedElement),
+        isTextLikeOnly: isTextSizedBox(clickedElement),
+        tagName: clickedElement.tagName,
       };
 
       const closestNode = getClosestFigmaNode(
