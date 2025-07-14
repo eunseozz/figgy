@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 import useFeedbackStore from "@/stores/useFeedbackStore";
@@ -25,6 +25,24 @@ const useDomClickComparator = ({
   const clearFeedback = useFeedbackStore((state) => state.clearFeedback);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const viewMode = useHUDStore((state) => state.viewMode);
+
+  const clickedElementRef = useRef(null);
+  const comparisonRef = useRef(null);
+
+  const updateTooltipPosition = () => {
+    const el = clickedElementRef.current;
+    const comparison = comparisonRef.current;
+
+    if (!el || !comparison || comparison.matched) return;
+
+    const rect = el.getBoundingClientRect();
+
+    setTooltip({
+      top: rect.top + window.scrollY + rect.height + 7,
+      left: rect.left - 3,
+      text: generateDiffText(comparison.mismatches),
+    });
+  };
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -54,6 +72,9 @@ const useDomClickComparator = ({
         frameOffsetRef.current,
       );
 
+      clickedElementRef.current = clickedElement;
+      comparisonRef.current = comparison;
+
       setActiveElement(clickedElement, comparison.matched);
 
       if (!comparison.matched) {
@@ -65,9 +86,19 @@ const useDomClickComparator = ({
       }
     };
 
-    document.addEventListener("click", handleClick, true);
+    const handleResizeOrScroll = () => {
+      updateTooltipPosition();
+    };
 
-    return () => document.removeEventListener("click", handleClick, true);
+    document.addEventListener("click", handleClick, true);
+    window.addEventListener("resize", handleResizeOrScroll);
+    window.addEventListener("scroll", handleResizeOrScroll);
+
+    return () => {
+      document.removeEventListener("click", handleClick, true);
+      window.removeEventListener("resize", handleResizeOrScroll);
+      window.removeEventListener("scroll", handleResizeOrScroll);
+    };
   }, [figmaNodes, project?.activePageMap, isShowOverlay, viewMode]);
 };
 
