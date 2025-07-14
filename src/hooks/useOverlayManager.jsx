@@ -29,15 +29,15 @@ const useOverlayManager = () => {
 
   const getOverlayNode = () => {
     const selectedPages = project?.activePageMap ?? {};
-    const sortedMinWidths = Object.keys(selectedPages)
+    const availableWidths = Object.keys(selectedPages)
       .map(Number)
       .sort((a, b) => b - a);
 
-    const matchedMinWidth = sortedMinWidths.find(
-      (minWidth) => windowWidth >= minWidth,
-    );
+    const bestFit = availableWidths.find((w) => windowWidth >= w);
 
-    return selectedPages[matchedMinWidth] ?? null;
+    if (bestFit) return selectedPages[bestFit];
+
+    return selectedPages[availableWidths[availableWidths.length - 1]] ?? null;
   };
 
   return {
