@@ -1,5 +1,8 @@
 import { FIGMA_NODE_TYPE } from "@/constants/figmaNodeTypes";
-import { computeTextSimilarity } from "@/utils/comparator/compare";
+import {
+  computeTextSimilarity,
+  MAX_MISMATCH_GAP,
+} from "@/utils/comparator/compare";
 
 export const findNodeById = (node, targetId) => {
   if (node.id === targetId) return node;
@@ -35,7 +38,7 @@ export const getClosestFigmaNode = (
 ) => {
   if (!imageRef.current) return null;
 
-  const GAP = 50;
+  const GAP = MAX_MISMATCH_GAP;
   const imageRect = imageRef.current.getBoundingClientRect();
   const scale = imageRef.current.width / figmaOriginalWidth;
   const offsetX = imageRect.left;

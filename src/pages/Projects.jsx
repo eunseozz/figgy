@@ -15,6 +15,7 @@ const Projects = () => {
   const navigate = useNavigate();
   const projects = useProjectStore((state) => state.projects);
   const deleteProject = useProjectStore((state) => state.deleteProject);
+  const resetActivePage = useProjectStore((state) => state.resetActivePage);
   const updateProjectTitle = useProjectStore(
     (state) => state.updateProjectTitle,
   );
@@ -90,6 +91,7 @@ const Projects = () => {
             title="PROJECTS"
             items={panelItems}
             onItemClick={(item) => {
+              resetActivePage(item.fileKey);
               navigate(`/pages/${item.fileKey}`);
             }}
             onDeleteClick={(item) => {

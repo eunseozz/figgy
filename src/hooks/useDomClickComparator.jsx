@@ -4,9 +4,11 @@ import { useParams } from "react-router-dom";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore from "@/stores/useProjectStore";
+import useToastStore from "@/stores/useToastStore";
 import {
   compareDomWithFigma,
   generateDiffText,
+  shouldSkipFeedback,
 } from "@/utils/comparator/compare";
 import { getDomData, isDiffTarget } from "@/utils/comparator/domUtil";
 import { getClosestFigmaNode } from "@/utils/comparator/nodeMatching";
@@ -65,6 +67,15 @@ const useDomClickComparator = ({
 
       clearFeedback();
 
+      const prevElement = clickedElementRef.current;
+
+      if (prevElement && prevElement.isSameNode(clickedElement)) {
+        clickedElementRef.current = null;
+        comparisonRef.current = null;
+
+        return;
+      }
+
       const rect = clickedElement.getBoundingClientRect();
       const domData = getDomData(clickedElement);
 
@@ -83,6 +94,14 @@ const useDomClickComparator = ({
         figmaOriginalWidthRef.current,
         frameOffsetRef.current,
       );
+
+      if (shouldSkipFeedback(comparison.mismatches)) {
+        useToastStore
+          .getState()
+          .showToast("❌ 일치하는 Figma 노드를 찾을 수 없습니다.");
+
+        return;
+      }
 
       clickedElementRef.current = clickedElement;
       comparisonRef.current = comparison;
