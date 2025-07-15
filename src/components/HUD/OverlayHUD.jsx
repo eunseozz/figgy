@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
+import { TbMoodEdit } from "react-icons/tb";
 import styled from "styled-components";
 
 import OpacityControl from "@/components/HUD/OpacityControl";
@@ -9,6 +10,11 @@ import { toggleGroups, VIEW_MODE } from "@/constants/hudOptions";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
+
+const TOOL_BOX_KEY = {
+  SETTING: "setting",
+  CUSTOM: "custom",
+};
 
 const OverlayHUD = () => {
   const alignment = useHUDStore((state) => state.alignment);
@@ -26,6 +32,7 @@ const OverlayHUD = () => {
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
 
   const [isShowShortcutModal, setIsShowShortcutModal] = useState(false);
+  const [openToolboxKey, setOpenToolboxKey] = useState(null);
 
   const {
     setAlignment,
@@ -34,8 +41,6 @@ const OverlayHUD = () => {
     setOpacity,
     setIsShowOverlay,
   } = useHUDStore.getState();
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const stateMap = { alignment, scaleMode, viewMode, isShowOverlay };
   const setStateMap = {
@@ -55,48 +60,75 @@ const OverlayHUD = () => {
 
   const logoImage = getAssetUrl("images/logos/size_48.png");
 
+  const handleToggleToolBox = (key) => {
+    setOpenToolboxKey((prevKey) => (prevKey === key ? null : key));
+  };
+
   return (
     <Container>
       <HUDBox>
-        <IconColumn>
+        <IconGroup>
           <IconWrapper
             $isActive={isOpenPanel}
             onClick={() => setIsOpenPanel(!isOpenPanel)}
           >
             <LogoImage src={logoImage} />
           </IconWrapper>
+        </IconGroup>
+
+        <IconGroup>
           <IconWrapper
-            $isActive={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
+            $isActive={openToolboxKey === TOOL_BOX_KEY.SETTING}
+            onClick={() => handleToggleToolBox(TOOL_BOX_KEY.SETTING)}
           >
             <IoMdSettings />
           </IconWrapper>
-        </IconColumn>
 
-        {isOpen && (
-          <HUDContainer>
-            <HUDWrapper>
-              {toggleGroups.map(({ label, stateKey, options, rightSlot }) => (
-                <ToggleOptionGroup
-                  key={stateKey}
-                  label={label}
-                  value={stateMap[stateKey]}
-                  onChange={setStateMap[stateKey]}
-                  options={options}
-                  rightSlot={rightSlot?.({
-                    value: showOverlayShortcutKey,
-                    onClick: () => setIsShowShortcutModal(true),
-                  })}
+          {openToolboxKey === TOOL_BOX_KEY.SETTING && (
+            <HUDContainer>
+              <HUDWrapper>
+                {toggleGroups.map(({ label, stateKey, options, rightSlot }) => (
+                  <ToggleOptionGroup
+                    key={stateKey}
+                    label={label}
+                    value={stateMap[stateKey]}
+                    onChange={setStateMap[stateKey]}
+                    options={options}
+                    rightSlot={rightSlot?.({
+                      value: showOverlayShortcutKey,
+                      onClick: () => setIsShowShortcutModal(true),
+                    })}
+                  />
+                ))}
+                <OpacityControl
+                  opacity={opacity}
+                  setOpacity={setOpacity}
                 />
-              ))}
-              <OpacityControl
-                opacity={opacity}
-                setOpacity={setOpacity}
-              />
-            </HUDWrapper>
-          </HUDContainer>
-        )}
+              </HUDWrapper>
+            </HUDContainer>
+          )}
+        </IconGroup>
+
+        <IconGroup>
+          <IconWrapper
+            $isActive={openToolboxKey === TOOL_BOX_KEY.CUSTOM}
+            onClick={() => handleToggleToolBox(TOOL_BOX_KEY.CUSTOM)}
+          >
+            <TbMoodEdit />
+          </IconWrapper>
+
+          {openToolboxKey === TOOL_BOX_KEY.CUSTOM && (
+            <HUDContainer>
+              <HUDWrapper>
+                <div style={{ fontSize: "14px", color: "#333" }}>
+                  🎨 피드백 커스터마이징 설정이 여기에 들어갈 예정입니다.
+                </div>
+              </HUDWrapper>
+            </HUDContainer>
+          )}
+        </IconGroup>
       </HUDBox>
+
       {isShowShortcutModal && (
         <ShortcutModal closeModal={() => setIsShowShortcutModal(false)} />
       )}
@@ -118,10 +150,11 @@ const HUDBox = styled.div`
   gap: 12px;
 `;
 
-const IconColumn = styled.div`
+const IconGroup = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: flex-start;
 `;
 
 const IconWrapper = styled.div`
@@ -146,14 +179,17 @@ const LogoImage = styled.img`
 `;
 
 const HUDContainer = styled.div`
+  position: absolute;
+  top: 4px;
+  left: 54px;
   width: 230px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  background-color: #ffffff;
 `;
 
 const HUDWrapper = styled.div`
-  background-color: #ffffff;
   padding: 16px 18px;
   color: #111827;
   display: flex;
