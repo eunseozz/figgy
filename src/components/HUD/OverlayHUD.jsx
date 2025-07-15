@@ -3,6 +3,7 @@ import { IoMdSettings } from "react-icons/io";
 import { TbMoodEdit } from "react-icons/tb";
 import styled from "styled-components";
 
+import CustomHighlightBox from "@/components/HUD/CustomHighlightBox";
 import HUDToolboxItem from "@/components/HUD/HUDToolboxItem";
 import OpacityControl from "@/components/HUD/OpacityControl";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
@@ -103,9 +104,7 @@ const OverlayHUD = () => {
           isActive={openToolboxKey === TOOL_BOX_KEY.CUSTOM}
           onClick={() => handleToggleToolBox(TOOL_BOX_KEY.CUSTOM)}
         >
-          <div style={{ fontSize: "14px", color: "#333" }}>
-            🎨 피드백 커스터마이징 설정이 여기에 들어갈 예정입니다.
-          </div>
+          <CustomHighlightBox />
         </HUDToolboxItem>
       </HUDBox>
 
