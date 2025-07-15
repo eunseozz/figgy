@@ -7,6 +7,7 @@ import useProjectStore from "@/stores/useProjectStore";
 import {
   compareDomWithFigma,
   generateDiffText,
+  shouldSkipFeedback,
 } from "@/utils/comparator/compare";
 import { getDomData, isDiffTarget } from "@/utils/comparator/domUtil";
 import { getClosestFigmaNode } from "@/utils/comparator/nodeMatching";
@@ -92,6 +93,12 @@ const useDomClickComparator = ({
         figmaOriginalWidthRef.current,
         frameOffsetRef.current,
       );
+
+      if (shouldSkipFeedback(comparison.mismatches)) {
+        alert("일치하는 Figma 노드를 찾을 수 없습니다.");
+
+        return;
+      }
 
       clickedElementRef.current = clickedElement;
       comparisonRef.current = comparison;

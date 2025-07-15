@@ -1,3 +1,5 @@
+export const MAX_MISMATCH_GAP = 50;
+
 export const compareDomWithFigma = (
   dom,
   figmaNode,
@@ -89,4 +91,12 @@ export const computeTextSimilarity = (a = "", b = "") => {
   const denominator = Math.sqrt(aMagnitude) * Math.sqrt(bMagnitude);
 
   return denominator === 0 ? 0 : dotProduct / denominator;
+};
+
+export const shouldSkipFeedback = (mismatches) => {
+  return mismatches.some(({ dom, figma }) => {
+    const diff = +(dom - figma).toFixed(1);
+
+    return Math.abs(diff) > MAX_MISMATCH_GAP;
+  });
 };
