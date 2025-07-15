@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 
 import HighlightBox from "@/components/Common/HighlightBox";
+import Toast from "@/components/Common/Toast";
 import Tooltip from "@/components/Common/Tooltip";
 import ViewportLabel from "@/components/Common/ViewportLabel";
 import OverlayHUD from "@/components/HUD/OverlayHUD";
@@ -19,6 +20,7 @@ const Layout = () => {
       <Tooltip {...tooltip} />
       <HighlightBox {...highlight} />
       <ViewportLabel />
+      <Toast />
       <Outlet />
     </>
   );
