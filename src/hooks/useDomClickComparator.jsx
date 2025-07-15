@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import useProjectStore from "@/stores/useProjectStore";
+import useToastStore from "@/stores/useToastStore";
 import {
   compareDomWithFigma,
   generateDiffText,
@@ -95,7 +96,9 @@ const useDomClickComparator = ({
       );
 
       if (shouldSkipFeedback(comparison.mismatches)) {
-        alert("일치하는 Figma 노드를 찾을 수 없습니다.");
+        useToastStore
+          .getState()
+          .showToast("❌ 일치하는 Figma 노드를 찾을 수 없습니다.");
 
         return;
       }
