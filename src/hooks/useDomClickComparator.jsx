@@ -65,6 +65,15 @@ const useDomClickComparator = ({
 
       clearFeedback();
 
+      const prevElement = clickedElementRef.current;
+
+      if (prevElement && prevElement.isSameNode(clickedElement)) {
+        clickedElementRef.current = null;
+        comparisonRef.current = null;
+
+        return;
+      }
+
       const rect = clickedElement.getBoundingClientRect();
       const domData = getDomData(clickedElement);
 

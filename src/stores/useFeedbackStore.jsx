@@ -1,41 +1,32 @@
-import { createRef } from "react";
 import { create } from "zustand";
 
-const useFeedbackStore = create((set) => {
-  const activeElementRef = createRef();
+const useFeedbackStore = create((set) => ({
+  tooltip: null,
+  highlightBox: null,
 
-  return {
-    tooltip: null,
-    highlightBox: null,
-    activeElementRef,
+  setTooltip: (tooltip) => set({ tooltip }),
 
-    setTooltip: (tooltip) => set({ tooltip }),
+  setHighlightBox: (highlightBox) => set({ highlightBox }),
 
-    setHighlightBox: (highlight) => set({ highlightBox: highlight }),
+  clearFeedback: () => {
+    set({ tooltip: null, highlightBox: null });
+  },
 
-    clearFeedback: () => {
-      activeElementRef.current = null;
-      set({ tooltip: null, highlightBox: null });
-    },
+  setActiveElement: (element, isMatched = true) => {
+    if (!element) return;
 
-    setActiveElement: (element, isMatched = true) => {
-      if (!element) return;
+    const rect = element.getBoundingClientRect();
 
-      const rect = element.getBoundingClientRect();
-
-      set({
-        highlightBox: {
-          top: rect.top + window.scrollY,
-          left: rect.left + window.scrollX,
-          width: rect.width,
-          height: rect.height,
-          isMatched,
-        },
-      });
-
-      activeElementRef.current = element;
-    },
-  };
-});
+    set({
+      highlightBox: {
+        top: rect.top + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        height: rect.height,
+        isMatched,
+      },
+    });
+  },
+}));
 
 export default useFeedbackStore;
