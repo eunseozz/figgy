@@ -1,17 +1,36 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 import ColorControlGroup from "@/components/HUD/ColorControlGroup";
+import useHUDStore from "@/stores/useHUDStore";
 
 const BORDER_STYLES = ["solid", "dashed", "dotted", "double"];
 
+const hexToRgba = (hex, alpha = 0.5) => {
+  const parsedHex = hex.replace("#", "");
+  const bigint = parseInt(parsedHex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  const isWhite = r === 255 && g === 255 && b === 255;
+
+  return `rgba(${r}, ${g}, ${b}, ${isWhite ? 0 : alpha})`;
+};
+
 const CustomHighlightBox = () => {
-  const [backgroundColor, setBackgroundColor] = useState("#dfffe0");
-  const [mismatchBackgroundColor, setMismatchBackgroundColor] =
-    useState("#ffe3e3");
-  const [borderColor, setBorderColor] = useState("#4caf50");
-  const [mismatchBorderColor, setMismatchBorderColor] = useState("#f44336");
-  const [selectedBorderStyle, setSelectedBorderStyle] = useState("solid");
+  const bgColor = useHUDStore((state) => state.bgColor);
+  const borderColor = useHUDStore((state) => state.borderColor);
+  const warnBgColor = useHUDStore((state) => state.warnBgColor);
+  const warnBorderColor = useHUDStore((state) => state.warnBorderColor);
+  const borderStyle = useHUDStore((state) => state.borderStyle);
+
+  const {
+    setBgColor,
+    setBorderColor,
+    setWarnBgColor,
+    setWarnBorderColor,
+    setBorderStyle,
+  } = useHUDStore.getState();
 
   return (
     <>
@@ -25,8 +44,8 @@ const CustomHighlightBox = () => {
               <BorderStyleBox
                 key={style}
                 $style={style}
-                $selected={selectedBorderStyle === style}
-                onClick={() => setSelectedBorderStyle(style)}
+                $selected={borderStyle === style}
+                onClick={() => setBorderStyle(style)}
               />
             ))}
           </BorderStyleGrid>
@@ -34,18 +53,18 @@ const CustomHighlightBox = () => {
 
         <ColorControlGroup
           label="일치"
-          backgroundColor={backgroundColor}
+          backgroundColor={bgColor}
           borderColor={borderColor}
-          onChangeBackground={setBackgroundColor}
+          onChangeBackground={setBgColor}
           onChangeBorder={setBorderColor}
         />
 
         <ColorControlGroup
           label="경고"
-          backgroundColor={mismatchBackgroundColor}
-          borderColor={mismatchBorderColor}
-          onChangeBackground={setMismatchBackgroundColor}
-          onChangeBorder={setMismatchBorderColor}
+          backgroundColor={warnBgColor}
+          borderColor={warnBorderColor}
+          onChangeBackground={setWarnBgColor}
+          onChangeBorder={setWarnBorderColor}
         />
       </Section>
 
@@ -55,15 +74,17 @@ const CustomHighlightBox = () => {
           <ColumnGroup $gap="6px">
             <Label>일치</Label>
             <PreviewBox
-              $bg={backgroundColor}
-              $border={`2px ${selectedBorderStyle} ${borderColor}`}
+              PreviewBox
+              $bg={hexToRgba(bgColor)}
+              $border={`2px ${borderStyle} ${borderColor}`}
             />
           </ColumnGroup>
           <ColumnGroup $gap="6px">
             <Label>경고</Label>
             <PreviewBox
-              $bg={mismatchBackgroundColor}
-              $border={`2px ${selectedBorderStyle} ${mismatchBorderColor}`}
+              PreviewBox
+              $bg={hexToRgba(warnBgColor)}
+              $border={`2px ${borderStyle} ${warnBorderColor}`}
             />
           </ColumnGroup>
         </PreviewWrapper>
@@ -128,8 +149,19 @@ const PreviewBox = styled.div`
   width: 100%;
   height: 36px;
   border-radius: 6px;
-  background-color: ${({ $bg }) => $bg};
   border: ${({ $border }) => $border};
+  background-color: ${({ $bg }) => {
+    const rgbMatch = $bg?.match(/\d+/g);
+
+    if (rgbMatch && rgbMatch.length >= 3) {
+      const [r, g, b] = rgbMatch.map(Number);
+      const isWhite = r === 255 && g === 255 && b === 255;
+
+      return `rgba(${r}, ${g}, ${b}, ${isWhite ? 0 : 0.5})`;
+    }
+
+    return $bg;
+  }};
 `;
 
 export default CustomHighlightBox;
