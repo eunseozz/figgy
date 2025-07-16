@@ -5,18 +5,6 @@ import useHUDStore from "@/stores/useHUDStore";
 
 const BORDER_STYLES = ["solid", "dashed", "dotted", "double"];
 
-const hexToRgba = (hex, alpha = 0.5) => {
-  const parsedHex = hex.replace("#", "");
-  const bigint = parseInt(parsedHex, 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-
-  const isWhite = r === 255 && g === 255 && b === 255;
-
-  return `rgba(${r}, ${g}, ${b}, ${isWhite ? 0 : alpha})`;
-};
-
 const CustomHighlightBox = () => {
   const bgColor = useHUDStore((state) => state.bgColor);
   const borderColor = useHUDStore((state) => state.borderColor);
@@ -75,7 +63,7 @@ const CustomHighlightBox = () => {
             <Label>일치</Label>
             <PreviewBox
               PreviewBox
-              $bg={hexToRgba(bgColor)}
+              $bg={bgColor}
               $border={`2px ${borderStyle} ${borderColor}`}
             />
           </ColumnGroup>
@@ -83,7 +71,7 @@ const CustomHighlightBox = () => {
             <Label>경고</Label>
             <PreviewBox
               PreviewBox
-              $bg={hexToRgba(warnBgColor)}
+              $bg={warnBgColor}
               $border={`2px ${borderStyle} ${warnBorderColor}`}
             />
           </ColumnGroup>
