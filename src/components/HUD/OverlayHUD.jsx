@@ -19,7 +19,6 @@ const TOOL_BOX_KEY = {
 };
 
 const OverlayHUD = () => {
-  const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const viewMode = useHUDStore((state) => state.viewMode);
   const opacity = useHUDStore((state) => state.opacity);
@@ -36,17 +35,11 @@ const OverlayHUD = () => {
   const [isShowShortcutModal, setIsShowShortcutModal] = useState(false);
   const [openToolboxKey, setOpenToolboxKey] = useState(null);
 
-  const {
-    setAlignment,
-    setScaleMode,
-    setViewMode,
-    setOpacity,
-    setIsShowOverlay,
-  } = useHUDStore.getState();
+  const { setScaleMode, setViewMode, setOpacity, setIsShowOverlay } =
+    useHUDStore.getState();
 
-  const stateMap = { alignment, scaleMode, viewMode, isShowOverlay };
+  const stateMap = { scaleMode, viewMode, isShowOverlay };
   const setStateMap = {
-    alignment: setAlignment,
     scaleMode: setScaleMode,
     viewMode: setViewMode,
     isShowOverlay: setIsShowOverlay,

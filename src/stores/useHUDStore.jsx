@@ -1,13 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { ALIGNMENT, SCALE_MODE, VIEW_MODE } from "@/constants/hudOptions";
+import { SCALE_MODE, VIEW_MODE } from "@/constants/hudOptions";
 import { chromeStorage } from "@/utils/chromeStorage";
 
 const useHUDStore = create(
   persist(
     (set) => ({
-      alignment: ALIGNMENT.CENTER,
       scaleMode: SCALE_MODE.ACTUAL,
       viewMode: VIEW_MODE.DIFF,
       isShowOverlay: true,
@@ -21,7 +20,6 @@ const useHUDStore = create(
       warnBorderColor: "#f44336",
       borderStyle: "solid",
 
-      setAlignment: (alignment) => set({ alignment }),
       setScaleMode: (scaleMode) => set({ scaleMode }),
       setViewMode: (viewMode) => set({ viewMode }),
       setIsShowOverlay: (isShowOverlay) => set({ isShowOverlay }),

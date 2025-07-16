@@ -1,28 +1,22 @@
 import styled from "styled-components";
 
-import { ALIGNMENT, SCALE_MODE } from "@/constants/hudOptions";
+import { SCALE_MODE } from "@/constants/hudOptions";
 import useHUDStore from "@/stores/useHUDStore";
 
 const Overlay = ({ imageUrl, imgRef }) => {
-  const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const opacity = useHUDStore((state) => state.opacity);
 
   if (!imageUrl) return null;
 
   const isFitMode = scaleMode === SCALE_MODE.FIT;
-  const isCenter = alignment === ALIGNMENT.CENTER;
 
   return (
-    <OverlayWrapper
-      $isCenter={isCenter}
-      $isFitMode={isFitMode}
-    >
+    <OverlayWrapper>
       <OverlayImage
         ref={imgRef}
         src={imageUrl}
         alt="Overlay"
-        $isCenter={isCenter}
         $isFitMode={isFitMode}
         $opacity={opacity}
       />
@@ -37,22 +31,15 @@ const OverlayWrapper = styled.div`
   width: 100%;
   pointer-events: none;
   z-index: 10000;
-
-  ${({ $isCenter, $isFitMode }) =>
-    $isCenter &&
-    !$isFitMode &&
-    `
-    display: flex;
-    justify-content: center;
-    overflow-x: hidden;
-  `}
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
 `;
 
 const OverlayImage = styled.img`
   display: block;
   pointer-events: none;
   user-select: none;
-
   width: ${({ $isFitMode }) => ($isFitMode ? "100%" : "auto")};
   height: auto;
   max-width: none;
