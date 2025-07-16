@@ -109,7 +109,7 @@ const ColumnGroup = styled.div`
 const Label = styled.label`
   font-size: 12px;
   font-weight: 600;
-  color: #444;
+  color: #777;
 `;
 
 const BorderStyleGrid = styled.div`
