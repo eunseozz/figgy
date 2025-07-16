@@ -82,7 +82,7 @@ const Container = styled.div`
   width: 400px;
   height: 100vh;
   background-color: #fff;
-  z-index: 13000;
+  z-index: 10003;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@ const ToolBar = styled.div`
   position: sticky;
   top: 0;
   background-color: #fff;
-  z-index: 10;
+  z-index: 1;
   height: 60px;
   display: flex;
   align-items: center;

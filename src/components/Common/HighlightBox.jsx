@@ -25,7 +25,7 @@ const HighlightBox = ({ top, left, width, height, isMatched }) => {
 const Box = styled.div`
   position: absolute;
   pointer-events: none;
-  z-index: 10000;
+  z-index: 10001;
   box-sizing: border-box;
   border: 3px ${({ $borderStyle }) => $borderStyle}
     ${({ $borderColor }) => $borderColor};

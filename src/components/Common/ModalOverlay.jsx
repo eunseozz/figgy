@@ -35,7 +35,7 @@ const BackScreeen = styled.div`
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 15000;
+  z-index: 10004;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -36,7 +36,7 @@ const OverlayWrapper = styled.div`
   left: 0;
   width: 100%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 10000;
 
   ${({ $isCenter, $isFitMode }) =>
     $isCenter &&

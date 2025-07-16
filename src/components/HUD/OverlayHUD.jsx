@@ -119,7 +119,7 @@ const Container = styled.div`
   position: fixed;
   top: 24px;
   left: 24px;
-  z-index: 10000;
+  z-index: 10005;
 `;
 
 const HUDBox = styled.div`
