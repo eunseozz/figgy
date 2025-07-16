@@ -5,10 +5,10 @@ import styled from "styled-components";
 
 import CustomHighlightBox from "@/components/HUD/CustomHighlightBox";
 import HUDToolboxItem from "@/components/HUD/HUDToolboxItem";
-import OpacityControl from "@/components/HUD/OpacityControl";
+import SliderControl from "@/components/HUD/SliderControl";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
 import ShortcutModal from "@/components/Modal/ShortcutModal";
-import { toggleGroups, VIEW_MODE } from "@/constants/hudOptions";
+import { SETTING_TOGGLE_GROUPS, VIEW_MODE } from "@/constants/hudOptions";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
@@ -22,6 +22,7 @@ const OverlayHUD = () => {
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const viewMode = useHUDStore((state) => state.viewMode);
   const opacity = useHUDStore((state) => state.opacity);
+  const matchGap = useHUDStore((state) => state.matchGap);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const showOverlayShortcutKey = useHUDStore(
     (state) => state.showOverlayShortcutKey,
@@ -35,8 +36,13 @@ const OverlayHUD = () => {
   const [isShowShortcutModal, setIsShowShortcutModal] = useState(false);
   const [openToolboxKey, setOpenToolboxKey] = useState(null);
 
-  const { setScaleMode, setViewMode, setOpacity, setIsShowOverlay } =
-    useHUDStore.getState();
+  const {
+    setScaleMode,
+    setViewMode,
+    setOpacity,
+    setMatchGap,
+    setIsShowOverlay,
+  } = useHUDStore.getState();
 
   const stateMap = { scaleMode, viewMode, isShowOverlay };
   const setStateMap = {
@@ -73,23 +79,44 @@ const OverlayHUD = () => {
           isActive={openToolboxKey === TOOL_BOX_KEY.SETTING}
           onClick={() => handleToggleToolBox(TOOL_BOX_KEY.SETTING)}
         >
-          {toggleGroups.map(({ label, stateKey, options, rightSlot }) => (
-            <ToggleOptionGroup
-              key={stateKey}
-              label={label}
-              value={stateMap[stateKey]}
-              onChange={setStateMap[stateKey]}
-              options={options}
-              rightSlot={rightSlot?.({
-                value: showOverlayShortcutKey,
-                onClick: () => setIsShowShortcutModal(true),
-              })}
-            />
-          ))}
-          <OpacityControl
-            opacity={opacity}
-            setOpacity={setOpacity}
-          />
+          {SETTING_TOGGLE_GROUPS.map(
+            ({ label, stateKey, options, rightSlot }) => (
+              <ToggleOptionGroup
+                key={stateKey}
+                label={label}
+                value={stateMap[stateKey]}
+                onChange={setStateMap[stateKey]}
+                options={options}
+                rightSlot={rightSlot?.({
+                  value: showOverlayShortcutKey,
+                  onClick: () => setIsShowShortcutModal(true),
+                })}
+              />
+            ),
+          )}
+          <SliderControl
+            min={0.05}
+            max={1}
+            step={0.05}
+            label="투명도"
+            value={opacity}
+            onChange={(e) => setOpacity(parseFloat(e.target.value))}
+          >
+            <ValueText>{Math.round(opacity * 100)}%</ValueText>
+          </SliderControl>
+          <SliderControl
+            min={0}
+            max={20}
+            step={1}
+            label="오차 허용 범위"
+            value={matchGap}
+            onChange={(e) => {
+              clearFeedback();
+              setMatchGap(e.target.value);
+            }}
+          >
+            <ValueText>{matchGap}px</ValueText>
+          </SliderControl>
         </HUDToolboxItem>
 
         <HUDToolboxItem
@@ -124,6 +151,13 @@ const HUDBox = styled.div`
 
 const LogoImage = styled.img`
   width: 22px;
+`;
+
+const ValueText = styled.span`
+  font-size: 11px;
+  color: #6b7280;
+  width: 36px;
+  text-align: right;
 `;
 
 export default OverlayHUD;

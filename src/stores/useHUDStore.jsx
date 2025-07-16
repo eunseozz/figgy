@@ -13,6 +13,7 @@ const useHUDStore = create(
       showOverlayShortcutKey: "K",
       opacity: 0.3,
       isOpenPanel: true,
+      matchGap: 5,
 
       bgColor: "#dfffe0",
       borderColor: "#4caf50",
@@ -26,6 +27,7 @@ const useHUDStore = create(
       setShowOverlayShortcutKey: (key) => set({ showOverlayShortcutKey: key }),
       setOpacity: (opacity) => set({ opacity }),
       setIsOpenPanel: (isOpenPanel) => set({ isOpenPanel }),
+      setMatchGap: (matchGap) => set({ matchGap }),
 
       setBgColor: (bgColor) => set({ bgColor }),
       setBorderColor: (borderColor) => set({ borderColor }),

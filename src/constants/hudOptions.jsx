@@ -10,7 +10,7 @@ export const VIEW_MODE = {
   DIFF: "diff",
 };
 
-export const toggleGroups = [
+export const SETTING_TOGGLE_GROUPS = [
   {
     label: "오버레이",
     stateKey: "isShowOverlay",
