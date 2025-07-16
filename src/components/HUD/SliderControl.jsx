@@ -1,18 +1,26 @@
 import styled from "styled-components";
 
-const OpacityControl = ({ opacity, setOpacity }) => (
+const SliderControl = ({
+  min,
+  max,
+  step,
+  label,
+  value,
+  onChange,
+  children,
+}) => (
   <div>
-    <GroupLabel>투명도</GroupLabel>
+    <GroupLabel>{label}</GroupLabel>
     <SliderWrapper>
-      <OpacitySlider
+      <Slider
         type="range"
-        min={0.05}
-        max={1}
-        step={0.05}
-        value={opacity}
-        onChange={(e) => setOpacity(parseFloat(e.target.value))}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
       />
-      <OpacityValue>{Math.round(opacity * 100)}%</OpacityValue>
+      {children}
     </SliderWrapper>
   </div>
 );
@@ -30,7 +38,7 @@ const SliderWrapper = styled.div`
   gap: 8px;
 `;
 
-const OpacitySlider = styled.input`
+const Slider = styled.input`
   flex: 1;
   appearance: none;
   height: 6px;
@@ -59,11 +67,4 @@ const OpacitySlider = styled.input`
   }
 `;
 
-const OpacityValue = styled.span`
-  font-size: 11px;
-  color: #6b7280;
-  width: 36px;
-  text-align: right;
-`;
-
-export default OpacityControl;
+export default SliderControl;

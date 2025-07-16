@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
+import { TbMoodEdit } from "react-icons/tb";
 import styled from "styled-components";
 
-import OpacityControl from "@/components/HUD/OpacityControl";
+import CustomHighlightBox from "@/components/HUD/CustomHighlightBox";
+import HUDToolboxItem from "@/components/HUD/HUDToolboxItem";
+import SliderControl from "@/components/HUD/SliderControl";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
 import ShortcutModal from "@/components/Modal/ShortcutModal";
-import { toggleGroups, VIEW_MODE } from "@/constants/hudOptions";
+import { SETTING_TOGGLE_GROUPS, VIEW_MODE } from "@/constants/hudOptions";
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
 import { getAssetUrl } from "@/utils/chrome";
 
+const TOOL_BOX_KEY = {
+  SETTING: "setting",
+  CUSTOM: "custom",
+};
+
 const OverlayHUD = () => {
-  const alignment = useHUDStore((state) => state.alignment);
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const viewMode = useHUDStore((state) => state.viewMode);
   const opacity = useHUDStore((state) => state.opacity);
+  const matchGap = useHUDStore((state) => state.matchGap);
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const showOverlayShortcutKey = useHUDStore(
     (state) => state.showOverlayShortcutKey,
@@ -26,20 +34,18 @@ const OverlayHUD = () => {
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
 
   const [isShowShortcutModal, setIsShowShortcutModal] = useState(false);
+  const [openToolboxKey, setOpenToolboxKey] = useState(null);
 
   const {
-    setAlignment,
     setScaleMode,
     setViewMode,
     setOpacity,
+    setMatchGap,
     setIsShowOverlay,
   } = useHUDStore.getState();
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  const stateMap = { alignment, scaleMode, viewMode, isShowOverlay };
+  const stateMap = { scaleMode, viewMode, isShowOverlay };
   const setStateMap = {
-    alignment: setAlignment,
     scaleMode: setScaleMode,
     viewMode: setViewMode,
     isShowOverlay: setIsShowOverlay,
@@ -55,48 +61,73 @@ const OverlayHUD = () => {
 
   const logoImage = getAssetUrl("images/logos/size_48.png");
 
+  const handleToggleToolBox = (key) => {
+    setOpenToolboxKey((prevKey) => (prevKey === key ? null : key));
+  };
+
   return (
     <Container>
       <HUDBox>
-        <IconColumn>
-          <IconWrapper
-            $isActive={isOpenPanel}
-            onClick={() => setIsOpenPanel(!isOpenPanel)}
-          >
-            <LogoImage src={logoImage} />
-          </IconWrapper>
-          <IconWrapper
-            $isActive={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-          >
-            <IoMdSettings />
-          </IconWrapper>
-        </IconColumn>
+        <HUDToolboxItem
+          icon={<LogoImage src={logoImage} />}
+          isActive={isOpenPanel}
+          onClick={() => setIsOpenPanel(!isOpenPanel)}
+        />
 
-        {isOpen && (
-          <HUDContainer>
-            <HUDWrapper>
-              {toggleGroups.map(({ label, stateKey, options, rightSlot }) => (
-                <ToggleOptionGroup
-                  key={stateKey}
-                  label={label}
-                  value={stateMap[stateKey]}
-                  onChange={setStateMap[stateKey]}
-                  options={options}
-                  rightSlot={rightSlot?.({
-                    value: showOverlayShortcutKey,
-                    onClick: () => setIsShowShortcutModal(true),
-                  })}
-                />
-              ))}
-              <OpacityControl
-                opacity={opacity}
-                setOpacity={setOpacity}
+        <HUDToolboxItem
+          icon={<IoMdSettings />}
+          isActive={openToolboxKey === TOOL_BOX_KEY.SETTING}
+          onClick={() => handleToggleToolBox(TOOL_BOX_KEY.SETTING)}
+        >
+          {SETTING_TOGGLE_GROUPS.map(
+            ({ label, stateKey, options, rightSlot }) => (
+              <ToggleOptionGroup
+                key={stateKey}
+                label={label}
+                value={stateMap[stateKey]}
+                onChange={setStateMap[stateKey]}
+                options={options}
+                rightSlot={rightSlot?.({
+                  value: showOverlayShortcutKey,
+                  onClick: () => setIsShowShortcutModal(true),
+                })}
               />
-            </HUDWrapper>
-          </HUDContainer>
-        )}
+            ),
+          )}
+          <SliderControl
+            min={0.05}
+            max={1}
+            step={0.05}
+            label="투명도"
+            value={opacity}
+            onChange={(e) => setOpacity(parseFloat(e.target.value))}
+          >
+            <ValueText>{Math.round(opacity * 100)}%</ValueText>
+          </SliderControl>
+          <SliderControl
+            min={0}
+            max={20}
+            step={1}
+            label="오차 허용 범위"
+            value={matchGap}
+            onChange={(e) => {
+              clearFeedback();
+              setMatchGap(e.target.value);
+            }}
+          >
+            <ValueText>{matchGap}px</ValueText>
+          </SliderControl>
+        </HUDToolboxItem>
+
+        <HUDToolboxItem
+          icon={<TbMoodEdit />}
+          isActive={openToolboxKey === TOOL_BOX_KEY.CUSTOM}
+          onClick={() => handleToggleToolBox(TOOL_BOX_KEY.CUSTOM)}
+        >
+          <CustomHighlightBox />
+        </HUDToolboxItem>
       </HUDBox>
+
       {isShowShortcutModal && (
         <ShortcutModal closeModal={() => setIsShowShortcutModal(false)} />
       )}
@@ -108,7 +139,7 @@ const Container = styled.div`
   position: fixed;
   top: 24px;
   left: 24px;
-  z-index: 10000;
+  z-index: 10005;
 `;
 
 const HUDBox = styled.div`
@@ -118,56 +149,15 @@ const HUDBox = styled.div`
   gap: 12px;
 `;
 
-const IconColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
-  background-color: ${({ $isActive }) => ($isActive ? "#ede8fe" : "#ffffff")};
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  color: #6dbbbf;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  svg {
-    font-size: 24px;
-  }
-`;
-
 const LogoImage = styled.img`
   width: 22px;
 `;
 
-const HUDContainer = styled.div`
-  width: 230px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-`;
-
-const HUDWrapper = styled.div`
-  background-color: #ffffff;
-  padding: 16px 18px;
-  color: #111827;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  animation: revealHUD 0.3s ease-out forwards;
-  clip-path: inset(0 100% 100% 0);
-
-  @keyframes revealHUD {
-    to {
-      clip-path: inset(0 0 0 0);
-    }
-  }
+const ValueText = styled.span`
+  font-size: 11px;
+  color: #6b7280;
+  width: 36px;
+  text-align: right;
 `;
 
 export default OverlayHUD;

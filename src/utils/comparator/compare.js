@@ -1,3 +1,5 @@
+import useHUDStore from "@/stores/useHUDStore";
+
 export const MAX_MISMATCH_GAP = 50;
 
 export const compareDomWithFigma = (
@@ -14,7 +16,7 @@ export const compareDomWithFigma = (
   }
 
   const figmaBox = figmaNode.absoluteBoundingBox;
-  const pixelLimit = 3;
+  const pixelLimit = useHUDStore.getState().matchGap;
 
   const imageRect = imageRef.current.getBoundingClientRect();
   const scale = imageRef.current.width / figmaOriginalWidth;

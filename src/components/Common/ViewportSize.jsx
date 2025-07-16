@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 const ViewportSize = ({ label = "PC" }) => {
@@ -22,7 +21,7 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  z-index: 10000;
+  z-index: 10002;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
