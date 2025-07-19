@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 import { SCALE_MODE, VIEW_MODE } from "@/constants/hudOptions";
 import { chromeStorage } from "@/utils/chromeStorage";
+import { hexToRgba } from "@/utils/setting";
 
 const useHUDStore = create(
   persist(
@@ -15,9 +16,9 @@ const useHUDStore = create(
       isOpenPanel: true,
       matchGap: 5,
 
-      bgColor: "#dfffe0",
+      bgColor: hexToRgba("#dfffe0"),
       borderColor: "#4caf50",
-      warnBgColor: "#ffe3e3",
+      warnBgColor: hexToRgba("#ffe3e3"),
       warnBorderColor: "#f44336",
       borderStyle: "solid",
 
