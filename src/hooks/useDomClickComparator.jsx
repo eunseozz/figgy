@@ -96,6 +96,9 @@ const useDomClickComparator = ({
       );
 
       if (shouldSkipFeedback(comparison.mismatches)) {
+        clickedElementRef.current = null;
+        comparisonRef.current = null;
+
         useToastStore
           .getState()
           .showToast("❌ 일치하는 Figma 노드를 찾을 수 없습니다.");
