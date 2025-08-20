@@ -3,7 +3,12 @@ import { persist } from "zustand/middleware";
 
 import { chromeStorage } from "@/utils/chromeStorage";
 
-const useUserStore = create(
+interface UserState {
+  accessToken: string;
+  setAccessToken: (token: string) => void;
+}
+
+const useUserStore = create<UserState>()(
   persist(
     (set) => ({
       accessToken: "",

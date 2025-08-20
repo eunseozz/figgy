@@ -1,6 +1,24 @@
 import { create } from "zustand";
 
-const useFeedbackStore = create((set) => ({
+interface HighlightBox {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  isMatched: boolean;
+}
+
+interface FeedbackState {
+  tooltip: string | null;
+  highlightBox: HighlightBox | null;
+
+  setTooltip: (tooltip: string | null) => void;
+  setHighlightBox: (highlightBox: HighlightBox | null) => void;
+  clearFeedback: () => void;
+  setActiveElement: (element: HTMLElement | null, isMatched?: boolean) => void;
+}
+
+const useFeedbackStore = create<FeedbackState>((set) => ({
   tooltip: null,
   highlightBox: null,
 

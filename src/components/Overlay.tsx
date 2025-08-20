@@ -1,9 +1,14 @@
 import styled from "styled-components";
-
 import { SCALE_MODE } from "@/constants/hudOptions";
 import useHUDStore from "@/stores/useHUDStore";
+import { RefObject } from "react";
 
-const Overlay = ({ imageUrl, imgRef }) => {
+type OverlayProps = {
+  imageUrl: string | null;
+  imgRef: RefObject<HTMLImageElement>;
+};
+
+const Overlay = ({ imageUrl, imgRef }: OverlayProps) => {
   const scaleMode = useHUDStore((state) => state.scaleMode);
   const opacity = useHUDStore((state) => state.opacity);
 
@@ -36,7 +41,7 @@ const OverlayWrapper = styled.div`
   overflow-x: hidden;
 `;
 
-const OverlayImage = styled.img`
+const OverlayImage = styled.img<{ $isFitMode: boolean; $opacity: number }>`
   display: block;
   pointer-events: none;
   user-select: none;

@@ -1,10 +1,56 @@
 import { v4 as uuidv4 } from "uuid";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
 import { chromeStorage } from "@/utils/chromeStorage";
 
-const useProjectStore = create(
+interface PageItem {
+  id: string;
+  nodeId: string;
+  label: string;
+  imageUrl: string;
+  isActive?: boolean;
+}
+
+interface PageFolder {
+  title: string;
+  minWidth: number;
+  items: PageItem[];
+}
+
+type ActivePageMap = Record<number, PageItem>;
+
+interface Project {
+  projectId: string;
+  projectName: string;
+  fileKey: string;
+  pages: PageFolder[];
+  activePageMap?: ActivePageMap;
+}
+
+interface ProjectState {
+  projects: Project[];
+
+  addProject: (projectName: string, fileKey: string) => void;
+  updateProjects: (fileKey: string, newPages: PageFolder[]) => void;
+  deleteProject: (fileKey: string) => void;
+  updateProjectTitle: (fileKey: string, newTitle: string) => void;
+
+  deletePage: (fileKey: string, pageId: string) => void;
+  updatePageFolder: (
+    projectId: string,
+    targetMinWidth: number,
+    newTitle: string,
+    newMinWidth: number,
+  ) => void;
+  createPageFolder: (projectId: string, title: string, width: number) => void;
+  deletePageFolder: (projectId: string, targetWidth: number) => void;
+
+  setActivePage: (fileKey: string, minWidth: number, item: PageItem) => void;
+  removeActivePage: (fileKey: string, minWidth: number) => void;
+  resetActivePage: (fileKey: string) => void;
+}
+
+const useProjectStore = create<ProjectState>()(
   persist(
     (set, get) => ({
       projects: [],
@@ -17,7 +63,7 @@ const useProjectStore = create(
 
         if (isDuplicate) return;
 
-        const newProject = {
+        const newProject: Project = {
           projectId: uuidv4(),
           projectName,
           fileKey,
@@ -68,15 +114,13 @@ const useProjectStore = create(
             const filteredItems = page.items.filter(
               (item) => item.id !== pageId,
             );
-
             return { ...page, items: filteredItems };
           });
 
           const updatedActivePageMap = { ...(project.activePageMap ?? {}) };
-
           for (const [minWidth, page] of Object.entries(updatedActivePageMap)) {
             if (page.id === pageId) {
-              delete updatedActivePageMap[minWidth];
+              delete updatedActivePageMap[Number(minWidth)];
             }
           }
 
@@ -121,7 +165,7 @@ const useProjectStore = create(
         const updatedProjects = projects.map((project) => {
           if (project.projectId !== projectId) return project;
 
-          const newPage = {
+          const newPage: PageFolder = {
             title,
             minWidth: width,
             items: [],
@@ -147,7 +191,6 @@ const useProjectStore = create(
           );
 
           const updatedActivePageMap = { ...(project.activePageMap ?? {}) };
-
           delete updatedActivePageMap[targetWidth];
 
           return {

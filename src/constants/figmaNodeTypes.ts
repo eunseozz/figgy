@@ -4,4 +4,4 @@ export const FIGMA_NODE_TYPE = {
   GROUP: "GROUP",
   SECTION: "SECTION",
   TEXT: "TEXT",
-};
+} as const;
