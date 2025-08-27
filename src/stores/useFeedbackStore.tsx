@@ -1,19 +1,25 @@
 import { create } from "zustand";
 
-interface HighlightBox {
+export type HighlightBoxProps = {
   top: number;
   left: number;
   width: number;
   height: number;
   isMatched: boolean;
-}
+};
+
+export type TooltipProps = {
+  top: number | null;
+  left: number | null;
+  text: string | null;
+};
 
 interface FeedbackState {
-  tooltip: string | null;
-  highlightBox: HighlightBox | null;
+  tooltip: TooltipProps | null;
+  highlightBox: HighlightBoxProps | null;
 
-  setTooltip: (tooltip: string | null) => void;
-  setHighlightBox: (highlightBox: HighlightBox | null) => void;
+  setTooltip: (tooltip: TooltipProps | null) => void;
+  setHighlightBox: (highlightBox: HighlightBoxProps | null) => void;
   clearFeedback: () => void;
   setActiveElement: (element: HTMLElement | null, isMatched?: boolean) => void;
 }

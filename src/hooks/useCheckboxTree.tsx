@@ -3,10 +3,10 @@ import { FIGMA_NODE_TYPE } from "@/constants/figmaNodeTypes";
 
 type FigmaNodeType = (typeof FIGMA_NODE_TYPE)[keyof typeof FIGMA_NODE_TYPE];
 
-type FigmaNode = {
+export type FigmaNode = {
   id: string;
   name: string;
-  type: FigmaNodeType;
+  type?: FigmaNodeType;
   children?: FigmaNode[];
 };
 

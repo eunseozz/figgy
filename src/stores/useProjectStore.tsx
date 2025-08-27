@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { chromeStorage } from "@/utils/chromeStorage";
 
-interface PageItem {
+export interface PageItem {
   id: string;
   nodeId: string;
   label: string;
@@ -19,7 +19,7 @@ interface PageFolder {
 
 type ActivePageMap = Record<number, PageItem>;
 
-interface Project {
+export interface Project {
   projectId: string;
   projectName: string;
   fileKey: string;

@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-interface ToastState {
+export type ToastState = {
   message: string | null;
   showToast: (message: string) => void;
   clearToast: () => void;
-}
+};
 
 const useToastStore = create<ToastState>((set) => ({
   message: null,
