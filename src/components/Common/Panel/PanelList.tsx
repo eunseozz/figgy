@@ -7,25 +7,27 @@ import styled from "styled-components";
 import GrayDashAddButton from "@/components/Common/GrayDashAddButton";
 
 export type PanelListItem = {
+  id?: string;
   label: string;
   icon?: React.ReactNode;
   isActive?: boolean;
+  fileKey?: string;
 };
 
 type PanelListProps = {
   title: string;
   titleExtras?: React.ReactNode;
   items: PanelListItem[];
-  emptyText: string;
+  emptyText?: string;
   isToggle?: boolean;
 
   onItemClick: (item: PanelListItem) => void;
-  onDragStart: (
+  onDragStart?: (
     e: React.DragEvent<HTMLButtonElement>,
     item: PanelListItem,
   ) => void;
-  onDrop: (e: React.DragEvent<HTMLDivElement | HTMLUListElement>) => void;
-  onDragOver: (e: React.DragEvent<HTMLDivElement | HTMLUListElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLDivElement | HTMLUListElement>) => void;
+  onDragOver?: (e: React.DragEvent<HTMLDivElement | HTMLUListElement>) => void;
 
   onDeleteClick?: (item: PanelListItem) => void;
   onUpdateClick?: (item: PanelListItem) => void;

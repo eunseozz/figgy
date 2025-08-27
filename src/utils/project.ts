@@ -1,8 +1,15 @@
+import type {
+  Project,
+  PageFolder,
+  PageItem,
+  ActivePageMap,
+} from "@/stores/useProjectStore";
+
 export const getActivePageGroupLabel = (
-  activePageMap,
-  projectPages,
-  windowWidth,
-) => {
+  activePageMap: ActivePageMap | undefined,
+  projectPages: PageFolder[] | undefined,
+  windowWidth: number,
+): string | null => {
   if (!activePageMap || !projectPages || projectPages.length === 0) return null;
 
   const matchedPage = getOverlayNodeByWidth(activePageMap, windowWidth);
@@ -17,7 +24,10 @@ export const getActivePageGroupLabel = (
   return matchedGroup?.title ?? null;
 };
 
-export const getOverlayNodeByWidth = (activePageMap, windowWidth) => {
+export const getOverlayNodeByWidth = (
+  activePageMap: ActivePageMap | undefined,
+  windowWidth: number,
+): PageItem | null => {
   if (!activePageMap || Object.keys(activePageMap).length === 0) return null;
 
   const availableWidths = Object.keys(activePageMap)
@@ -31,6 +41,14 @@ export const getOverlayNodeByWidth = (activePageMap, windowWidth) => {
     : (activePageMap[availableWidths[availableWidths.length - 1]] ?? null);
 };
 
-export const selectedProject = (fileKey) => (state) => {
-  return state.projects.find((project) => project.fileKey === fileKey) || null;
+type ProjectStore = {
+  projects: Project[];
 };
+
+export const selectedProject =
+  (fileKey: string | undefined) =>
+  (state: ProjectStore): Project | null => {
+    return (
+      state.projects.find((project) => project.fileKey === fileKey) || null
+    );
+  };

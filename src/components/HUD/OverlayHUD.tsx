@@ -4,7 +4,7 @@ import { TbMoodEdit } from "react-icons/tb";
 import styled from "styled-components";
 
 import CustomHighlightBox from "@/components/HUD/CustomHighlightBox";
-import HUDToolboxItem from "@/components/HUD/HUDToolboxItem";
+import HUDToolboxItem from "@/components/HUD/HUDToolBoxItem";
 import SliderControl from "@/components/HUD/SliderControl";
 import ToggleOptionGroup from "@/components/HUD/ToggleOptionGroup";
 import ShortcutModal from "@/components/Modal/ShortcutModal";
@@ -16,7 +16,9 @@ import { getAssetUrl } from "@/utils/chrome";
 const TOOL_BOX_KEY = {
   SETTING: "setting",
   CUSTOM: "custom",
-};
+} as const;
+
+type ToolBoxKey = (typeof TOOL_BOX_KEY)[keyof typeof TOOL_BOX_KEY];
 
 const OverlayHUD = () => {
   const scaleMode = useHUDStore((state) => state.scaleMode);
@@ -34,7 +36,7 @@ const OverlayHUD = () => {
   const setIsOpenPanel = useHUDStore((state) => state.setIsOpenPanel);
 
   const [isShowShortcutModal, setIsShowShortcutModal] = useState(false);
-  const [openToolboxKey, setOpenToolboxKey] = useState(null);
+  const [openToolboxKey, setOpenToolboxKey] = useState<ToolBoxKey | null>(null);
 
   const {
     setScaleMode,
@@ -53,15 +55,14 @@ const OverlayHUD = () => {
 
   useEffect(() => {
     const shouldClearFeedback = viewMode !== VIEW_MODE.DIFF || !isShowOverlay;
-
     if (shouldClearFeedback) {
       clearFeedback();
     }
-  }, [viewMode, isShowOverlay]);
+  }, [viewMode, isShowOverlay, clearFeedback]);
 
   const logoImage = getAssetUrl("images/logos/size_48.png");
 
-  const handleToggleToolBox = (key) => {
+  const handleToggleToolBox = (key: ToolBoxKey) => {
     setOpenToolboxKey((prevKey) => (prevKey === key ? null : key));
   };
 
@@ -84,8 +85,8 @@ const OverlayHUD = () => {
               <ToggleOptionGroup
                 key={stateKey}
                 label={label}
-                value={stateMap[stateKey]}
-                onChange={setStateMap[stateKey]}
+                value={stateMap[stateKey as keyof typeof stateMap]}
+                onChange={setStateMap[stateKey as keyof typeof setStateMap]}
                 options={options}
                 rightSlot={rightSlot?.({
                   value: showOverlayShortcutKey,
@@ -112,7 +113,7 @@ const OverlayHUD = () => {
             value={matchGap}
             onChange={(e) => {
               clearFeedback();
-              setMatchGap(e.target.value);
+              setMatchGap(Number(e.target.value));
             }}
           >
             <ValueText>{matchGap}px</ValueText>

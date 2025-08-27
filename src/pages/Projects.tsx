@@ -8,8 +8,11 @@ import AccessTokenModal from "@/components/Modal/AccessTokenModal";
 import AddProjectModal from "@/components/Modal/AddProjectModal";
 import ConfirmDeleteModal from "@/components/Modal/ConfirmDeleteModal";
 import UpdateTitleModal from "@/components/Modal/UpdateTitleModal";
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { Project } from "@/stores/useProjectStore";
 import useUserStore from "@/stores/useUserStore";
+import type { PanelListItem } from "@/components/Common/Panel/PanelList";
+
+type ModalKey = "accessToken" | "add" | "delete" | "update" | null;
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -20,14 +23,16 @@ const Projects = () => {
     (state) => state.updateProjectTitle,
   );
 
-  const [openModalKey, setOpenModalKey] = useState(null);
-  const [targetProject, setTargetProject] = useState(null);
+  const [openModalKey, setOpenModalKey] = useState<ModalKey>(null);
+  const [targetProject, setTargetProject] = useState<PanelListItem | null>(
+    null,
+  );
 
   const accessToken = useUserStore((state) => state.accessToken);
 
   const handleCloseModal = () => setOpenModalKey(null);
 
-  const panelItems = projects.map((project) => ({
+  const panelItems: PanelListItem[] = projects.map((project: Project) => ({
     icon: <FaRegFolder />,
     label: project.projectName,
     fileKey: project.fileKey,
@@ -35,19 +40,19 @@ const Projects = () => {
 
   const modals = [
     {
-      key: "accessToken",
+      key: "accessToken" as const,
       Component: AccessTokenModal,
       isOpen: openModalKey === "accessToken",
       props: { closeModal: handleCloseModal },
     },
     {
-      key: "add",
+      key: "add" as const,
       Component: AddProjectModal,
       isOpen: openModalKey === "add",
       props: { closeModal: handleCloseModal },
     },
     {
-      key: "delete",
+      key: "delete" as const,
       Component: ConfirmDeleteModal,
       isOpen: openModalKey === "delete",
       props: {
@@ -55,22 +60,24 @@ const Projects = () => {
         text: "삭제하면 이 프로젝트의 모든 정보가 사라지고 복구할 수 없어요.",
         onCancel: handleCloseModal,
         onConfirm: () => {
+          if (!targetProject) return;
           deleteProject(targetProject.fileKey);
           handleCloseModal();
         },
       },
     },
     {
-      key: "update",
+      key: "update" as const,
       Component: UpdateTitleModal,
       isOpen: openModalKey === "update",
       props: {
         closeModal: handleCloseModal,
-        onConfirm: (newTitle) => {
+        onConfirm: (newTitle: string) => {
+          if (!targetProject) return;
           updateProjectTitle(targetProject.fileKey, newTitle);
           handleCloseModal();
         },
-        title: targetProject?.label,
+        title: targetProject?.label ?? "",
         label: "프로젝트 이름",
       },
     },
@@ -110,7 +117,7 @@ const Projects = () => {
         modal.isOpen ? (
           <modal.Component
             key={modal.key}
-            {...modal.props}
+            {...(modal.props as any)}
           />
         ) : null,
       )}

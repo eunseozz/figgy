@@ -1,19 +1,19 @@
 import styled from "styled-components";
 import type { ReactNode } from "react";
 
-type ToggleOption<T extends string | number = string> = {
+export type ToggleOption<T extends string | number | boolean = string> = {
   value: T;
   label: ReactNode;
 };
 
-type SlidingToggleProps<T extends string | number = string> = {
+export type SlidingToggleProps<T extends string | number | boolean = string> = {
   options: ToggleOption<T>[];
   value: T;
   onChange: (value: T) => void;
 };
 
-const SlidingToggle = <T extends string | number = string>({
-  options = [],
+const SlidingToggle = <T extends string | number | boolean = string>({
+  options,
   value,
   onChange,
 }: SlidingToggleProps<T>) => {
@@ -27,7 +27,7 @@ const SlidingToggle = <T extends string | number = string>({
       />
       {options.map((option) => (
         <ToggleButton
-          key={option.value}
+          key={String(option.value)}
           $isActive={option.value === value}
           onClick={() => onChange(option.value)}
         >

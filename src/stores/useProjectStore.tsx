@@ -11,13 +11,13 @@ export interface PageItem {
   isActive?: boolean;
 }
 
-interface PageFolder {
+export interface PageFolder {
   title: string;
   minWidth: number;
   items: PageItem[];
 }
 
-type ActivePageMap = Record<number, PageItem>;
+export type ActivePageMap = Record<number, PageItem>;
 
 export interface Project {
   projectId: string;

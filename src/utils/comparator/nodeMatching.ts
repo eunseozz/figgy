@@ -3,21 +3,50 @@ import {
   computeTextSimilarity,
   MAX_MISMATCH_GAP,
 } from "@/utils/comparator/compare";
+import type { DomData } from "@/utils/comparator/domUtil";
 
-export const findNodeById = (node, targetId) => {
+export interface AbsoluteBoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface ExtendedFigmaNode {
+  id: string;
+  name: string;
+  type: string;
+  characters?: string;
+  absoluteBoundingBox?: AbsoluteBoundingBox;
+  children?: ExtendedFigmaNode[];
+  __depth?: number;
+}
+
+export interface FrameOffset {
+  x: number;
+  y: number;
+}
+
+export const findNodeById = (
+  node: ExtendedFigmaNode,
+  targetId: string,
+): ExtendedFigmaNode | null => {
   if (node.id === targetId) return node;
   if (!node.children) return null;
 
   for (const child of node.children) {
     const found = findNodeById(child, targetId);
-
     if (found) return found;
   }
 
   return null;
 };
 
-export const flattenNodes = (node, acc = [], depth = 0) => {
+export const flattenNodes = (
+  node: ExtendedFigmaNode,
+  acc: ExtendedFigmaNode[] = [],
+  depth = 0,
+): ExtendedFigmaNode[] => {
   if (node.absoluteBoundingBox) {
     acc.push({ ...node, __depth: depth });
   }
@@ -30,12 +59,12 @@ export const flattenNodes = (node, acc = [], depth = 0) => {
 };
 
 export const getClosestFigmaNode = (
-  domData,
-  figmaNodes,
-  imageRef,
-  figmaOriginalWidth,
-  frameOffset,
-) => {
+  domData: DomData,
+  figmaNodes: ExtendedFigmaNode[],
+  imageRef: React.RefObject<HTMLImageElement>,
+  figmaOriginalWidth: number,
+  frameOffset: FrameOffset,
+): ExtendedFigmaNode | null => {
   if (!imageRef.current) return null;
 
   const GAP = MAX_MISMATCH_GAP;
@@ -56,7 +85,6 @@ export const getClosestFigmaNode = (
   const candidates = figmaNodes
     .map((node) => {
       const box = node.absoluteBoundingBox;
-
       if (!box) return null;
 
       const x1 = (box.x - frameOffset.x) * scale + offsetX;
@@ -78,7 +106,7 @@ export const getClosestFigmaNode = (
       if (shouldExcludeTextNode && node.type === FIGMA_NODE_TYPE.TEXT)
         return null;
 
-      const offsetSum = calculateOffsetSum(domBox, { x1, y1, x2, y2 });
+      const offsetSum = calculateOffsetSum(domBox, { x1, y1 });
 
       return {
         node,
@@ -87,7 +115,16 @@ export const getClosestFigmaNode = (
         box,
       };
     })
-    .filter(Boolean);
+    .filter(
+      (
+        c,
+      ): c is {
+        node: ExtendedFigmaNode;
+        offsetSum: number;
+        __depth: number;
+        box: AbsoluteBoundingBox;
+      } => Boolean(c),
+    );
 
   if (candidates.length === 0) return null;
 
@@ -102,10 +139,10 @@ export const getClosestFigmaNode = (
         typeof c.node.characters === "string",
     );
     const exact = matches.filter(
-      (c) => c.node.characters.trim().toLowerCase() === domText,
+      (c) => c.node.characters?.trim().toLowerCase() === domText,
     );
     const partial = matches.filter((c) =>
-      c.node.characters.trim().toLowerCase().includes(domText),
+      c.node.characters?.trim().toLowerCase().includes(domText),
     );
 
     if (exact.length > 0) narrowed = exact;
@@ -116,7 +153,7 @@ export const getClosestFigmaNode = (
           ...c,
           similarity: computeTextSimilarity(
             domText,
-            c.node.characters.trim().toLowerCase(),
+            c.node.characters!.trim().toLowerCase(),
           ),
         }))
         .filter((c) => c.similarity > 0.8)
@@ -131,22 +168,33 @@ export const getClosestFigmaNode = (
   return narrowed[0].node ?? null;
 };
 
-const shouldExcludeText = (domData) => {
+const shouldExcludeText = (domData: DomData): boolean => {
   const tag = domData.tagName?.toLowerCase?.();
 
   return (
     domData.isMessy ||
-    (["a", "button"].includes(tag) && !domData.isTextLikeOnly)
+    (["a", "button"].includes(tag ?? "") && !domData.isTextLikeOnly)
   );
 };
 
-const isNodeOverlapping = (domX, domY, x1, y1, x2, y2, GAP) => {
+const isNodeOverlapping = (
+  domX: number,
+  domY: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  GAP: number,
+): boolean => {
   return (
     domX >= x1 - GAP && domX <= x2 + GAP && domY >= y1 - GAP && domY <= y2 + GAP
   );
 };
 
-export const calculateOffsetSum = (domBox, figmaBox) => {
+export const calculateOffsetSum = (
+  domBox: { x1: number; y1: number },
+  figmaBox: { x1: number; y1: number },
+): number => {
   const dx = Math.abs(domBox.x1 - figmaBox.x1);
   const dy = Math.abs(domBox.y1 - figmaBox.y1);
 

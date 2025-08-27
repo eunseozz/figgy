@@ -20,12 +20,16 @@ import useDragAndDropPages from "@/hooks/useDragAndDropPages";
 import useFigmaFrameData from "@/hooks/useFigmaFrameData";
 import useOverlayManager from "@/hooks/useOverlayManager";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { PageFolder, Project } from "@/stores/useProjectStore";
 import { selectedProject } from "@/utils/project";
+import type { FigmaNode } from "@/hooks/useCheckboxTree";
+
+type ModalKey = "selectFrame" | "updateFolder" | "delete" | null;
 
 const Pages = () => {
-  const { fileKey } = useParams();
-  const project = useProjectStore(selectedProject(fileKey));
+  const { fileKey } = useParams<{ fileKey: string }>();
+  const project: Project | null = useProjectStore(selectedProject(fileKey));
+
   const deletePage = useProjectStore((state) => state.deletePage);
   const updatePageFolder = useProjectStore((state) => state.updatePageFolder);
   const deletePageFolder = useProjectStore((state) => state.deletePageFolder);
@@ -37,7 +41,7 @@ const Pages = () => {
   const overlayNode = getOverlayNode();
 
   const { figmaNodes, imgRef, figmaOriginalWidthRef, frameOffsetRef } =
-    useFigmaFrameData(overlayNode?.nodeId);
+    useFigmaFrameData(overlayNode?.nodeId ?? null);
 
   useDomClickComparator({
     imgRef,
@@ -46,11 +50,11 @@ const Pages = () => {
     frameOffsetRef,
   });
 
-  const [openModalKey, setOpenModalKey] = useState(null);
+  const [openModalKey, setOpenModalKey] = useState<ModalKey>(null);
   const handleCloseModal = () => setOpenModalKey(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [targetFolder, setTargetFolder] = useState(null);
+  const [targetFolder, setTargetFolder] = useState<PageFolder | null>(null);
 
   const { mutate } = useSaveFigmaFrames({
     onSuccessAfterSave: () => {
@@ -64,12 +68,12 @@ const Pages = () => {
 
   const modals = [
     {
-      key: "selectFrame",
+      key: "selectFrame" as const,
       Component: SelectFrameModal,
       isOpen: openModalKey === "selectFrame",
       props: {
         closeModal: handleCloseModal,
-        onConfirm: (frames) => {
+        onConfirm: (frames: FigmaNode[]) => {
           handleCloseModal();
           setIsLoading(true);
           mutate(frames);
@@ -77,27 +81,28 @@ const Pages = () => {
       },
     },
     {
-      key: "updateFolder",
+      key: "updateFolder" as const,
       Component: FolderSettingsModal,
       isOpen: openModalKey === "updateFolder",
       props: {
         closeModal: handleCloseModal,
-        onConfirm: (newTitle, newWidth) => {
+        onConfirm: (newTitle: string, newWidth: number) => {
+          if (!targetFolder) return;
           updatePageFolder(
             project.projectId,
-            targetFolder?.minWidth,
+            targetFolder.minWidth,
             newTitle,
             newWidth,
           );
           handleCloseModal();
         },
-        name: targetFolder?.title,
-        width: targetFolder?.minWidth,
+        name: targetFolder?.title ?? "",
+        width: targetFolder?.minWidth ?? "",
         mode: SETTING_MODE.EDIT,
       },
     },
     {
-      key: "delete",
+      key: "delete" as const,
       Component: ConfirmDeleteModal,
       isOpen: openModalKey === "delete",
       props: {
@@ -105,7 +110,8 @@ const Pages = () => {
         text: "삭제하면 이 폴더 안의 모든 프레임이 함께 사라지고 복구할 수 없어요.",
         onCancel: handleCloseModal,
         onConfirm: () => {
-          deletePageFolder(project.projectId, targetFolder?.minWidth);
+          if (!targetFolder) return;
+          deletePageFolder(project.projectId, targetFolder.minWidth);
           handleCloseModal();
         },
       },
@@ -121,7 +127,7 @@ const Pages = () => {
           onClick: () => setOpenModalKey("selectFrame"),
         }}
       >
-        {project?.pages.map((group) => {
+        {project.pages.map((group) => {
           const selectedId = selectedPages[group.minWidth]?.id ?? null;
           const markedItems = group.items.map((item) => ({
             ...item,
@@ -155,7 +161,6 @@ const Pages = () => {
                   </DeleteButton>
                 </TitleExtraWrap>
               }
-              labelText={group.minWidth}
               items={markedItems}
               onItemClick={handleItemClick}
               isToggle={true}
@@ -164,6 +169,7 @@ const Pages = () => {
               onDrop={(event) => handleDrop(event, group.minWidth)}
               emptyText="프레임을 끌어다 놓으면 여기에 추가돼요"
               onDeleteClick={(item) => {
+                if (!fileKey) return;
                 deletePage(fileKey, item.id);
               }}
             />
@@ -172,13 +178,8 @@ const Pages = () => {
       </Panel>
 
       {modals.map((modal) => (
-        <SuspenseWrapper>
-          {modal.isOpen ? (
-            <modal.Component
-              key={modal.key}
-              {...modal.props}
-            />
-          ) : null}
+        <SuspenseWrapper key={modal.key}>
+          {modal.isOpen ? <modal.Component {...(modal.props as any)} /> : null}
         </SuspenseWrapper>
       ))}
 

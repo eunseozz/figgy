@@ -26,10 +26,7 @@ interface SettingToggleGroup {
   label: string;
   stateKey: StateKey;
   options: SettingOption[];
-  rightSlot?: (args: {
-    value: OptionValue;
-    onClick: () => void;
-  }) => JSX.Element;
+  rightSlot?: (args: { value: string; onClick: () => void }) => JSX.Element;
 }
 
 export const SETTING_TOGGLE_GROUPS: SettingToggleGroup[] = [

@@ -3,12 +3,14 @@ import type { ReactNode } from "react";
 
 import SlidingToggle from "@/components/HUD/SlidingToggle";
 
-type ToggleOption<T extends string | number = string> = {
+export type ToggleOption<T extends string | number | boolean = string> = {
   value: T;
   label: ReactNode;
 };
 
-type ToggleOptionGroupProps<T extends string | number = string> = {
+export type ToggleOptionGroupProps<
+  T extends string | number | boolean = string,
+> = {
   label: string;
   value: T;
   onChange: (value: T) => void;
@@ -16,25 +18,27 @@ type ToggleOptionGroupProps<T extends string | number = string> = {
   rightSlot?: ReactNode;
 };
 
-const ToggleOptionGroup = <T extends string | number = string>({
+function ToggleOptionGroup<T extends string | number | boolean = string>({
   label,
   value,
   onChange,
   options,
   rightSlot,
-}: ToggleOptionGroupProps<T>) => (
-  <div>
-    <LabelRow>
-      <GroupLabel>{label}</GroupLabel>
-      {rightSlot && <RightSlotWrapper>{rightSlot}</RightSlotWrapper>}
-    </LabelRow>
-    <SlidingToggle
-      options={options}
-      value={value}
-      onChange={onChange}
-    />
-  </div>
-);
+}: ToggleOptionGroupProps<T>) {
+  return (
+    <div>
+      <LabelRow>
+        <GroupLabel>{label}</GroupLabel>
+        {rightSlot && <RightSlotWrapper>{rightSlot}</RightSlotWrapper>}
+      </LabelRow>
+      <SlidingToggle
+        options={options}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+}
 
 const LabelRow = styled.div`
   display: flex;

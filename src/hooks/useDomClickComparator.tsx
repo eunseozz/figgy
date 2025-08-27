@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import useFeedbackStore from "@/stores/useFeedbackStore";
 import useHUDStore from "@/stores/useHUDStore";
-import useProjectStore from "@/stores/useProjectStore";
+import useProjectStore, { Project } from "@/stores/useProjectStore";
 import useToastStore from "@/stores/useToastStore";
 import {
   compareDomWithFigma,
@@ -13,15 +13,33 @@ import {
 import { getDomData, isDiffTarget } from "@/utils/comparator/domUtil";
 import { getClosestFigmaNode } from "@/utils/comparator/nodeMatching";
 import { selectedProject } from "@/utils/project";
+import type { AbsoluteBoundingBox } from "@/utils/comparator/nodeMatching";
+
+type FigmaNode = {
+  id: string;
+  type: string;
+  name: string;
+  characters?: string;
+  absoluteBoundingBox?: AbsoluteBoundingBox;
+  children?: FigmaNode[];
+  __depth?: number;
+};
+
+interface UseDomClickComparatorParams {
+  figmaNodes: FigmaNode[];
+  imgRef: React.RefObject<HTMLImageElement>;
+  figmaOriginalWidthRef: React.MutableRefObject<number>;
+  frameOffsetRef: React.MutableRefObject<{ x: number; y: number }>;
+}
 
 const useDomClickComparator = ({
   figmaNodes,
   imgRef,
   figmaOriginalWidthRef,
   frameOffsetRef,
-}) => {
-  const { fileKey } = useParams();
-  const project = useProjectStore(selectedProject(fileKey));
+}: UseDomClickComparatorParams) => {
+  const { fileKey } = useParams<{ fileKey: string }>();
+  const project: Project | null = useProjectStore(selectedProject(fileKey));
 
   const setTooltip = useFeedbackStore((state) => state.setTooltip);
   const setActiveElement = useFeedbackStore((state) => state.setActiveElement);
@@ -30,8 +48,11 @@ const useDomClickComparator = ({
   const isShowOverlay = useHUDStore((state) => state.isShowOverlay);
   const viewMode = useHUDStore((state) => state.viewMode);
 
-  const clickedElementRef = useRef(null);
-  const comparisonRef = useRef(null);
+  const clickedElementRef = useRef<HTMLElement | null>(null);
+  const comparisonRef = useRef<{
+    matched: boolean;
+    mismatches: { key: string; dom: number; figma: number }[];
+  } | null>(null);
 
   const updateFeedbackPosition = () => {
     const el = clickedElementRef.current;
@@ -59,8 +80,9 @@ const useDomClickComparator = ({
   };
 
   useEffect(() => {
-    const handleClick = (event) => {
-      const clickedElement = event.target;
+    const handleClick = (event: MouseEvent) => {
+      const clickedElement = event.target as HTMLElement;
+      if (!clickedElement) return;
 
       if (!isDiffTarget(clickedElement, project, viewMode, isShowOverlay))
         return;
@@ -72,7 +94,6 @@ const useDomClickComparator = ({
       if (prevElement && prevElement.isSameNode(clickedElement)) {
         clickedElementRef.current = null;
         comparisonRef.current = null;
-
         return;
       }
 

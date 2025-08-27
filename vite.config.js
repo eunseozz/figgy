@@ -14,7 +14,7 @@ export default defineConfig({
     cssCodeSplit: true,
     rollupOptions: {
       input: {
-        "figgy-dashboard": resolve(__dirname, "src/main.jsx"),
+        "figgy-dashboard": resolve(__dirname, "src/main.tsx"),
       },
       output: {
         entryFileNames: "figgy-dashboard.js",
